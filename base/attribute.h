@@ -3,6 +3,8 @@
 extern "C" {
 #endif // __cplusplus
 
+#   define XOCEAN_INTERNAL
+
 #if defined(__GNUC__)
 #   define XOCEAN_FORCE_INLINE __attribute__((always_inline))
 #   define XOCEAN_NO_INLINE __attribute__((noinline))
@@ -46,6 +48,8 @@ extern "C" {
 #   define XOCEAN_EXPORT
 #   define XOCEAN_IMPORT
 #endif
+
+#define XOCEAN_BUG(m) assert(m)
 
 #if defined(__cplusplus)
 }

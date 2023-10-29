@@ -29,7 +29,9 @@ typedef uint16_t xocean_uint16_t;
 typedef uint32_t xocean_uint32_t;
 typedef uint64_t xocean_uint64_t;
 
-
+typedef void* xocean_pointer_t;
+typedef bool xocean_bool_t;
+typedef xocean_int32_t xocean_stat_t;
 
 #   if __STDC_VERSION__ >= 201112L
 typedef _Atomic(xocean_fp32_t) xocean_afp32_t;
