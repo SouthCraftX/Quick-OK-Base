@@ -2,3 +2,8 @@
 #include "base/attribute.h"
 #include "base/platform.h"
 #include "base/types.h"
+#include "base/stat.h"
+#include "base/debug.h"
+#include "base/basic_class.h"
+#include "base/fastclac.h"
+#include "base/limit.h"

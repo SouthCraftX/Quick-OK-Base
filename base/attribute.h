@@ -6,6 +6,9 @@ extern "C" {
 #   define XOCEAN_INTERNAL
 
 #if defined(__GNUC__)
+#   define XOCEAN_THREAD_LOCAL __thread
+#   define XOCEAN_DEPRICATED __attribute__((deprecated))
+#   define XOCEAN_NODISCARD __attribute__((warn_unused_result))
 #   define XOCEAN_FORCE_INLINE __attribute__((always_inline))
 #   define XOCEAN_NO_INLINE __attribute__((noinline))
 #   define XOCEAN_LIKELY(x) __builtin_expect(!!(x), 1)
@@ -18,8 +21,14 @@ extern "C" {
 #   define XOCEAN_PACKED __attribute__((packed))
 #   define XOCEAN_EXPORT __attribute__((visibility("default")))
 #   define XOCEAN_IMPORT __attribute__((visibility("default")))
+#   define XOCEAN_NOEXPORT __attribute__((visibility("hidden"))) // wtf why gcc/linux always export all symbols on linux by default?!
+#   define XOCEAN_ABORT() __builtin_trap()
+#   define XOCEAN_ERRPRINTF(f,...) __buildin_printf(__VA_ARGS__)
 #elif defined(_MSC_VER)
-#   info "Warning:Missing feature for `likely` and `unlikely`"
+#   info "Warning:Missing feature for XOCEAN_LIKELY and XOCEAB_UNLIKELY"
+#   define XOCEAN_DEPRICATED __declspec(deprecated)
+#   define XOCEAN_THREAD_LOCAL __declspec(thread)
+#   define XOCEAN_NODISCARD __nodiscard
 #   define XOCEAN_FORCE_INLINE __forceinline
 #   define XOCEAN_NO_INLINE __declspec(noinline)
 #   define XOCEAN_LIKELY(x) (x)
@@ -31,23 +40,38 @@ extern "C" {
 #   define XOCEAN_ALIGNED(x) __declspec(align(x))
 #   define XOCEAN_PACKED __pragma(pack(push, 1)) __declspec(align(1))
 #   define XOCEAN_EXPORT __declspec(dllexport)
+#   define XOCEAN_NOEXPORT
 #   define XOCEAN_IMPORT __declspec(dllimport)
+
+#   define XOCEAN_ABORT() __debugbreak()
+#   define XOCEAN_ERRPRINT(f,...) printf(f,__VA_ARGS__)
 #else
 #   info "Warning:Your compiler is not recommanded, which means you may encounter some problems."
 #   info "Missing feature for `likely`, `unlikely`, `noinline`, `export` and `import`"
 #   info "`inline`and `fallthrough` may not work as expected."
+#   define XOCEAN_THREAD_LOCAL _Thread_local
 #   define XOCEAN_FORCE_INLINE inline
+#   define XOCEAN_DEPRECATED [[deprecated]]
 #   define XOCEAN_NO_INLINE
 #   define XOCEAN_LIKELY(x) (x)
 #   define XOCEAN_UNLIKELY(x) (x)
 #   define XOCEAN_UNREACHABLE() unreachable()
 #   define XOCEAN_RESTRICT restrict
 #   define XOCEAN_NORETURN _Noreturn
+#   define XOCEAN_NODISCARD [[nodiscard]]
 #   define XOCEAN_FALLTHROUGH [[fallthrough]]
 #   define XOCEAN_ALIGNED(x) alignas(x)
 #   define XOCEAN_EXPORT
+#   define XOCEAN_NOEXPORT
 #   define XOCEAN_IMPORT
+#   define XOCEAN_ABORT() abort()
 #endif
+
+#if defined(XOCEAN_WANT_STATIC_LIBRARY)
+#   define XOCEAN_API
+#else
+#   define XOCEAN_API XOCEAN_EXPORT
+#endif // defined(XOCEAN_WANT_STATIC_LIBRARY)
 
 #define XOCEAN_BUG(m) assert(m)
 
