@@ -7,8 +7,11 @@ extern "C" {
 #endif // __cplusplus
 
 // Thanks to SodiumCl10
-xocean_int32_t xocean_find_contigous_zeros64(xocean_uint64_t x,
-                                             xocean_size_t len) {
+xocean_int32_t 
+xocean_find_contigous_zeros64(
+    xocean_uint64_t x,
+    xocean_size_t len
+){
     xocean_uint16_t tmp[6];
     --len;
     tmp[1] = tmp[0] | (tmp[0] << 1);
