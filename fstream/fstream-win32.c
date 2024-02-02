@@ -2,6 +2,9 @@
 
 #include <fileapi.h>
 
+static DWORD xocean_access_mode_list[] = {FILE_GENERIC_READ , FILE_GENERIC_WRITE , 
+                                   FILE_GENERIC_READ | FILE_GENERIC_WRITE , 0};
+
 XOCEAN_NOEXPORT XOCEAN_FORCE_INLINE
 DWORD _xocean_file_win_translate_flag_and_attributes(
     xocean_flag32_t mode
@@ -14,19 +17,14 @@ XOCEAN_NOEXPORT XOCEAN_FORCE_INLINE
 DWORD _xocean_file_win_translate_open_mode(
     xocean_flag32_t mode
 ){
-    return (XOCEAN_HAS_FLAG(mode , XOCEAN_FILE_CREATE_ALWAYS) ? CREATE_ALWAYS : 0) &
-           (XOCEAN_HAS_FLAG(mode , XOCEAN_FILE_OPEN_ALWAYS) ? OPEN_ALWAYS : 0) &
-           (XOCEAN_HAS_FLAG(mode , XOCEAN_FILE_CREATE_WHEN_NONEXISTENT) ? CREATE_NEW : 0) &
-           (XOCEAN_HAS_FLAG(mode , XOCEAN_FILE_OPEN_EXISTING) ? OPEN_EXISTING : 0) &
-           (XOCEAN_HAS_FLAG(mode , XOCEAN_FILE_OPEN_TRANCATELY) ? TRUNCATE_EXISTING : 0);
+    return (mode >> 8) & 0xff;
 }
 
 XOCEAN_NOEXPORT XOCEAN_FORCE_INLINE
 DWORD _xocean_file_win_translate_desired_access(
     xocean_flag32_t mode
 ){
-    return (XOCEAN_HAS_FLAG(mode , XOCEAN_FILE_READ) ? GENERIC_READ : 0) &
-           (XOCEAN_HAS_FLAG(mode , XOCEAN_FILE_WRITE) ? GENERIC_WRITE : 0) ;
+    return xocean_access_mode_list[mode & 0x3];
 }
 
 XOCEAN_NOEXPORT XOCEAN_FORCE_INLINE
@@ -139,26 +137,38 @@ xocean_stat_t xocean_file_get_size(
     }
 }
 
+XOCEAN_FORCE_INLINE
+xocean_offset_t xocean_win_large_interger_to_offset(
+    LARGE_INTEGER li
+){
+#   if XOCEAN_SYSTEM_BIT(64)
+    return li.QuadPart;
+#   else
+    return li.LowPart;
+#   endif 
+}
+
 XOCEAN_API
-xocean_stat_t xocean_file_seek(
+xocean_offset_t xocean_file_seek(
     XOceanFile * file ,
-    xocean_ssize_t offset ,
+    xocean_offset_t offset ,
     xocean_flag32_t move_method
 ){
+    LARGE_INTEGER after_moving_offset;
 #   if XOCEAN_SYSTEM_BIT(64)
     LARGE_INTEGER li_offset = {.QuadPart = offset};
 #   else
     LARGE_INTEGER li_offset = {.LowPart = offset , .HighPart = 0};
 #   endif
     BOOL ret = SetFilePointerEx(file->handle , 
-                                 li_offset , 
-                                 NULL , 
-                                 move_method);
+                                li_offset , 
+                                &after_moving_offset , 
+                                move_method);
     if(ret)
     {
-        return XOCEAN_OK;
+        return xocean_win_large_interger_to_offset(after_moving_offset);
     }
-    switch(GetLastError())
+    /*switch(GetLastError())
     {
         case ERROR_FILE_NOT_FOUND:
         case ERROR_INVALID_HANDLE:
@@ -169,5 +179,9 @@ xocean_stat_t xocean_file_seek(
             return XOCEAN_INVALID_ARG;
         default:
             return XOCEAN_UNKNOWN;
-    }
+    }*/
+    return -1;
 }
+
+
+

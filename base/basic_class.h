@@ -11,8 +11,8 @@ extern "C" {
 
 struct _XOceanClassBase
 {
-    xocean_stat_t stat;
-    xocean_flag32_t type;
+    xocean_stat_t   stat;
+    xocean_flag32_t trait;
 };
 
 typedef _XOceanClassBase XOceanClassBase;
@@ -31,15 +31,15 @@ xocean_stat_t xocean_class_get_stat(XOceanClass * __class)
 }
 
 XOCEAN_FORCE_INLINE
-xocean_flag32_t xocean_class_get_type(XOceanClass * __class)
+xocean_flag32_t xocean_class_get_trait(XOceanClass * __class)
 {
-    return __class->type;
+    return __class->trait;
 }
 
 XOCEAN_FORCE_INLINE
-void xocean_class_set_type(XOceanClass * __class, xocean_flag32_t type)
+void xocean_class_set_trait(XOceanClass * __class, xocean_flag32_t trait)
 {
-    __class->type = type;
+    __class->trait = trait;
 }
 
 enum

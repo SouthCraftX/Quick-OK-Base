@@ -1,5 +1,13 @@
 {
     "files.associations": {
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "cerrno": "c",
+        "fstream.h": "c",
+        "thread.h": "c",
+        "pthread_unistd.h": "c",
+        "mmap.h": "c",
+        "fileapi.h": "c",
+        "mman.h": "c",
+        "delay.h": "c"
     }
 }

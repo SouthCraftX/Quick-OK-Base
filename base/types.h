@@ -50,14 +50,15 @@ typedef     xocean_uint32_t xocean_size_t;
 typedef     xocean_int32_t  xocean_ssize_t;
 #endif // XOCEAN_SYSTEM_BIT(64)
 
+typedef     xocean_ssize_t  xocean_offset_t;
 
 typedef     xocean_int8_t   xocean_flag8_t;
 typedef     xocean_int16_t  xocean_flag16_t;
 typedef     xocean_int32_t  xocean_flag32_t;
 typedef     xocean_int64_t  xocean_flag64_t;
 
-typedef     char*           xocean_cstring_t;
-typedef     const xocean_cstring_t xocean_ccstring_t;
+typedef     char*                   xocean_cstring_t;
+typedef     const xocean_cstring_t  xocean_ccstring_t;
 
 #   if __STDC_VERSION__ >= 201112L
 typedef _Atomic(xocean_fp32_t) xocean_afp32_t;

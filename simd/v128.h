@@ -1,44 +1,6 @@
 #pragma once
 
-#include <immintrin.h>
-
-#pragma intrinsic(_mm_load_si128)
-#pragma intrinsic(_mm_loadu_si128)
-#pragma intrinsic(_mm_store_si128)
-#pragma intrinsic(_mm_storeu_si128)
-#pragma intrinsic(_mm_cmpeq_epi8)
-#pragma intrinsic(_mm_cmpeq_epi16)
-#pragma intrinsic(_mm_cmpeq_epi32)
-#pragma intrinsic(_mm_cmpeq_epi64)
-#pragma intrinsic(_mm_cmpeq_epi8)
-#pragma intrinsic(_mm_cmpeq_epi16)
-#pragma intrinsic(_mm_cmpeq_epi32)
-#pragma intrinsic(_mm_cmpeq_epi64)
-#pragma intrinsic(_mm_add_epi8)
-#pragma intrinsic(_mm_add_epi16)
-#pragma intrinsic(_mm_add_epi32)
-#pragma intrinsic(_mm_add_epi64)
-#pragma intrinsic(_mm_sub_epi8)
-#pragma intrinsic(_mm_sub_epi16)
-#pragma intrinsic(_mm_sub_epi32)
-#pragma intrinsic(_mm_sub_epi64)
-#pragma intrinsic(_mm_div_epi16)
-#pragma intrinsic(_mm_div_epi32)
-#pragma intrinsic(_mm_div_epi64)
-#pragma intrinsic(_mm_mul_epi16)
-#pragma intrinsic(_mm_mul_epi32)
-#pragma intrinsic(_mm_mul_epi64)
-#pragma intrinsic(_mm_max_epi8)
-#pragma intrinsic(_mm_max_epi16)
-#pragma intrinsic(_mm_max_epi32)
-#pragma intrinsic(_mm_max_epi64)
-#pragma intrinsic(_mm_min_epi8)
-#pragma intrinsic(_mm_min_epi16)
-#pragma intrinsic(_mm_min_epi32)
-#pragma intrinsic(_mm_min_epi64)
-#pragma intrinsic(_mm_and_si128)
-#pragma intrinsic(_mm_or_si128)
-#pragma intrinsic(_mm_xor_si128)
+#include "simd.h"
 
 #include "../base.h"
 
@@ -85,7 +47,8 @@ xocean_bool_t xocean_i128_cmpeq(xocean_pointer_t x , xocean_pointer_t y)
 #define xocean_128_fp64_mul(x , y , res) xocean_128_mul(x , y , res , pd , pd)
 
 // @param size Must be aligned to 16 bytes
-void xocean_i128_zeromem(xocean_byte_t * dst , const xocean_size_t size)
+void 
+__xocean_i128_zeromem(xocean_byte_t * dst , const xocean_size_t size)
 {
     __m128i zero_vec = _mm_setzero_si128();
     xocean_size_t i;
@@ -99,9 +62,12 @@ void xocean_i128_zeromem(xocean_byte_t * dst , const xocean_size_t size)
 // @param dst The array you want to copy to (must be aligned in 16 bytes)
 // @param src The array you want to copy from (must be aligned in 16 bytes)
 // @param size The size to copy (must be mutilple of 16)
-void xocean_i128_array_copy(xocean_byte_t * dst , const xocean_byte_t * src , 
-                            const xocean_size_t size)
-{
+void 
+__xocean_i128_array_copy(
+    xocean_byte_t * dst , 
+    const xocean_byte_t * src , 
+    const xocean_size_t size
+){
     for ( ; src < src + size; src += 16 , dst += 16)
     {
         _mm_store_si128((__m128i *)dst , _mm_load_si128((__m128i *)src));

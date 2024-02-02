@@ -15,6 +15,8 @@
 
 #define XOCEAN_SWAP(x,y) do { typeof(x) tmp = x; x = y; y = tmp; } while (false)
 
+#define XOCEAN_SNULL(x,t) ((x) ? (x->t) : NULL)
+
 // Thanks to sodiumcl10
 #define XOCEAN_FIND_ZEROS_INDEX64(x,n) 
 

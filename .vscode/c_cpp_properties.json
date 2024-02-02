@@ -3,7 +3,8 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "C:\\tools\\msys64\\usr\\include"
             ],
             "defines": [
                 "_DEBUG",
@@ -15,7 +16,24 @@
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "windows-gcc-x64",
-            "configurationProvider": "ms-vscode.cmake-tools"
+            "configurationProvider": "ms-vscode.cmake-tools",
+            "compilerArgs": [
+                "-Wall",
+                "-Wextra"
+            ]
+        },
+        {
+            "name": "arch",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/usr/include/",
+                "/usr/lib/modules/6.7.2-arch1-1/build/include/"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-x64"
         }
     ],
     "version": 4

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
-
+#include <fcntl.h>
+#include <fileapi.h>
 uint64_t f(uint64_t x,uint64_t n)
 {
     uint64_t mask = ((1ull<<n)-1)<<(64-n);
@@ -13,6 +14,7 @@ uint64_t f(uint64_t x,uint64_t n)
 
 int main()
 {
+    int s = SEEK_CUR;
     uint64_t x = 0xff00ffffffffffff;
     printf("f(x)=%llu",64-f(x,2));
 }

@@ -1,7 +1,5 @@
 #pragma once
-#if defined(__cplusplus)
-extern "C" {
-#endif // __cplusplus
+
 
 #   define XOCEAN_INTERNAL
 
@@ -73,8 +71,16 @@ extern "C" {
 #   define XOCEAN_API XOCEAN_EXPORT
 #endif // defined(XOCEAN_WANT_STATIC_LIBRARY)
 
-#define XOCEAN_BUG(m) assert(m)
+#define XOCEAN_IMPL(f) _##f
+#define XOCEAN_DBG(f) _##f##_dbg
 
-#if defined(__cplusplus)
-}
-#endif // __cplusplus
+#if defined(XOCEAN_DEBUG)
+#   define XOCEAN_INTERFACE(f) XOCEAN_DBG(f)
+#else
+#   define XOCEAN_INTERFACE(f) XOCEAN_IMPL(f)
+#endif 
+
+#define XOCEAN_GLOBAL_LOCAL static
+
+
+#define XOCEAN_BUG(m) assert(m)

@@ -35,23 +35,27 @@ void xocean_condlock_signal(
     XOceanCondLock * lock
 );
 
-void xocean_condlock_signal_all(
+void 
+xocean_condlock_signal_all(
     XOceanCondLock * lock
 );
     
-void xocean_condlock_destroy(
+void 
+xocean_condlock_destroy(
     XOceanCondLock * lock
 );
 
- 
-XOceanCondLock * xocean_condlock_new()
+
+XOceanCondLock * 
+xocean_condlock_new()
 {
     xocean_stat_t stat;
     return xocean_condlock_new_ex(&stat);
 }
 
  
-XOceanCondLock * xocean_condlock_new_ex(xocean_stat_t * stat)
+XOceanCondLock * 
+xocean_condlock_new_ex(xocean_stat_t * stat)
 {
     XOCEAN_ASSERT(stat);
     XOceanCondLock * ret = (XOceanCondLock*)mi_malloc_small(sizeof(XOceanCondLock));
