@@ -38,29 +38,30 @@ struct _XOceanFile
 };
 typedef struct _XOceanFile XOceanFile;
 
-XOCEAN_API
-xocean_stat_t XOCEAN_INTERFACE(xocean_file_open)(
+xocean_stat_t 
+XOCEAN_INTERFACE(xocean_file_open)(
     XOceanFile *        file , 
     xocean_ccstring_t   path , 
     xocean_flag32_t     mode
 );
 
-XOCEAN_API
-xocean_size_t XOCEAN_INTERFACE(xocean_file_read)(
+xocean_size_t 
+XOCEAN_INTERFACE(xocean_file_read)(
     XOceanFile *        file ,
     xocean_byte_t *     buf ,
     xocean_size_t       size
 );
 
-XOCEAN_API
-xocean_size_t XOCEAN_INTERFACE(xocean_file_write)(
+
+xocean_size_t
+XOCEAN_INTERFACE(xocean_file_write)(
     XOceanFile *        file ,
     xocean_byte_t *     buf ,
     xocean_size_t       size
 );
 
-XOCEAN_API
-void XOCEAN_INTERFACE(xocean_file_close)(
+void 
+XOCEAN_INTERFACE(xocean_file_close)(
     XOceanFile * file
 );
 

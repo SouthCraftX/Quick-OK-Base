@@ -8,6 +8,50 @@
         "mmap.h": "c",
         "fileapi.h": "c",
         "mman.h": "c",
-        "delay.h": "c"
-    }
+        "delay.h": "c",
+        "condlock.h": "c",
+        "queue.h": "c",
+        "utility": "c",
+        "format": "c",
+        "ntifs.h": "c",
+        "simd.h": "c",
+        "cstdlib": "cpp",
+        "*.tcc": "cpp",
+        "chrono": "cpp",
+        "cmath": "cpp",
+        "random": "cpp",
+        "limits": "cpp",
+        "type_traits": "cpp",
+        "MEMSET.C": "cpp",
+        "base.h": "c",
+        "encoder.h": "c",
+        "swscale.h": "c",
+        "avcodec.h": "c",
+        "opt.h": "c",
+        "hwcontext.h": "c",
+        "imgutils.h": "c",
+        "synchapi.h": "c",
+        "mutex": "c",
+        "shared_mutex": "c",
+        "syncstream": "c",
+        "apiset.h": "c",
+        "_mingw.h": "c",
+        "minwinbase.h": "c",
+        "minwindef.h": "c",
+        "winapifamily.h": "c",
+        "apisetcconv.h": "c",
+        "basic_class.h": "c",
+        "types.h": "c",
+        "charconv": "cpp"
+    },
+    "terminal.integrated.profiles.windows": {
+        "MSYS2 UCRT": {
+            "path": "cmd.exe",
+            "args": [
+                "/c",
+                "C:\\tools\\msys64\\msys2_shell.cmd -defterm -here -no-start -ucrt64"
+            ]
+        }
+    },
+    "Codegeex.CompletionModel": "CodeGeeX Lite"
 }

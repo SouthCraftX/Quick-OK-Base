@@ -73,6 +73,14 @@ typedef _Atomic(xocean_uint8_t) xocean_auint8_t;
 typedef _Atomic(xocean_uint16_t) xocean_auint16_t;
 typedef _Atomic(xocean_uint32_t) xocean_auint32_t;
 typedef _Atomic(xocean_uint64_t) xocean_auint64_t;
+
+typedef _Atomic(xocean_flag8_t) xocean_aflag8_t;
+typedef _Atomic(xocean_flag16_t) xocean_aflag16_t;
+typedef _Atomic(xocean_flag32_t) xocean_aflag32_t;
+typedef _Atomic(xocean_flag64_t) xocean_aflag64_t;
+
+typedef _Atomic(xocean_size_t) xocean_asize_t;
+typedef _Atomic(xocean_ssize_t) xocean_assize_t;
 #   endif // __STDC_VERSION__
 
 #if defined(__cplusplus)

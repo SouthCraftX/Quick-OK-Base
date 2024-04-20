@@ -1,4 +1,5 @@
 #pragma once
+#define __XOCEAN_MMAP_H__
 
 #include "../fstream/fstream.h"
 
@@ -21,12 +22,12 @@ typedef struct _XOceanMemmap XOceanMemmap;
 
 xocean_stat_t
 XOCEAN_INTERFACE(xocean_memmap_init)(
-    XOceanMemmap *      memmap ,
-    XOceanFile *        file ,
-    const xocean_offset_t     offset ,
-    const xocean_size_t       len ,
-    const xocean_flag32_t     mode ,
-    const xocean_pointer_t    suggested_addr
+    XOceanMemmap *              memmap ,
+    XOceanFile *                file ,
+    const xocean_offset_t       offset ,
+    const xocean_size_t         len ,
+    const xocean_flag32_t       mode ,
+    const xocean_pointer_t      suggested_addr
 );
 
 xocean_pointer_t
@@ -42,3 +43,11 @@ XOCEAN_INTERFACE(xocean_memmap_close)(
 #if defined(__cplusplus)
 }
 #endif // __cplusplus
+
+#if XOCEAN_PLATFORM(WINDOWS)
+#   include "platform_spec/win32/mmap.h"
+#elif XOCEAN_PLATFORM(POSIX)
+#   include "platform_spec/posix/mmap.h"
+#else
+#   error "Unsupported platform"
+#endif
