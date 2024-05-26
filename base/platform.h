@@ -103,6 +103,22 @@ extern "C" {
 
 #define XOCEAN_ENDIAN(e) (XOCEAN_##e##_ENDIAN_ACTIVE)
 
+#define XOCEAN_x86_ACTIVE 0
+#define XOCEAN_ARM_ACTIVE 0
+
+#if defined(__i386__) || defined(__x86_32__) || defined(__amd32) || \ 
+    defined(__INTEL__) || defined(_M_IX86) || defined(_M_X64) || \
+    defined(_X86_) || defined(_M_IA64) || defined(_M_AMD64)
+#   undef XOCEAN_x86_ACTIVE
+#   define XOCEAN_x86_ACTIVE 1
+#elif defined(__arm__) || defined(__thumb__) || defined(__TARGET_ARCH_ARM) || \
+      defined(__TARGET_ARCH_THUMB) || defined(_ARM_) || defined(_M_ARM) || \ 
+      defined(_M_ARMT) || defined(__aarch64__) || defined(_M_ARM64)
+#   undef XOCEAN_ARM_ACTIVE
+#   define XOCEAN_ARM_ACTIVE 1
+#endif
+
+#define XOCEAN_ARCH(a) (XOCEAN_##a##_ACTIVE)
 
 #if defined(__cplusplus)
 }

@@ -5,13 +5,8 @@
 extern "C" {
 #endif // __cplusplus
 
-struct _XOceanFileStreamBase
-{
-    XOceanClassBase base;
-    xocean_intmax_t handle;
-};
-typedef struct _XOceanFileStreamBase XOceanFileStreamBase;
-typedef struct XOCeanFileStream XOceanFileStream;
+struct _XOceanFileStream;
+typedef struct _XOceanFileStream XOceanFileStream;
 
 
 #if defined(__cplusplus)

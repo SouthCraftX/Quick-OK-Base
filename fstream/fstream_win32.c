@@ -42,7 +42,7 @@ __xocean_file_read32(
     xocean_uint32_t size
 ){
     DWORD have_read;
-    return ReadFile(file->handle , buf , size , &have_read , NULL) ? have_read : 0;
+    return ReadFile((HANDLE)file , buf , size , &have_read , NULL) ? have_read : 0;
 }
 
 #if XOCEAN_SYSTEM_BIT(64)
@@ -91,7 +91,7 @@ XOCEAN_IMPL(xocean_file_read)(
 
 xocean_stat_t 
 XOCEAN_IMPL(xocean_file_open)(
-    XOceanFile *        file , 
+    XOceanFile **       file , 
     xocean_ccstring_t   path ,
     xocean_flag32_t     mode
 ){
@@ -109,7 +109,7 @@ XOCEAN_IMPL(xocean_file_open)(
         NULL
     );
 
-    if (file->handle == INVALID_HANDLE_VALUE)
+    if(file_handle == INVALID_HANDLE_VALUE)
     {
         switch(GetLastError())
         {
@@ -122,7 +122,7 @@ XOCEAN_IMPL(xocean_file_open)(
                 return XOCEAN_FILE_OPEN_FAILED;
         }
     }
-    file->handle = file_handle;
+    (HANDLE)*file = file_handle;
     return XOCEAN_OK;
 }
 
@@ -131,8 +131,7 @@ void
 XOCEAN_IMPL(xocean_file_close)(
     XOceanFile * file
 ){
-    CloseHandle(file->handle);
-    file->handle = INVALID_HANDLE_VALUE;
+    CloseHandle((HANDLE)file);
 }
 
 XOCEAN_API 
@@ -142,10 +141,10 @@ XOCEAN_IMPL(xocean_file_get_size)(
     xocean_size_t * size
 ){
 #   if XOCEAN_SYSTEM_BIT(64)
-    BOOL ret = GetFileSizeEx(file->handle , (PLARGE_INTEGER)size);
+    BOOL ret = GetFileSizeEx((HANDLE)file , (PLARGE_INTEGER)size);
 #   else
     BOOL ret = GetFileSizeEx(
-        file->handle , 
+        (HANDLE)file 
         &(LARGE_INTEGER){.LowPart = *size , .HighPart = 0}
     );
 #   endif
@@ -185,7 +184,7 @@ XOCEAN_IMPL(xocean_file_seek)(
 #   else
     LARGE_INTEGER li_offset = {.LowPart = offset , .HighPart = 0};
 #   endif
-    BOOL ret = SetFilePointerEx(file->handle , 
+    BOOL ret = SetFilePointerEx((HANDLE)file , 
                                 li_offset , 
                                 &after_moving_offset , 
                                 move_method);
@@ -245,7 +244,7 @@ xocean_fstream_prealloc(
 #   endif // XOCEAN_SYSTEM_BIT
 
     return SetFileInformationByHandle(
-        file->handle , 
+        (HANDLE)file , 
         FileAllocationInfo , 
         &falloc_info , 
         sizeof(falloc_info)

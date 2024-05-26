@@ -3,21 +3,6 @@
 
 #define XOCEAN_POSIX_ONCE_READ_LIMIT 0x7ffff000
 
-XOCEAN_FORCE_INLINE
-int xocean_file_get_fd(
-    XOceanFile * file
-){
-    return (int)file->handle;
-}
-
-XOCEAN_FORCE_INLINE
-void 
-xocean_file_set_fd(
-    XOceanFile *    file ,
-    int             fd
-){
-    file->handle = (xocean_pointer_t)fd;
-}
 
 XOCEAN_GLOBAL_LOCAL XOCEAN_FORCE_INLINE 
 xocean_stat_t
@@ -44,17 +29,16 @@ __xocean_file_handle_open_error()
 
 xocean_stat_t 
 XOCEAN_IMPL(xocean_file_open)(
-    XOceanFile *        file ,
+    XOceanFile **       file ,
     xocean_ccstring_t   path ,
     xocean_flag32_t     mode 
 ){
-    O_CREAT;
     int fd = open(path , mode);
     if(fd == -1)
     {
         return __xocean_file_handle_open_error(); 
     }
-    xocean_file_set_fd(file , fd);
+    *((xocean_intmax_t *)file) = fd;
     return XOCEAN_OK;
 }
 
@@ -62,7 +46,7 @@ XOCEAN_API
 void XOCEAN_IMPL(xocean_file_close)(
     XOceanFile * file
 ){
-    close(xocean_file_get_fd(file));
+    close((int)file);
 }
 
 XOCEAN_FORCE_INLINE
@@ -71,7 +55,7 @@ xocean_uint32_t xocean_file_read32(
     xocean_byte_t * buf ,
     xocean_size_t   size
 ){
-    read(xocean_file_get_fd(file) , buf , size);
+    read((int)fd , buf , size);
 }
 
 
@@ -95,7 +79,7 @@ XOCEAN_IMPL(xocean_file_read32)(
         }
         return have_read;
     }
-    have_read += xocean_file_read32(file , buf , remain_size);
+    have_read += xocean_file_read32((int)file , buf , remain_size);
     return have_read;
 }
 
@@ -130,7 +114,7 @@ XOCEAN_IMPL(xocean_file_seek)(
     xocean_flag32_t     move_method ,
     xocean_offset_t *   current_offset
 ){
-    off_t off = lseek(xocean_file_get_fd(file) , desired_offset , move_method);
+    off_t off = lseek((int)file , desired_offset , move_method);
     return __xocean_auto_handle_file_seek_error(off , current_offset);
 }
 
@@ -143,7 +127,7 @@ xocean_stat_t XOCEAN_IMPL(xocean_file_alloc)(
     XOceanFile *    file ,
     xocean_size_t   size
 ){
-    switch(posix_fallocate(xocean_file_get_fd(file) , 0 , size))
+    switch(posix_fallocate((int)file , 0 , size))
     {
         case 0:         return XOCEAN_OK;
         case ENOSPC:    return XOCEAN_DISK_NO_SPACE;

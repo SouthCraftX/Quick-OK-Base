@@ -8,6 +8,20 @@
 
 #define  __XOCEAN_GNUC_ATOMIC_H__
 
+typedef volatile xocean_int8_t  xocean_aint8_t;
+typedef volatile xocean_int16_t xocean_aint16_t;
+typedef volatile xocean_int32_t xocean_aint32_t;
+typedef volatile xocean_int64_t xocean_aint64_t;
+
+typedef volatile xocean_uint8_t  xocean_uint8_t;
+typedef volatile xocean_uint16_t xocean_uint16_t;
+typedef volatile xocean_uint32_t xocean_uint32_t;
+typedef volatile xocean_uint64_t xocean_uint64_t;
+
+typedef volatile xocean_intmax_t  xocean_aintmax_t;
+typedef volatile xocean_uintmax_t xocean_auintmax_t;
+
+
 #define XOCEAN_ATOMIC_RELEXED   __ATOMIC_RELAXED
 #define XOCEAN_ATOMIC_CONSUME   __ATOMIC_CONSUME
 #define XOCEAN_ATOMIC_ACQUIRE   __ATOMIC_ACQUIRE

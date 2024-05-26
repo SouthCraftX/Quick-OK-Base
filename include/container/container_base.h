@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../base.h"
-#include "mimalloc.h"
+#include <mimalloc.h>
 
 #define XOCEAN_CONTAINER_PRIVATE_HEAP  (1)
 #define XOCEAN_CONTAINER_NO_PREALLOC   (1 << 1)

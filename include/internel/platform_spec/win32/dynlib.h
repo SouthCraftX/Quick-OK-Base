@@ -1,10 +1,10 @@
 #pragma once
 
 // for debug
-#include "dynlib.h"
+#include "include/dynlib.h"
 
 #if !defined(XOCEAN_DYNAMIC_LIBRARY_INCLUDED)
-#   error Do not include this file directly. Use dynlib.h instead
+#   error "Never include this header file directly. Use dynlib.h instead."
 #endif 
 
 #include <libloaderapi.h>

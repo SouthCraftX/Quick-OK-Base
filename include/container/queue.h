@@ -23,13 +23,23 @@ XOCEAN_IMPL(xocean_queue_init)(
 }
 
 XOCEAN_FORCE_INLINE
-void
+bool
 XOCEAN_IMPL(xocean_queue_add)(
     XOceanQueue *           queue ,
     const xocean_pointer_t  element
 ){
-    xocean_list_insert_head((XOceanList *)queue , element);
+    return xocean_list_insert_head((XOceanList *)queue , element);
 }
+
+XOCEAN_FORCE_INLINE
+void
+XOCEAN_IMPL(xocean_queue_add_node)(
+    XOceanQueue *           queue ,
+    XOceanListNode *        node
+){
+    xocean_list_insert_head((XOceanList *)queue , node->data);
+}
+
 
 XOCEAN_FORCE_INLINE
 xocean_size_t

@@ -5,6 +5,9 @@
 #   error "Never include this header file directly. Use <xocean/atomic.h> instead."
 #endif
 
+// Generic macro tricks refer to:
+// https://blog.csdn.net/fshngrmng/article/details/119572189
+
 #define __XOCEAN_ATOMIC_2OR3_ARGS_SELECT(ptr , val , order , target , ...) target
 #define __XOCEAN_ATOMIC_CAS_SELECT(ptr , expected , desired , success , \ 
                                    failure , target , ...) target

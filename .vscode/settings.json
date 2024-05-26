@@ -42,7 +42,10 @@
         "apisetcconv.h": "c",
         "basic_class.h": "c",
         "types.h": "c",
-        "charconv": "cpp"
+        "charconv": "cpp",
+        "list.h": "c",
+        "cstdint": "c",
+        "atomic": "cpp"
     },
     "terminal.integrated.profiles.windows": {
         "MSYS2 UCRT": {

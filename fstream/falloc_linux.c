@@ -12,7 +12,7 @@ XOCEAN_IMPL(xocean_fstream_prealloc)(
     XOceanFile *    file ,
     xocean_size_t   size
 ){
-    switch(fallocate(file->handle , 0 , 0 , size))
+    switch(fallocate((int)file , 0 , 0 , size))
     {
 
         case 0:         return XOCEAN_OK;
