@@ -27,6 +27,9 @@ typedef     void*           xocean_pointer_t;
 typedef     xocean_int8_t   xocean_bool_t;
 typedef     xocean_uint32_t xocean_ref_count_t;
 
+#define     xocean_true     ((xocean_bool_t)1)
+#define     xocean_false    ((xocean_bool_t)0)
+
 #if defined(XOCEAN_WANT_HALF_LEN_STAT_T)
 typedef     xocean_int16_t  xocean_stat_t;
 #else

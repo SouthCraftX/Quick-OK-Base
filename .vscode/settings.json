@@ -45,7 +45,12 @@
         "charconv": "cpp",
         "list.h": "c",
         "cstdint": "c",
-        "atomic": "cpp"
+        "atomic": "cpp",
+        "atomic.h": "c",
+        "x86intrin.h": "c",
+        "compare": "c",
+        "crc.h": "c",
+        "expected": "c"
     },
     "terminal.integrated.profiles.windows": {
         "MSYS2 UCRT": {

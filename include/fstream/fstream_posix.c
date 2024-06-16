@@ -1,4 +1,5 @@
 #include "fstream.h"
+#include "internel/platform_spec/posix/common.h"
 #include <fcntl.h>
 
 #define XOCEAN_POSIX_ONCE_READ_LIMIT 0x7ffff000
@@ -38,7 +39,7 @@ XOCEAN_IMPL(xocean_file_open)(
     {
         return __xocean_file_handle_open_error(); 
     }
-    *((xocean_intmax_t *)file) = fd;
+    __xocean_write_ptr_as_int(file , fd);
     return XOCEAN_OK;
 }
 
@@ -46,7 +47,7 @@ XOCEAN_API
 void XOCEAN_IMPL(xocean_file_close)(
     XOceanFile * file
 ){
-    close((int)file);
+    close(__xocean_read_ptr_as_int(file));
 }
 
 XOCEAN_FORCE_INLINE
@@ -55,7 +56,7 @@ xocean_uint32_t xocean_file_read32(
     xocean_byte_t * buf ,
     xocean_size_t   size
 ){
-    read((int)fd , buf , size);
+    read(__xocean_read_ptr_as_int(file) , buf , size);
 }
 
 
@@ -79,7 +80,7 @@ XOCEAN_IMPL(xocean_file_read32)(
         }
         return have_read;
     }
-    have_read += xocean_file_read32((int)file , buf , remain_size);
+    have_read += xocean_file_read32(__xocean_read_ptr_as_int(file) , buf , remain_size);
     return have_read;
 }
 
@@ -114,7 +115,7 @@ XOCEAN_IMPL(xocean_file_seek)(
     xocean_flag32_t     move_method ,
     xocean_offset_t *   current_offset
 ){
-    off_t off = lseek((int)file , desired_offset , move_method);
+    off_t off = lseek(__xocean_read_ptr_as_int(file) , desired_offset , move_method);
     return __xocean_auto_handle_file_seek_error(off , current_offset);
 }
 
@@ -127,7 +128,7 @@ xocean_stat_t XOCEAN_IMPL(xocean_file_alloc)(
     XOceanFile *    file ,
     xocean_size_t   size
 ){
-    switch(posix_fallocate((int)file , 0 , size))
+    switch(posix_fallocate(__xocean_read_ptr_as_int(file) , 0 , size))
     {
         case 0:         return XOCEAN_OK;
         case ENOSPC:    return XOCEAN_DISK_NO_SPACE;

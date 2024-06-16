@@ -1,7 +1,10 @@
 #pragma once
+#define __XOCEAN_LIST_INLINE_IMPL_H__
 
 #include "container_base.h"
 #include "../memory/memory_oper.h"
+
+#include "atomic.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -38,29 +41,47 @@ XOCEAN_IMPL(xocean_list_get_cur)(
     return list->cur->data;
 }
 
+// @brief iterate the list forward from head
+// @param list: the list to be iterated
+// @param p: the pointer to be filled
 #define XOCEAN_LIST_ITERATE_FORWARD(list , p) \
     for(XOceanListNode * ___cur_node = (list)->head ; \
         ___cur_node != NULL ; \
         (p) = ___cur_node->data , ___cur_node = ___cur_node->next)
 
+// @brief iterate the list backward from tail
+// @param list: the list to be iterated
+// @param p: the pointer to be filled
 #define XOCEAN_LIST_ITERATE_BACKWARD(list , p) \
     for(XOceanListNode * ___cur_node = (list)->tail ; \
         ___cur_node != NULL ; \
         (p) = ___cur_node->data , ___cur_node = ___cur_node->prev)
 
+// @brief iterate the list forward from current node
+// @param list: the list to be iterated
+// @param p: the pointer to be filled
 #define XOCEAN_LIST_CUR_ITERATE_FORWARD(list , p) \
     for(XOceanListNode * ___cur_node = (list)->cur ; \
         ___cur_node != NULL ; \
         (p) = ___cur_node->data , ___cur_node = ___cur_node->next)
 
+// @brief iterate the list bacjward from current node 
+// @param list: the list to be iterated
+// @param p: the pointer to be filled
 #define XOCEAN_LIST_CUR_ITERATE_BACKWARD(list , p) \
     for(XOceanListNode * ___cur_node = (list)->cur ; \
         ___cur_node != NULL ; \
         (p) = ___cur_node->data , ___cur_node = ___cur_node->prev)
 
+// @brief iterate the list forward from head
+// @param list: the list to be iterated
+// @param cp: the pointer to be filled
 #define XOCEAN_LIST_CONST_ITERATE_FORWARD(list , cp) \
     XOCEAN_LIST_ITERATE_FORWARD((list) , (const)cp)
 
+// @brief iterate the list backward from tail
+// @param list: the list to be iterated
+// @param cp: the pointer to be filled
 #define XOCEAN_LIST_CONST_ITERATE_BACKWARD(list , cp) \
     XOCEAN_LIST_ITERATE_BACKWARD((list) , (const)cp)
 
@@ -170,17 +191,18 @@ __xocean_list_node_clac_size(
 XOCEAN_FORCE_INLINE
 void
 XOCEAN_IMPL(xocean_list_insert_node_ahead)(
-    XOceanList * list ,
-    XOceanListNode * node
+    XOceanList *        list ,
+    XOceanListNode *    node
 ){
     node->next = list->cur;
-    node->prev = list->prev;
+    node->prev = list->cur->prev;
     list->cur->prev->next = node;
     list->cur->prev = node;
 }
 
+
 XOCEAN_FORCE_INLINE
-bool
+xocean_bool_t
 XOCEAN_IMPL(xocean_list_insert_ahead)(
     XOceanList * list,
     xocean_pointer_t p_element
@@ -194,9 +216,9 @@ XOCEAN_IMPL(xocean_list_insert_ahead)(
         new_node->next = list->cur->next;
         new_node->prev = list->cur;
         list->cur->next = new_node;
-        return true;
+        return xocean_true;
     }
-    return false;
+    return xocean_false;
 }
 
 
@@ -214,7 +236,7 @@ XOCEAN_IMPL(xocean_list_set)(
 }
 
 XOCEAN_FORCE_INLINE
-bool
+xocean_bool_t
 XOCEAN_IMPL(xocean_list_insert_backward)(
     XOceanList * list ,
     xocean_pointer_t p_element
@@ -228,9 +250,9 @@ XOCEAN_IMPL(xocean_list_insert_backward)(
         new_node->next = list->cur;
         new_node->prev = list->cur->prev;
         list->cur->prev = new_node;
-        return true;
+        return xocean_true;
     }
-    return false;
+    return xocean_false;
 }
 
 XOCEAN_FORCE_INLINE
@@ -274,7 +296,7 @@ XOCEAN_IMPL(xocean_list_insert_multiple_backward)(
 }
 
 XOCEAN_FORCE_INLINE
-bool
+xocean_bool_t
 XOCEAN_IMPL(xocean_list_insert_tail)(
     XOceanList *            list ,
     const xocean_pointer_t  element
@@ -291,13 +313,13 @@ XOCEAN_IMPL(xocean_list_insert_tail)(
         list->tail = node;
         list->element_count ++;
         xocean_memory_copy(element , node->data , list->element_size);
-        return true;
+        return xocean_true;
     }
-    return false;
+    return xocean_false;
 }
 
 XOCEAN_FORCE_INLINE
-bool
+xocean_bool_t
 XOCEAN_IMPL(xocean_list_insert_head)(
     XOceanList *            list ,
     const xocean_pointer_t  element
@@ -313,9 +335,9 @@ XOCEAN_IMPL(xocean_list_insert_head)(
         list->head = node;
         list->element_count ++;
         xocean_memory_copy(element , node->data , list->element_size);
-        return true;
+        return xocean_true;
     }
-    return false;
+    return xocean_false;
 }
 
 XOCEAN_FORCE_INLINE
@@ -341,6 +363,33 @@ XOCEAN_IMPL(xocean_list_insert_node_to_tail)(
     node->next = NULL;
     list->tail = node;
 }
+
+void
+XOCEAN_IMPL(xocean_list_insert_node_to_tail_cas)(
+    XOceanList *            list ,
+    XOceanListNode *        new_tail_node
+){
+    XOceanListNode * old_tail = list->tail;
+    while (xocean_atomic_cas(&list->tail , old_tail , new_tail_node))
+    {
+        old_tail = list->tail; 
+        // Keep updating old_tail until the tail of list is no longer changed. 
+    }
+    
+}
+
+void
+XOCEAN_IMPL(xocean_list_insert_node_to_head_cas)(
+    XOceanList *        list ,
+    XOceanListNode *    new_head_node
+){
+    XOceanListNode * old_head = list->head;
+    while (xocean_atomic_cas_strong_noexplicit(&list->head , old_head , new_head_node))
+    {
+        old_head = list->head; 
+        // Keep updating old_head until the head of list is no longer changed. 
+    }
+}   
 
 XOCEAN_FORCE_INLINE
 void
@@ -370,39 +419,53 @@ XOCEAN_IMPL(xocean_list_remove_cur)(
     list->element_count--;
 }
 
-XOCEAN_FORCE_INLINE
 xocean_size_t
 XOCEAN_IMPL(xocean_list_remove_front)(
     XOceanList * list ,
     xocean_size_t count
 ){
     xocean_size_t remove_count = 0;
-    while (list->cur->next && remove_count < count)
+    XOceanListNode * now = list->head->prev , * prev;
+    while (now && remove_count < count)
     {
-        list->cur->next->prev = list->cur;
-        list->cur->next = list->cur->next->next;
-        mi_free(list->cur->next);
-        list->cur = list->cur->next;
-        break;
+        prev = now->prev;
+        mi_free(now);
+        now = prev;
+    }
+    if(now) // Is it not the first node?
+    {
+        list->head->prev = now;
+        now->next = list->head;
+    }
+    else
+    {
+        list->head->prev = NULL;
     }
     list->element_count -= remove_count;
     return remove_count;
 }
 
-XOCEAN_FORCE_INLINE
 xocean_size_t
 XOCEAN_IMPL(xocean_list_remove_backward)(
     XOceanList * list ,
     xocean_size_t count
 ){
     xocean_size_t remove_count = 0;
-    while (list->cur->prev && remove_count < count)
+    XOceanListNode * now = list->cur->next , * next;
+    while (now && remove_count < count)
     {
-        list->cur->prev->next = list->cur;
-        list->cur->prev = list->cur->prev->prev;
-        mi_free(list->cur->prev);
-        list->cur = list->cur->prev;
-        break;
+        next = now->next;
+        mi_free(now);
+        now = next;
+    }
+    if(now) // Is it not the last node?
+    {
+        list->cur->next = now;
+        now->prev = list->cur;
+    }
+    else
+    {
+        list->cur->next = NULL;
     }
     list->element_count -= remove_count;
     return remove_count;
@@ -444,7 +507,6 @@ XOCEAN_IMPL(xocean_list_get_data_size)(
     return list->element_count * (list->element_size + sizeof(XOceanListNode));
 }
 
-XOCEAN_FORCE_INLINE
 xocean_size_t
 XOCEAN_IMPL(xocean_list_move_ahead)(
     XOceanList * list ,
@@ -460,12 +522,10 @@ XOCEAN_IMPL(xocean_list_move_ahead)(
 }
 
 
-
-XOCEAN_FORCE_INLINE
 xocean_size_t
 XOCEAN_IMPL(xocean_list_move_backward)(
-    XOceanList * list ,
-    xocean_size_t count
+    XOceanList *    list ,
+    xocean_size_t   count
 ){
     xocean_size_t move_count = 0;
     while (list->cur->prev && move_count < count)
@@ -509,31 +569,7 @@ XOCEAN_IMPL(xocean_list_destory)(
     (*(list->destructor))(list);
 }
 
-#define xocean_list_init            XOCEAN_INTERFACE(xocean_list_init)
-#define xocean_list_get_element_size \
-        XOCEAN_INTERFACE(xocean_list_get_element_size)
-#define xocean_list_get_element_count \
-        XOCEAN_INTERFACE(xocean_list_get_element_count)
-#define xocean_list_get_data_size   XOCEAN_INTERFACE(xocean_list_get_data_size)
-#define xocean_list_insert_head     XOCEAN_INTERFACE(xocean_list_insert_head)
-#define xocean_list_insert_tail     XOCEAN_INTERFACE(xocean_list_insert_tail)
-#define xocean_list_insert_ahead    XOCEAN_INTERFACE(xocean_list_insert_ahead)
-#define xocean_list_insert_backward XOCEAN_INTERFACE(xocean_list_insert_backward)
-#define xocean_list_insert_multiple_ahead \
-        XOCEAN_INTERFACE(xocean_list_insert_multiple_ahead)
-#define xocean_list_insert_multiple_backward \
-        XOCEAN_INTERFACE(xocean_list_insert_multiple_backward)
-#define xocean_list_remove_head     XOCEAN_INTERFACE(xocean_list_remove_head)
-#define xocean_list_remove_tail     XOCEAN_INTERFACE(xocean_list_remove_tail)
-#define xocean_list_remove_cur      XOCEAN_INTERFACE(xocean_list_remove_cur)
-#define xocean_list_remove_front    XOCEAN_INTERFACE(xocean_list_remove_front)
-#define xocean_list_remove_back     XOCEAN_INTERFACE(xocean_list_remove_back)
-#define xocean_list_remove_all      XOCEAN_INTERFACE(xocean_list_remove_all)
-#define xocean_list_move_ahead      XOCEAN_INTERFACE(xocean_list_move_ahead)
-#define xocean_list_move_backward   XOCEAN_INTERFACE(xocean_list_move_backward)
-#define xocean_list_goto_head       XOCEAN_INTERFACE(xocean_list_goto_head)
-#define xocean_list_goto_tail       XOCEAN_INTERFACE(xocean_list_goto_tail)
-#define xocean_list_destory         XOCEAN_INTERFACE(xocean_list_destory)
+
 
 #if defined(__cplusplus)
 }

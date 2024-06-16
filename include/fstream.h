@@ -3,28 +3,29 @@
 
 #   include "../base.h"
 
-#define XOCEAN_FILE_READ                     (0)
-#define XOCEAN_FILE_WRITE                    (1)
-#define XOCEAN_FILE_READ_WRITE               (2)
-
-#define XOCEAN_FILE_MOVE_FROM_BEGIN          (0)
-#define XOCEAN_FILE_MOVE_FROM_CURRENT        (1)
-#define XOCEAN_FILE_MOVE_FROM_END            (2)
-
-#define XOCEAN_FILE_APPEND                   (1 << 2)
-#define XOCEAN_FILE_CREATE_NEW               (1 << 8)
-#define XOCEAN_FILE_CREATE_ALWAYS            (2 << 8)
-#define XOCEAN_FILE_OPEN_EXISTING            (3 << 8)
-#define XOCEAN_FILE_OPEN_ALWAYS              (4 << 8)
-#define XOCEAN_FILE_OPEN_TRANCATELY          (5 << 8)
-
-#define XOCEAN_FILE_SHARED_READ              (1 << 16)
-#define XOCEAN_FILE_SHARED_WRITE             (2 << 16)
-#define XOCEAN_FILE_SHARED_DELETE            (1 << 16)
-#define XOCEAN_FILE_NO_CACHING               (1 << 11)
-#define XOCEAN_FILE_SEQUENTIAL               (1 << 12)
-#define XOCEAN_FILE_DELETE_ON_CLOSE          (1 << 13)
-#define XOCEAN_FILE_RANDOM_ACCESS            (1 << 14)
+// implementation-defined
+// #define XOCEAN_FILE_READ                     (0)
+// #define XOCEAN_FILE_WRITE                    (1)
+// #define XOCEAN_FILE_READ_WRITE               (2)
+// 
+// #define XOCEAN_FILE_MOVE_FROM_BEGIN          (0)
+// #define XOCEAN_FILE_MOVE_FROM_CURRENT        (1)
+// #define XOCEAN_FILE_MOVE_FROM_END            (2)
+// 
+// #define XOCEAN_FILE_APPEND                   (1 << 2)
+// #define XOCEAN_FILE_CREATE_NEW               (1 << 8)
+// #define XOCEAN_FILE_CREATE_ALWAYS            (2 << 8)
+// #define XOCEAN_FILE_OPEN_EXISTING            (3 << 8)
+// #define XOCEAN_FILE_OPEN_ALWAYS              (4 << 8)
+// #define XOCEAN_FILE_OPEN_TRANCATELY          (5 << 8)
+// 
+// #define XOCEAN_FILE_SHARED_READ              (1 << 16)
+// #define XOCEAN_FILE_SHARED_WRITE             (2 << 16)
+// #define XOCEAN_FILE_SHARED_DELETE            (1 << 16)
+// #define XOCEAN_FILE_NO_CACHING               (1 << 11)
+// #define XOCEAN_FILE_SEQUENTIAL               (1 << 12)
+// #define XOCEAN_FILE_DELETE_ON_CLOSE          (1 << 13)
+// #define XOCEAN_FILE_RANDOM_ACCESS            (1 << 14)
 
 
 #if defined(__cplusplus)
@@ -138,3 +139,11 @@ XOCEAN_INTERFACE(xocean_file_get_size)(
 #if defined(__cplusplus)
 }
 #endif // __cplusplus
+
+#if XOCEAN_PLATFORM(WINDOWS)
+#   include "internel/platform_spec/win32/fstream.h"
+#elif XOCEAN_PLATFORM(POSIX)
+#   include "internel/platform_spec/posix/fstream.h"
+#else
+#   error "XOceanLib: File stream interfaces not implemented"
+#endif // 
