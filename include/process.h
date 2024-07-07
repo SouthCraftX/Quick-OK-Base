@@ -1,5 +1,5 @@
 #pragma once
-#define __XOCEAN_PROCESS_H__
+#define __XOC_PROCESS_H__
 
 #include "thread.h"
 
@@ -7,21 +7,21 @@
 extern "C" {
 #endif // __cplusplus
 
-struct _XOceanProcess
+struct _XOCProcess
 {
     HANDLE  process;
 };
-typedef struct _XOceanProcess XOceanProcess;
+typedef struct _XOCProcess XOCProcess;
 
-xocean_stat_t
-XOCEAN_INTERFACE(xocean_process_adjust_priority)(
-    XOceanProcess   process ,
-    enum XOceanThreadPriority   priority
+xoc_stat_t
+XOC_INTERFACE(xoc_process_adjust_priority)(
+    XOCProcess   process ,
+    enum XOC_ThreadPriority   priority
 );
 
-xocean_stat_t
-XOCEAN_INTERFACE(xocean_process_get_priority)(
-    XOceanProcess   process 
+xoc_stat_t
+XOC_INTERFACE(xoc_process_get_priority)(
+    XOCProcess   process 
 );
 
 

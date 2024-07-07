@@ -7,50 +7,50 @@ extern "C" {
 
 #include <libavformat/avformat.h>
 
-struct _XOceanVideoInfo
+struct _XOCVideoInfo
 {
-    xocean_uint16_t width;
-    xocean_uint16_t height;
-    xocean_uint16_t gop_size;
+    xoc_uint16_t width;
+    xoc_uint16_t height;
+    xoc_uint16_t gop_size;
     AVPixelFormat   pix_fmt;
-    xocean_fp64_t   fps;
+    xoc_fp64_t   fps;
     
 };
-typedef struct _XOceanVideoInfo XOceanVideoInfo;
+typedef struct _XOCVideoInfo XOCVideoInfo;
 
-enum _XOceanVideoQualityType
+enum _XOCVideoQualityType
 {
-    XOCEAN_VIDEO_QUALITY_QP,
-    XOCEAN_VIDEO_QUALITY_BITRATE,
-    XOCEAN_VIDEO_QUALITY_CRF
+    XOC_VIDEO_QUALITY_QP,
+    XOC_VIDEO_QUALITY_BITRATE,
+    XOC_VIDEO_QUALITY_CRF
 };
-typedef enum _XOceanVideoQualityType XOceanVideoQualityType;
+typedef enum _XOCVideoQualityType XOCVideoQualityType;
 
-struct _XOceanVideoQuality
+struct _XOCVideoQuality
 {
-    XOceanVideoQualityType  type;
-    xocean_ccstring_t       preset;
-    xocean_ccstring_t       profile;
+    XOCVideoQualityType  type;
+    xoc_ccstring_t       preset;
+    xoc_ccstring_t       profile;
     union 
     {
         struct 
         {
-            xocean_int16_t  qp;
-            xocean_int16_t  min_qp;
-            xocean_int16_t  max_qp;
+            xoc_int16_t  qp;
+            xoc_int16_t  min_qp;
+            xoc_int16_t  max_qp;
         } qp;
         struct
         {
-            xocean_size_t   bitrate;
-            xocean_size_t   max_bitrate;
-            xocean_size_t   min_bitrate;
+            xoc_size_t   bitrate;
+            xoc_size_t   max_bitrate;
+            xoc_size_t   min_bitrate;
         } bitrate;
         struct {
-            xocean_int16_t  crf;
+            xoc_int16_t  crf;
         } crf;
     };
 };
-typedef struct _XOceanVideoQuality XOceanVideoQuality;
+typedef struct _XOCVideoQuality XOCVideoQuality;
 
 
 #if defined(__cplusplus)

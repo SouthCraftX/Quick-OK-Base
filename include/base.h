@@ -8,6 +8,6 @@
 #include "base/fastclac.h"
 #include "base/limit.h"
 
-#if XOCEAN_PLATFORM(WINDOWS)
+#if XOC_PLATFORM(WINDOWS)
 #include "base/win32_common.h"
-#endif // XOCEAN_PLATFORM(WINDOWS)
+#endif // XOC_PLATFORM(WINDOWS)

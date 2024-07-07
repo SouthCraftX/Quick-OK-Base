@@ -4,10 +4,10 @@
 
 
 
-xocean_int32_t
-XOCEAN_IMPL(xocean_crc32c_4k)(
-    xocean_byte_t * buffer ,
-    xocean_size_t   size
+xoc_int32_t
+XOC_IMPL(xoc_crc32c_4k)(
+    xoc_byte_t * buffer ,
+    xoc_size_t   size
 ){
 
 }

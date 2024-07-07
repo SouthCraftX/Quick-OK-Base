@@ -9,58 +9,58 @@
 extern "C" {
 #endif // __cplusplus
 
-struct _XOceanClassBase
+struct _XOCClassBase
 {
-    xocean_stat_t   stat;
-    xocean_flag32_t trait;
+    xoc_stat_t   stat;
+    xoc_flag32_t trait;
 };
 
-typedef _XOceanClassBase XOceanClassBase;
-typedef XOceanClassBase XOceanClass;
+typedef _XOCClassBase XOCClassBase;
+typedef XOCClassBase XOCClass;
 
-XOCEAN_FORCE_INLINE
-void xocean_class_set_stat(XOceanClass * __class, xocean_stat_t stat)
+XOC_FORCE_INLINE
+void xoc_class_set_stat(XOCClass * __class, xoc_stat_t stat)
 {
     __class->stat = stat;
 }
 
-XOCEAN_FORCE_INLINE
-xocean_stat_t xocean_class_get_stat(XOceanClass * __class)
+XOC_FORCE_INLINE
+xoc_stat_t xoc_class_get_stat(XOCClass * __class)
 {
     return __class->stat;
 }
 
-XOCEAN_FORCE_INLINE
-xocean_flag32_t xocean_class_get_trait(XOceanClass * __class)
+XOC_FORCE_INLINE
+xoc_flag32_t xoc_class_get_trait(XOCClass * __class)
 {
     return __class->trait;
 }
 
-XOCEAN_FORCE_INLINE
-void xocean_class_set_trait(XOceanClass * __class, xocean_flag32_t trait)
+XOC_FORCE_INLINE
+void xoc_class_set_trait(XOCClass * __class, xoc_flag32_t trait)
 {
     __class->trait = trait;
 }
 
 enum
 {
-    XOCEAN_CLASS_TYPE_NONE = 0,
-    XOCEAN_CLASS_TYPE_FSTREAM_BASE,
-    XOCEAN_CLASS_TYPE_IFSTREAM,
-    XOCEAN_CLASS_TYPE_IOFSTREAM,
-    XOCEAN_CLASS_TYPE_PIPE,
-    XOCEAN_CLASS_TYPE_MEMPOOL,
-    XOCEAN_CLASS_TYPE_FORWARD_LIST,
-    XOCEAN_CLASS_TYPE_LIST,
-    XOCEAN_CLASS_TYPE_MAP,
-    XOCEAN_CLASS_TYPE_PAIR,
-    XOCEAN_CLASS_TYPE_SET,
-    XOCEAN_CLASS_TYPE_RBTREE,
-    XOCEAN_CLASS_TYPE_ITERATOR_BASE,
-    XOCEAN_CLASS_TYPE_ARRAY_ITERATOR,
-    XOCEAN_CLASS_TYPE_LIST_ITERATOR,
+    XOC_CLASS_TYPE_NONE = 0,
+    XOC_CLASS_TYPE_FSTREAM_BASE,
+    XOC_CLASS_TYPE_IFSTREAM,
+    XOC_CLASS_TYPE_IOFSTREAM,
+    XOC_CLASS_TYPE_PIPE,
+    XOC_CLASS_TYPE_MEMPOOL,
+    XOC_CLASS_TYPE_FORWARD_LIST,
+    XOC_CLASS_TYPE_LIST,
+    XOC_CLASS_TYPE_MAP,
+    XOC_CLASS_TYPE_PAIR,
+    XOC_CLASS_TYPE_SET,
+    XOC_CLASS_TYPE_RBTREE,
+    XOC_CLASS_TYPE_ITERATOR_BASE,
+    XOC_CLASS_TYPE_ARRAY_ITERATOR,
+    XOC_CLASS_TYPE_LIST_ITERATOR,
 
-} XOCEAN_CLASS_TYPE;
+} XOC_CLASS_TYPE;
 
 #if defined(__cplusplus)
 }

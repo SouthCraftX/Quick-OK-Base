@@ -9,10 +9,10 @@
 extern "C" {
 #endif // __forceinline
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 bool
-__xocean_win32_utf8_path_to_wcpath(
-    xocean_ccstring_t   source ,
+__xoc_win32_utf8_path_to_wcpath(
+    xoc_ccstring_t   source ,
     wchar_t *           target 
 ){
     return MultiByteToWideChar(CP_UTF8 , 0 , source , -1 , target , 0);

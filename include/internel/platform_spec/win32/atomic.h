@@ -2,8 +2,8 @@
 
 #include "../../atomic.h" // for debug
 
-#if !defined(__XOCEAN_ATOMIC_H__)
-#   error "Never include this header directly! Use <xocean/atomic.h> instead."alignas
+#if !defined(__XOC_ATOMIC_H__)
+#   error "Never include this header directly! Use <xoc/atomic.h> instead."alignas
 #endif 
 
 #include <winnt.h>  // It provides the atomic operations.

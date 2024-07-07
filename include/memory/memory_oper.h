@@ -6,105 +6,105 @@ extern "C" {
 #endif // __cplusplus
 
 void
-XOCEAN_INTERFACE(xocean_memory_copy)(
-    xocean_pointer_t    source ,
-    xocean_pointer_t    destination ,
-    xocean_size_t       size
+XOC_INTERFACE(xoc_memory_copy)(
+    xoc_pointer_t    source ,
+    xoc_pointer_t    destination ,
+    xoc_size_t       size
 );
 
 void
-XOCEAN_INTERFACE(xocean_memory_copy_align16)(
-    xocean_pointer_t    source ,
-    xocean_pointer_t    destination ,
-    xocean_size_t       size
+XOC_INTERFACE(xoc_memory_copy_align16)(
+    xoc_pointer_t    source ,
+    xoc_pointer_t    destination ,
+    xoc_size_t       size
 );
 
 void
-XOCEAN_INTERFACE(xocean_memory_copy_align32)(
-    xocean_pointer_t    source ,
-    xocean_pointer_t    destination ,
-    xocean_size_t       size
+XOC_INTERFACE(xoc_memory_copy_align32)(
+    xoc_pointer_t    source ,
+    xoc_pointer_t    destination ,
+    xoc_size_t       size
 );
 
 void
-XOCEAN_INTERFACE(xocean_memory_clear)(
-    xocean_pointer_t    destination ,
-    xocean_size_t       size
+XOC_INTERFACE(xoc_memory_clear)(
+    xoc_pointer_t    destination ,
+    xoc_size_t       size
 );
 
 void
-XOCEAN_INTERFACE(xocean_memory_clear_align16)(
-    xocean_pointer_t    destination ,
-    xocean_size_t       size
+XOC_INTERFACE(xoc_memory_clear_align16)(
+    xoc_pointer_t    destination ,
+    xoc_size_t       size
 );
 
 void
-XOCEAN_INTERFACE(xocean_memory_clear_align32)(
-    xocean_pointer_t    destination ,
-    xocean_size_t       size
+XOC_INTERFACE(xoc_memory_clear_align32)(
+    xoc_pointer_t    destination ,
+    xoc_size_t       size
 );
 
 void
-XOCEAN_INTERFACE(xocean_memory_set_nonzero)(
-    xocean_pointer_t    destination ,
-    xocean_size_t       size ,
-    xocean_uint8_t      value
+XOC_INTERFACE(xoc_memory_set_nonzero)(
+    xoc_pointer_t    destination ,
+    xoc_size_t       size ,
+    xoc_uint8_t      value
 );
 
 void
-XOCEAN_INTERFACE(xocean_memory_set_nonzero_align16)(
-    xocean_pointer_t    target ,
-    xocean_uint64_t     value[2] ,
-    xocean_size_t       size
+XOC_INTERFACE(xoc_memory_set_nonzero_align16)(
+    xoc_pointer_t    target ,
+    xoc_uint64_t     value[2] ,
+    xoc_size_t       size
 );
 
 void
-XOCEAN_INTERFACE(xocean_memory_set_nonzero_align32)(
-    xocean_pointer_t    target ,
-    xocean_uint64_t     value[4] ,
-    xocean_size_t       size
+XOC_INTERFACE(xoc_memory_set_nonzero_align32)(
+    xoc_pointer_t    target ,
+    xoc_uint64_t     value[4] ,
+    xoc_size_t       size
 );
 
 void
-XOCEAN_INTERFACE(xocean_memory_move)(
-    xocean_pointer_t    addr ,
-    xocean_size_t       size ,
-    xocean_offset_t     offset
+XOC_INTERFACE(xoc_memory_move)(
+    xoc_pointer_t    addr ,
+    xoc_size_t       size ,
+    xoc_offset_t     offset
 );
 
 void
-XOCEAN_INTERFACE(xocean_memory_move_align16)(
-    xocean_pointer_t    addr ,
-    xocean_size_t       size ,
-    xocean_offset_t     offset
+XOC_INTERFACE(xoc_memory_move_align16)(
+    xoc_pointer_t    addr ,
+    xoc_size_t       size ,
+    xoc_offset_t     offset
 );
 
 void
-XOCEAN_INTERFACE(xocean_memory_move_align32)(
-    xocean_pointer_t    addr ,
-    xocean_size_t       size ,
-    xocean_offset_t     offset
+XOC_INTERFACE(xoc_memory_move_align32)(
+    xoc_pointer_t    addr ,
+    xoc_size_t       size ,
+    xoc_offset_t     offset
 );
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 void
-XOCEAN_INTERFACE(xocean_memory_set)(
-    xocean_pointer_t    destination ,
-    xocean_size_t       size ,
-    xocean_uint8_t      value
+XOC_INTERFACE(xoc_memory_set)(
+    xoc_pointer_t    destination ,
+    xoc_size_t       size ,
+    xoc_uint8_t      value
 ){
-    value ? XOCEAN_INTERFACE(xocean_memory_set_nonzero)(destination , size , value) :
-            XOCEAN_INTERFACE(xocean_memory_clear)(destination , size);
+    value ? XOC_INTERFACE(xoc_memory_set_nonzero)(destination , size , value) :
+            XOC_INTERFACE(xoc_memory_clear)(destination , size);
 }
 
-#define xocean_memory_copy  XOCEAN_INTERFACE(xocean_memory_copy)
-#define xocean_memory_copy_align16  XOCEAN_INTERFACE(xocean_memory_copy_align16)
-#define xocean_memory_copy_align32  XOCEAN_INTERFACE(xocean_memory_copy_align32)
-#define xocean_memory_clear XOCEAN_INTERFACE(xocean_memory_clear)
-#define xocean_memory_clear_align16 XOCEAN_INTERFACE(xocean_memory_clear)
-#define xocean_memory_clear_align32 XOCEAN_INTERFACE(xocean_memory_clear)
-#define xocean_memory_set   XOCEAN_INTERFACE(xocean_memory_set)
-#define xocean_memory_set_nonzero   XOCEAN_INTERFACE(xocean_memory_set_nonzero)
+#define xoc_memory_copy  XOC_INTERFACE(xoc_memory_copy)
+#define xoc_memory_copy_align16  XOC_INTERFACE(xoc_memory_copy_align16)
+#define xoc_memory_copy_align32  XOC_INTERFACE(xoc_memory_copy_align32)
+#define xoc_memory_clear XOC_INTERFACE(xoc_memory_clear)
+#define xoc_memory_clear_align16 XOC_INTERFACE(xoc_memory_clear)
+#define xoc_memory_clear_align32 XOC_INTERFACE(xoc_memory_clear)
+#define xoc_memory_set   XOC_INTERFACE(xoc_memory_set)
+#define xoc_memory_set_nonzero   XOC_INTERFACE(xoc_memory_set_nonzero)
 
 #if defined(__cplusplus)
 }

@@ -1,37 +1,129 @@
 #pragma once
-#define __XOCEAN_POSIX_FSTREAM_H__
+#define __XOC_POSIX_FSTREAM_H__
 
-#if XOCEAN_PLATFORM(LINUX)
-#   include <unistd.h>
+#if !defined(__XOC_FSTREAM_H__)
+#   error "Never include this header file directly. Use <xoc/fstream.h> instead."
+#endif
 
-xocean_stat_t xocean_fstream_prealloc(
-    XOceanIOFStream * stream , 
-    xocean_size_t size
+#include <unistd.h>
+#include "common.h"
+
+#define XOC_FILE_READONLY    O_RDONLY
+#define XOC_FILE_WRITEONLY   O_WRONLY
+#define XOC_FILE_READWRITE   O_RDWR
+#define XOC_FILE_APPEND      O_APPEND
+#define XOC_FILE_TRUNCATE    O_TRUNC
+#define XOC_FILE_AUTO_CREATE O_CREAT
+#define XOC_FILE_EXISING     O_EXCL
+
+#define __XOC_POSIX_ONCE_READ_LIMIT 0x7ffff000
+
+xoc_stat_t 
+XOC_IMPL(xoc_file_open)(
+    XOC_File **       file ,
+    xoc_ccstring_t   path ,
+    xoc_flag32_t     mode 
 ){
-    switch(fallocate((int)((XOceanFileStreamBase *)stream->handle) , 0 , 0 , size))
+    int fd = open(path , mode);
+    if(fd == -1)
     {
-
-        case 0:         return XOCEAN_OK;
-        case EBADF:     return XOCEAN_INVALID_HANDLE;
-        case EINVAL:    return XOCEAN_INVALID_ARG;
-        case EFBIG:     return XOCEAN_FILE_TOO_BIG;
-        case ENOSPC:    return XOCEAN_DISK_NO_SPACE;
-        case ESPIPE:    return XOCEAN_BAD_TYPE;
-        case EIO:       return XOCEAN_BROKEN_DEVICE;
-        case ENOTSUP:
-            return XOCEAN_NOT_SUPPORTED;
-        case EINPR:
-            return XOCEAN_SIGNAL_INTERRUPTED;
-        default:
-            return XOCEAN_UNKNOWN;
+        return __xoc_file_handle_open_error(); 
     }
+    __xoc_write_ptr_as_int(file , fd);
+    return XOC_OK;
 }
 
-#elif XOCEAN_PLATFORM(WINDOWS)
+XOC_FORCE_INLINE
+void 
+XOC_IMPL(xoc_file_close)(
+    XOC_File * file
+){
+    close(__xoc_read_ptr_as_int(file));
+}
+
+XOC_FORCE_INLINE
+xoc_uint32_t 
+__xoc_file_read32(
+    XOC_File *    file ,
+    xoc_byte_t * buf ,
+    xoc_size_t   size
+){
+    read(__xoc_read_ptr_as_int(file) , buf , size);
+}
+
+xoc_size_t 
+XOC_IMPL(__xoc_file_read32)(
+    XOC_File *        file ,
+    xoc_byte_t *     buf ,
+    xoc_size_t       size
+){
+    xoc_size_t remain_size = size , have_read = 0 , once_read;
+    for (; remain_size >= __XOC_POSIX_ONCE_READ_LIMIT; 
+           remain_size -= __XOC_POSIX_ONCE_READ_LIMIT
+    ){
+        once_read = __xoc_file_read32(file , buf , __XOC_POSIX_ONCE_READ_LIMIT);
+        if(once_read)
+        {
+            xoc_file_auto_handle_read_error(file , once_read);
+            buf += once_read;
+            have_read += once_read;
+        }
+        return have_read;
+    }
+    have_read += __xoc_file_read32(__xoc_read_ptr_as_int(file) , buf , remain_size);
+    return have_read;
+}
+
+XOC_FORCE_INLINE 
+xoc_stat_t 
+__xoc_auto_handle_file_seek_error(
+    off_t               offset ,
+    xoc_offset_t *   current_offset
+){
+    if (offset == -1)
+    {
+        switch (offset)
+        {
+            case EINVAL:
+            case EOVERFLOW: return XOC_INVALID_ARG;
+            case EBADF:     return XOC_INVALID_HANDLE;
+            case ESPIPE:    return XOC_BAD_TYPE;
+        }
+    }
+
+    if(current_offset)
+        *current_offset = offset;
+
+    return XOC_OK;
+}
+
+XOC_FORCE_INLINE
+xoc_stat_t
+XOC_IMPL(xoc_file_seek)(
+    XOC_File *        file ,
+    xoc_offset_t     desired_offset ,
+    xoc_flag32_t     move_method ,
+    xoc_offset_t *   current_offset
+){
+    off_t off = lseek(__xoc_read_ptr_as_int(file) , desired_offset , move_method);
+    return __xoc_auto_handle_file_seek_error(off , current_offset);
+}
+
+XOC_FORCE_INLINE
+xoc_stat_t 
+XOC_IMPL(xoc_fstream_prealloc)(
+    XOC_File *    file , 
+    xoc_size_t   size
+){
+    return fallocate(__xoc_read_ptr_as_int(file) , 0 , 0 , size) ? 
+           __xoc_file_prealloc_error() : XOC_OK;
+}
+
+#if 0
 
 #   include <WinBase.h>
 
-xocean_stat_t xocean_fstream_prealloc_handle_error()
+xoc_stat_t xoc_fstream_prealloc_handle_error()
 {
     switch (GetLastError())
     {
@@ -41,56 +133,58 @@ xocean_stat_t xocean_fstream_prealloc_handle_error()
         case ERROR_BAD_ARGUMENTS:
         case ERROR_FILE_NOT_FOUND:
         case ERROR_INVALID_HANDLE_STATE:
-            return XOCEAN_INVALID_ARG;
+            return XOC_INVALID_ARG;
 
         case ERROR_NOT_ENOUGH_MEMORY:
-            return XOCEAN_OUT_OF_MEMORY;
+            return XOC_OUT_OF_MEMORY;
 
         case ERROR_ACCESS_DENIED:
         case ERROR_SHARING_VIOLATION:
         case ERROR_PRIVILEGE_NOT_HELD:
-            return XOCEAN_PERMISSION_DENIED;
+            return XOC_PERMISSION_DENIED;
 
         case ERROR_BAD_FILE_TYPE:
-            return XOCEAN_BAD_TYPE;
+            return XOC_BAD_TYPE;
 
         case ERROR_FILE_OPERATION_ABORTED:
-            return XOCEAN_SIGNAL_INTERRUPTED;
+            return XOC_SIGNAL_INTERRUPTED;
 
         case ERROR_VOLUME_FULL:
         case ERROR_VOLUME_QUOTA_EXCEEDED:
-            return XOCEAN_DISK_NO_SPACE;
+            return XOC_DISK_NO_SPACE;
 
         case ERROR_HANDLE_TIMEOUT:
-            return XOCEAN_TIMEOUT;
+            return XOC_TIMEOUT;
 
         case ERROR_PIPE_BUSY:
-            return XOCEAN_BUSY;
+            return XOC_BUSY;
 
         case ERROR_INSUFFICIENT_BUFFER:
-            XOCEAN_BUG(0);
+            XOC_BUG(0);
 
         default:
-            return XOCEAN_UNKNOWN;
+            return XOC_UNKNOWN;
     }
 }
 
-xocean_stat_t xocean_fstream_prealloc(
-    XOceanIOFStream * stream , 
-    xocean_size_t size
+#if 0
+xoc_stat_t xoc_fstream_prealloc(
+    XOCIOFStream * stream , 
+    xoc_size_t size
 ){
     FILE_ALLOCATE_INFORMATION falloc_info;
-#   if XOCEAN_SYSTEM_BIT(64)
+#   if XOC_SYSTEM_BIT(64)
     falloc_info.AllocationSize.QuadPart = size;
 #   else
     falloc_info.AllocationSize.LowPart = size;
     falloc_info.AllocationSize.HighPart = 0;
-#   endif // XOCEAN_SYSTEM_BIT
-    return SetFileInformationByHandle((HANDLE)(((XOceanFileStreamBase*)stream)->handle) , 
+#   endif // XOC_SYSTEM_BIT
+    return SetFileInformationByHandle((HANDLE)(((XOC_FileStreamBase*)stream)->handle) , 
                                FileAllocationInfo , &falloc_info , 
-                               sizeof(falloc_info)) ? XOCEAN_OK :
-                               xocean_fstream_prealloc_handle_error();
+                               sizeof(falloc_info)) ? XOC_OK :
+                               xoc_fstream_prealloc_handle_error();
 
 }
+#endif
 
-#endif // XOCEAN_PLATFORM
+#endif // XOC_PLATFORM

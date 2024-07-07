@@ -3,49 +3,49 @@
 #include "../base.h"
 #include <mimalloc.h>
 
-#define XOCEAN_CONTAINER_PRIVATE_HEAP  (1)
-#define XOCEAN_CONTAINER_NO_PREALLOC   (1 << 1)
+#define XOC_CONTAINER_PRIVATE_HEAP  (1)
+#define XOC_CONTAINER_NO_PREALLOC   (1 << 1)
 
-union _XOceanContainerInfo
+union _XOCContainerInfo
 {
-    xocean_stat_t i32;
+    xoc_stat_t i32;
     struct 
     {
-        xocean_uint16_t trait;
-        xocean_uint16_t type;
+        xoc_uint16_t trait;
+        xoc_uint16_t type;
     };
 };
-typedef union _XOceanContainerInfo XOceanContainerInfo;
+typedef union _XOCContainerInfo XOCContainerInfo;
 
-XOCEAN_GLOBAL_LOCAL xocean_size_t _xocean_container_init_alloc_element_count;
+XOC_GLOBAL_LOCAL xoc_size_t _xoc_container_init_alloc_element_count;
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 void
-XOCEAN_IMPL(xocean_set_container_init_alloc_element_count)(
-    xocean_size_t count
+XOC_IMPL(xoc_set_container_init_alloc_element_count)(
+    xoc_size_t count
 ){
-    _xocean_container_init_alloc_element_count = count;
+    _xoc_container_init_alloc_element_count = count;
 }
 
-XOCEAN_FORCE_INLINE
-xocean_size_t
-XOCEAN_IMPL(xocean_get_container_init_alloc_element_count)()
+XOC_FORCE_INLINE
+xoc_size_t
+XOC_IMPL(xoc_get_container_init_alloc_element_count)()
 {
-    return _xocean_container_init_alloc_element_count;
+    return _xoc_container_init_alloc_element_count;
 }
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 mi_heap_t *
-__xocean_container_acquire_heap(
-    xocean_stat_t mode_from_new
+__xoc_container_acquire_heap(
+    xoc_stat_t mode_from_new
 ){
-    return XOCEAN_HAS_FLAG(mode_from_new , XOCEAN_CONTAINER_PRIVATE_HEAP) ?
+    return XOC_HAS_FLAG(mode_from_new , XOC_CONTAINER_PRIVATE_HEAP) ?
             mi_heap_new() : mi_heap_get_default();
     
 }
 
-#define xocean_set_container_init_alloc_element_count(count) \
-    XOCEAN_INTERFACE(xocean_set_container_init_alloc_element_count)(count)
+#define xoc_set_container_init_alloc_element_count(count) \
+    XOC_INTERFACE(xoc_set_container_init_alloc_element_count)(count)
 
-#define xocean_get_container_init_alloc_element_count() \
-    XOCEAN_INTERFACE(xocean_get_container_init_alloc_element_count)()
+#define xoc_get_container_init_alloc_element_count() \
+    XOC_INTERFACE(xoc_get_container_init_alloc_element_count)()

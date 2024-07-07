@@ -1,21 +1,21 @@
 #pragma once
-#define __XOCEAN_LIST_H__
+#define __XOC_LIST_H__
 
 #include "base.h"
 
-struct _XOceanList;
-struct _XOceanListNode;
-typedef struct _XOceanListNode XOceanListNode;
-typedef struct _XOceanList XOceanList;
+struct _XOC_List;
+struct _XOC_ListNode;
+typedef struct _XOC_ListNode XOC_ListNode;
+typedef struct _XOC_List XOC_List;
 
 #if defined(__cplusplus)
 extern "C" {
 #endif // __cplusplus
 
-XOCEAN_FORCE_INLINE
-xocean_pointer_t
-XOCEAN_INTERFACE(xocean_list_get_cur)(
-    XOceanList * list
+XOC_FORCE_INLINE
+xoc_pointer_t
+XOC_INTERFACE(xoc_list_get_cur)(
+    XOC_List * list
 );
 
 #if defined(__cplusplus)
@@ -24,28 +24,28 @@ XOCEAN_INTERFACE(xocean_list_get_cur)(
 
 #include "internel/container/inline_impl/list.h"
 
-#define xocean_list_init            XOCEAN_INTERFACE(xocean_list_init)
-#define xocean_list_get_element_size \
-        XOCEAN_INTERFACE(xocean_list_get_element_size)
-#define xocean_list_get_element_count \
-        XOCEAN_INTERFACE(xocean_list_get_element_count)
-#define xocean_list_get_data_size   XOCEAN_INTERFACE(xocean_list_get_data_size)
-#define xocean_list_insert_head     XOCEAN_INTERFACE(xocean_list_insert_head)
-#define xocean_list_insert_tail     XOCEAN_INTERFACE(xocean_list_insert_tail)
-#define xocean_list_insert_ahead    XOCEAN_INTERFACE(xocean_list_insert_ahead)
-#define xocean_list_insert_backward XOCEAN_INTERFACE(xocean_list_insert_backward)
-#define xocean_list_insert_multiple_ahead \
-        XOCEAN_INTERFACE(xocean_list_insert_multiple_ahead)
-#define xocean_list_insert_multiple_backward \
-        XOCEAN_INTERFACE(xocean_list_insert_multiple_backward)
-#define xocean_list_remove_head     XOCEAN_INTERFACE(xocean_list_remove_head)
-#define xocean_list_remove_tail     XOCEAN_INTERFACE(xocean_list_remove_tail)
-#define xocean_list_remove_cur      XOCEAN_INTERFACE(xocean_list_remove_cur)
-#define xocean_list_remove_front    XOCEAN_INTERFACE(xocean_list_remove_front)
-#define xocean_list_remove_back     XOCEAN_INTERFACE(xocean_list_remove_back)
-#define xocean_list_remove_all      XOCEAN_INTERFACE(xocean_list_remove_all)
-#define xocean_list_move_ahead      XOCEAN_INTERFACE(xocean_list_move_ahead)
-#define xocean_list_move_backward   XOCEAN_INTERFACE(xocean_list_move_backward)
-#define xocean_list_goto_head       XOCEAN_INTERFACE(xocean_list_goto_head)
-#define xocean_list_goto_tail       XOCEAN_INTERFACE(xocean_list_goto_tail)
-#define xocean_list_destory         XOCEAN_INTERFACE(xocean_list_destory)
+#define xoc_list_init            XOC_INTERFACE(xoc_list_init)
+#define xoc_list_get_element_size \
+        XOC_INTERFACE(xoc_list_get_element_size)
+#define xoc_list_get_element_count \
+        XOC_INTERFACE(xoc_list_get_element_count)
+#define xoc_list_get_data_size   XOC_INTERFACE(xoc_list_get_data_size)
+#define xoc_list_insert_head     XOC_INTERFACE(xoc_list_insert_head)
+#define xoc_list_insert_tail     XOC_INTERFACE(xoc_list_insert_tail)
+#define xoc_list_insert_ahead    XOC_INTERFACE(xoc_list_insert_ahead)
+#define xoc_list_insert_backward XOC_INTERFACE(xoc_list_insert_backward)
+#define xoc_list_insert_multiple_ahead \
+        XOC_INTERFACE(xoc_list_insert_multiple_ahead)
+#define xoc_list_insert_multiple_backward \
+        XOC_INTERFACE(xoc_list_insert_multiple_backward)
+#define xoc_list_remove_head     XOC_INTERFACE(xoc_list_remove_head)
+#define xoc_list_remove_tail     XOC_INTERFACE(xoc_list_remove_tail)
+#define xoc_list_remove_cur      XOC_INTERFACE(xoc_list_remove_cur)
+#define xoc_list_remove_front    XOC_INTERFACE(xoc_list_remove_front)
+#define xoc_list_remove_back     XOC_INTERFACE(xoc_list_remove_back)
+#define xoc_list_remove_all      XOC_INTERFACE(xoc_list_remove_all)
+#define xoc_list_move_ahead      XOC_INTERFACE(xoc_list_move_ahead)
+#define xoc_list_move_backward   XOC_INTERFACE(xoc_list_move_backward)
+#define xoc_list_goto_head       XOC_INTERFACE(xoc_list_goto_head)
+#define xoc_list_goto_tail       XOC_INTERFACE(xoc_list_goto_tail)
+#define xoc_list_destory         XOC_INTERFACE(xoc_list_destory)

@@ -1,5 +1,5 @@
 #pragma once
-#define __XOCEAN_THREAD_H__
+#define __XOC_THREAD_H__
 
 #include "../base.h"
 
@@ -7,97 +7,97 @@
 extern "C" {
 #endif // __cplusplus
 
-struct _XOceanThread;
-typedef struct _XOceanThread XOceanThread;
+struct _XOC_Thread;
+typedef struct _XOC_Thread XOC_Thread;
 
-typedef xocean_flag8_t xocean_priority_t;
+typedef xoc_flag8_t xoc_priority_t;
 
-enum XOceanThreadPriority{
-    XOCEAN_THREAD_PRIORITY_LOWEST = 0,
-    XOCEAN_THREAD_PRIORITY_LOW,
-    XOCEAN_THREAD_PRIORITY_NORMAL,
-    XOCEAN_THREAD_PRIORITY_HIGH,
-    XOCEAN_THREAD_PRIORITY_HIGHEST,
-    XOCEAN_THREAD_PRIORITY_CRAZY
+enum XOC_ThreadPriority{
+    XOC_THREAD_PRIORITY_LOWEST = 0,
+    XOC_THREAD_PRIORITY_LOW,
+    XOC_THREAD_PRIORITY_NORMAL,
+    XOC_THREAD_PRIORITY_HIGH,
+    XOC_THREAD_PRIORITY_HIGHEST,
+    XOC_THREAD_PRIORITY_CRAZY
 };
 
-xocean_stat_t
-XOCEAN_INTERFACE(xocean_thread_create)(
-    XOceanThread*       thread ,
-    const xocean_pointer_t    func , 
-    const xocean_pointer_t    arg ,
-    const xocean_size_t       stack_size
-);
+xoc_stat_t
+XOC_INTERFACE(xoc_thread_create)(
+    XOC_Thread **         thread ,
+    xoc_pointer_t        func , 
+    xoc_pointer_t        arg ,
+    xoc_size_t           stack_size
+) XOC_NONNULL(1 , 2);
 
-xocean_stat_t
-XOCEAN_INTERFACE(xocean_thread_join)(
-    XOceanThread   thread 
-);
+xoc_stat_t
+XOC_INTERFACE(xoc_thread_join)(
+    XOC_Thread * thread 
+) XOC_NONNULL(1);
 
-xocean_stat_t
-XOCEAN_INTERFACE(xocean_thread_multijoin)(
-    XOceanThread *  thread_array ,
-    xocean_size_t   count    
-);
-
-void
-XOCEAN_INTERFACE(xocean_thread_exit)(
-    xocean_stat_t exit_code
-);
-
-XOceanThread
-XOCEAN_INTERFACE(xocean_thread_self)();
-
-void
-XOCEAN_INTERFACE(xocean_thread_yield)();
-
-xocean_stat_t
-XOCEAN_INTERFACE(xocean_thread_suspend)(
-    XOceanThread   thread
+xoc_stat_t
+XOC_INTERFACE(xoc_thread_multijoin)(
+    XOC_Thread *  thread_array ,
+    xoc_size_t   count    
 );
 
 void
-XOCEAN_INTERFACE(xocean_thread_sleep_milliseconds)(
-    const xocean_uint32_t milliseconds
+XOC_INTERFACE(xoc_thread_exit)(
+    xoc_stat_t exit_code
+);
+
+XOC_Thread
+XOC_INTERFACE(xoc_thread_self)();
+
+void
+XOC_INTERFACE(xoc_thread_yield)();
+
+xoc_stat_t
+XOC_INTERFACE(xoc_thread_suspend)(
+    XOC_Thread *  thread
 );
 
 void
-XOCEAN_INTERFACE(xocean_thread_sleep_microseconds)(
-    const xocean_size_t microseconds
+XOC_INTERFACE(xoc_thread_sleep_milliseconds)(
+    xoc_uint32_t milliseconds
 );
 
 void
-XOCEAN_INTERFACE(xocean_thread_sleep_nanoseconds)(
-    const xocean_size_t nanoseconds
+XOC_INTERFACE(xoc_thread_sleep_microseconds)(
+    const xoc_size_t microseconds
 );
 
 void
-XOCEAN_INTERFACE(xocean_thread_destory)(
-    XOceanThread * thread
+XOC_INTERFACE(xoc_thread_sleep_nanoseconds)(
+    const xoc_size_t nanoseconds
 );
 
-xocean_stat_t
-XOCEAN_INTERFACE(xocean_thread_kill)(
+void
+XOC_INTERFACE(xoc_thread_destory)(
+    XOC_Thread * thread
+);
+
+xoc_stat_t
+XOC_INTERFACE(xoc_thread_kill)(
 
 );
 
-xocean_stat_t
-XOCEAN_INTERFACE(xocean_thread_get_exit_code)(
-    XOceanThread  thread 
-);
+xoc_stat_t
+XOC_INTERFACE(xoc_thread_get_exit_code)(
+    XOC_Thread *  thread 
+) XOC_NONNULL(1);
 
 bool
-XOCEAN_INTERFACE(xocean_thread_is_equal)(
-    const XOceanThread    x ,
-    const XOceanThread    y
-);
+XOC_INTERFACE(xoc_thread_is_equal)(
+    const XOC_Thread *    x ,
+    const XOC_Thread *    y
+) XOC_NONNULL(1 , 2);
 
 #if defined(__cplusplus)
 }
 #endif // __cplusplus
 
-#if XOCEAN_PLATFORM(WINDOWS)
+#if XOC_PLATFORM(WINDOWS)
 #   include "platform_spec/win32/thread.h"
-#elif XOCEAN_PLATFORM(POSIX)
+#elif XOC_PLATFORM(POSIX)
 #   include "platform_spec/posix/thread.h"
-#endif // XOCEAN_PLATFORM
+#endif // XOC_PLATFORM

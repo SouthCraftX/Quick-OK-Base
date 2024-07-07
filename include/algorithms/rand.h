@@ -6,38 +6,38 @@
 extern "C" {
 #endif // __cplusplus
 
-xocean_int32_t
-XOCEAN_INTERFACE(xocean_rand32)(
-    xocean_int32_t min ,
-    xocean_int32_t max
+xoc_int32_t
+XOC_INTERFACE(xoc_rand32)(
+    xoc_int32_t min ,
+    xoc_int32_t max
 );
 
-xocean_int64_t
-XOCEAN_INTERFACE(xocean_rand64)(
-    xocean_int64_t min ,
-    xocean_int64_t max
-);
-
-void
-XOCEAN_INTERFACE(xocean_rand_string)(
-    xocean_cstring_t    target_str ,
-    xocean_size_t       target_str_len ,
-    xocean_ccstring_t   char_set ,
-    xocean_size_t       char_set_len
+xoc_int64_t
+XOC_INTERFACE(xoc_rand64)(
+    xoc_int64_t min ,
+    xoc_int64_t max
 );
 
 void
-XOCEAN_INTERFACE(xocean_sys_rand_buf)(
-    xocean_pointer_t    buf , 
-    xocean_size_t       len
+XOC_INTERFACE(xoc_rand_string)(
+    xoc_cstring_t    target_str ,
+    xoc_size_t       target_str_len ,
+    xoc_ccstring_t   char_set ,
+    xoc_size_t       char_set_len
 );
 
 void
-XOCEAN_INTERFACE(xocean_rand_string_utf8)(
-    xocean_cstring_t    target_str ,
-    xocean_size_t       target_str_len ,
-    xocean_ccstring_t   char_set ,
-    xocean_size_t       char_set_len
+XOC_INTERFACE(xoc_sys_rand_buf)(
+    xoc_pointer_t    buf , 
+    xoc_size_t       len
+);
+
+void
+XOC_INTERFACE(xoc_rand_string_utf8)(
+    xoc_cstring_t    target_str ,
+    xoc_size_t       target_str_len ,
+    xoc_ccstring_t   char_set ,
+    xoc_size_t       char_set_len
 );
 
 #if defined(__cplusplus)

@@ -7,24 +7,24 @@
 extern "C" {
 #endif // __cplusplus    
 
-struct _XOceanCanvas
+struct _XOCCanvas
 {
     SDL_Surface * surface;
 };
-typedef struct _XOceanCanvas XOceanCanvas;
+typedef struct _XOCCanvas XOCCanvas;
 
-XOCEAN_FORCE_INLINE
-xocean_size_t
-xocean_canvas_get_width(
-    XOceanCanvas * canvas
+XOC_FORCE_INLINE
+xoc_size_t
+xoc_canvas_get_width(
+    XOCCanvas * canvas
 ){
     return canvas->surface->w;
 }
 
-XOCEAN_FORCE_INLINE
-xocean_size_t
-xocean_canvas_get_height(
-    XOceanCanvas * canvas
+XOC_FORCE_INLINE
+xoc_size_t
+xoc_canvas_get_height(
+    XOCCanvas * canvas
 ){
     return canvas->surface->h;
 }

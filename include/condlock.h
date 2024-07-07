@@ -1,5 +1,5 @@
 #pragma once
-#define __XOCEAN_CONDLOCK_H__
+#define __XOC_CONDLOCK_H__
 
 #include "base.h"
 
@@ -8,42 +8,42 @@ extern "C" {
 #endif // __cplusplus
 
 
-struct _XOceanCondLock;
-typedef struct _XOceanCondLock XOceanCondLock;
+struct _XOC_CondLock;
+typedef struct _XOC_CondLock XOC_CondLock;
 
 void 
-XOCEAN_INTERFACE(xocean_condlock_init)(
-    XOceanCondLock * lock
+XOC_INTERFACE(xoc_condlock_init)(
+    XOC_CondLock * lock
 );
 
 void 
-XOCEAN_INTERFACE(xocean_condlock_lock)(
-    XOceanCondLock * lock
+XOC_INTERFACE(xoc_condlock_lock)(
+    XOC_CondLock * lock
 );
 
 void 
-XOCEAN_INTERFACE(xocean_condlock_unlock)(
-    XOceanCondLock * lock
+XOC_INTERFACE(xoc_condlock_unlock)(
+    XOC_CondLock * lock
 );
 
 void
-XOCEAN_INTERFACE(xocean_condlock_wait)(
-    XOceanCondLock * lock
+XOC_INTERFACE(xoc_condlock_wait)(
+    XOC_CondLock * lock
 );
 
 void 
-XOCEAN_INTERFACE(xocean_condlock_wake)(
-    XOceanCondLock * lock
+XOC_INTERFACE(xoc_condlock_wake)(
+    XOC_CondLock * lock
 );
 
 void 
-XOCEAN_INTERFACE(xocean_condlock_wake_all)(
-    XOceanCondLock * lock
+XOC_INTERFACE(xoc_condlock_wake_all)(
+    XOC_CondLock * lock
 );
     
 void 
-XOCEAN_INTERFACE(xocean_condlock_destroy)(
-    XOceanCondLock * lock
+XOC_INTERFACE(xoc_condlock_destroy)(
+    XOC_CondLock * lock
 );
 
 
@@ -51,16 +51,16 @@ XOCEAN_INTERFACE(xocean_condlock_destroy)(
 }
 #endif // __cplusplus
 
-#if XOCEAN_PLATFORM(WINDOWS)
+#if XOC_PLATFORM(WINDOWS)
 #   include "platform_spec/win32/condlock.h"
-#elif XOCEAN_PLATFORM(POSIX)
+#elif XOC_PLATFORM(POSIX)
 #   include "platform_spec/posix/condlock.h"
 #endif 
 
-#define xocean_condlock_init        XOCEAN_INTERFACE(xocean_condlock_init)
-#define xocean_condlock_lock        XOCEAN_INTERFACE(xocean_condlock_lock)
-#define xocean_condlock_unlock      XOCEAN_INTERFACE(xocean_condlock_unlock)
-#define xocean_condlock_wait        XOCEAN_INTERFACE(xocean_condlock_wait)
-#define xocean_condlock_wake        XOCEAN_INTERFACE(xocean_condlock_wake)
-#define xocean_condlock_wake_all    XOCEAN_INTERFACE(xocean_condlock_wake_all)
-#define xocean_condlock_destroy     XOCEAN_INTERFACE(xocean_condlock_destroy)
+#define xoc_condlock_init        XOC_INTERFACE(xoc_condlock_init)
+#define xoc_condlock_lock        XOC_INTERFACE(xoc_condlock_lock)
+#define xoc_condlock_unlock      XOC_INTERFACE(xoc_condlock_unlock)
+#define xoc_condlock_wait        XOC_INTERFACE(xoc_condlock_wait)
+#define xoc_condlock_wake        XOC_INTERFACE(xoc_condlock_wake)
+#define xoc_condlock_wake_all    XOC_INTERFACE(xoc_condlock_wake_all)
+#define xoc_condlock_destroy     XOC_INTERFACE(xoc_condlock_destroy)

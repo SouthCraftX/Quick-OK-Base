@@ -7,14 +7,14 @@
 extern "C" {
 #endif // __cplusplus
 
-struct _XOceanAsyncFile;
-typedef struct _XOceanAsyncFile XOceanAsyncFile;
+struct _XOCAsyncFile;
+typedef struct _XOCAsyncFile XOCAsyncFile;
 
-xocean_stat_t
-XOCEAN_INTERFACE(xocean_async_file_open)(
-    XOceanAsyncFile *   file , 
-    xocean_ccstring_t   path ,
-    xocean_flag32_t     mode
+xoc_stat_t
+XOC_INTERFACE(xoc_async_file_open)(
+    XOCAsyncFile *   file , 
+    xoc_ccstring_t   path ,
+    xoc_flag32_t     mode
 );
 
 

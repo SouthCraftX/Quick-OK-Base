@@ -1,8 +1,8 @@
 // For debug
 #include "../../condlock.h"
 
-#if !defined(__XOCEAN_CONDLOCK_H__)
-#   error "Never include this header directly, use <xocean/condlock.h> instead!"
+#if !defined(__XOC_CONDLOCK_H__)
+#   error "Never include this header directly, use <xoc/condlock.h> instead!"
 #endif
 
 #pragma once
@@ -14,64 +14,64 @@
 extern "C"{
 #endif // __cplusplus
 
-struct _XOceanCondLock
+struct _XOC_CondLock
 {
     CONDITION_VARIABLE  cond_var;
     CRITICAL_SECTION    lock;
 }; 
 
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 void 
-XOCEAN_IMPL(xocean_condlock_init)(XOceanCondLock * lock)
+XOC_IMPL(xoc_condlock_init)(XOC_CondLock * lock)
 {
     InitializeCriticalSection(&lock->lock);
 }
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 void 
-XOCEAN_IMPL(xocean_condlock_lock)(
-    XOceanCondLock * lock
+XOC_IMPL(xoc_condlock_lock)(
+    XOC_CondLock * lock
 ){
     EnterCriticalSection(&lock->lock);
 }
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 void 
-XOCEAN_IMPL(xocean_condlock_unlock)(
-    XOceanCondLock * lock
+XOC_IMPL(xoc_condlock_unlock)(
+    XOC_CondLock * lock
 ){
     LeaveCriticalSection(&lock->lock);
 }
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 void
-XOCEAN_IMPL(xocean_condlock_wait)(
-    XOceanCondLock * lock
+XOC_IMPL(xoc_condlock_wait)(
+    XOC_CondLock * lock
 ){
     SleepConditionVariableCS(&lock->cond_var, &lock->lock, INFINITE);
 }
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 void 
-XOCEAN_IMPL(xocean_condlock_wake)(
-    XOceanCondLock * lock
+XOC_IMPL(xoc_condlock_wake)(
+    XOC_CondLock * lock
 ){
     WakeConditionVariable(&lock->cond_var);
 }
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 void 
-XOCEAN_IMPL(xocean_condlock_wake_all)(
-    XOceanCondLock * lock
+XOC_IMPL(xoc_condlock_wake_all)(
+    XOC_CondLock * lock
 ){
     WakeAllConditionVariable(&lock->cond_var);
 }
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 void 
-XOCEAN_IMPL(xocean_condlock_destory)(
-    XOceanCondLock * lock
+XOC_IMPL(xoc_condlock_destory)(
+    XOC_CondLock * lock
 ){}
 
 #if defined(__cplusplus)

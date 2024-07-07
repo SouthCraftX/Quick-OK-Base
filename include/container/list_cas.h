@@ -6,25 +6,25 @@
 extern "C" {
 #endif // __cplusplus
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 bool
-XOCEAN_IMPL(xocean_list_insert_tail_cas)(
-    XOceanList *            list ,
-    const xocean_pointer_t  element
+XOC_IMPL(xoc_list_insert_tail_cas)(
+    XOC_List *            list ,
+    const xoc_pointer_t  element
 ){
-    XOceanListNode * node = (XOceanListNode *)mi_heap_malloc(
+    XOC_ListNode * node = (XOC_ListNode *)mi_heap_malloc(
         list->heap , 
-        sizeof(XOceanListNode) + list->element_size
+        sizeof(XOC_ListNode) + list->element_size
     );
     if(node)
     {
         node->next = NULL;
-        xocean_memory_copy(node->data , element , list->element_size);
+        xoc_memory_copy(node->data , element , list->element_size);
         do
         {
             node = list->tail;
         }
-        while(!XOCEAN_CAS(list->tail->next , NULL , node));
+        while(!XOC_CAS(list->tail->next , NULL , node));
     }
     return false;
 }

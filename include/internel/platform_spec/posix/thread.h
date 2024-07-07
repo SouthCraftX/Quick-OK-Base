@@ -4,124 +4,120 @@
 #include <pthread.h> 
 #include <time.h>
 
-struct _XOceanThread
-{
-    pthread_t thread_handle;
-};
 
-XOCEAN_FORCE_INLINE
-xocean_stat_t
-__xocean_thread_creating_error()
+XOC_FORCE_INLINE
+xoc_stat_t
+__xoc_thread_creating_error()
 {
     switch (errno)
     {
-        case ENOMEM:    return XOCEAN_OUT_OF_MEMORY;
-        case EAGAIN:    return XOCEAN_NO_RESOURCE;
-        case EPERM:     return XOCEAN_PERMISSION_DENIED;
-        case EINVAL:    return XOCEAN_INVALID_ARG;
+        case ENOMEM:    return XOC_OUT_OF_MEMORY;
+        case EAGAIN:    return XOC_NO_RESOURCE;
+        case EPERM:     return XOC_PERMISSION_DENIED;
+        case EINVAL:    return XOC_INVALID_ARG;
     }
 }
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 void
-__xocean_thread_full_sleep(
+__xoc_thread_full_sleep(
     struct timespec * ts
 ){
     while ((nanosleep(&ts , &ts) == -1) && (errno == EINTR));
 }
 
-xocean_stat_t
-XOCEAN_IMPL(xocean_thread_init)(
-    XOceanThread *          thread ,
-    const xocean_pointer_t  func ,
-    const xocean_pointer_t  arg ,
-    const xocean_size_t     stack_size
+xoc_stat_t
+XOC_IMPL(xoc_thread_init)(
+    XOC_Thread **   thread ,
+    xoc_pointer_t  func ,
+    xoc_pointer_t  arg ,
+    xoc_size_t     stack_size
 ){
     pthread_attr_t attr;
     int attr_init_ret = pthread_attr_init(&attr);
 
-#   if !XOCEAN_PLATFORM(LINUX) // Linux guarantee that all init will succeed
+#   if !XOC_PLATFORM(LINUX) // Linux guarantee that all init will succeed
     if (attr_init_ret)
-        return XOCEAN_THREAD_CREATE_FAILED;
+        return XOC_THREAD_CREATE_FAILED;
 #   endif
 
     // When stack_size is 0, then pthread_attr_setstacksize() won't be called
     if(stack_size && pthread_attr_setstacksize(&attr, stack_size))
-        return XOCEAN_INVALID_ARG; 
+        return XOC_INVALID_ARG; 
         // stack_size too small or not multiple of system page size
 
-    if(pthread_create(&thread->thread_handle , &attr , 
+    if(pthread_create((thread_t *)thread , &attr , 
        (void *(*)(void *))func, arg))
-        return __xocean_thread_creating_error(); 
+        return __xoc_thread_creating_error(); 
 
     pthread_attr_destroy(&attr);
 }
 
 void
-XOCEAN_IMPL(xocean_thread_exit)(
-    xocean_stat_t exit_code
+XOC_IMPL(xoc_thread_exit)(
+    xoc_stat_t exit_code
 ){
     pthread_exit((void*)exit_code); 
 }
 
-xocean_stat_t
-XOCEAN_IMPL(xocean_thread_join)(
-    XOceanThread * thread 
+xoc_stat_t
+XOC_IMPL(xoc_thread_join)(
+    XOC_Thread * thread 
 ){
-    pthread_join(thread->thread_handle, NULL);
+    pthread_join((pthread_t)thread , NULL);
 }
 
-XOceanThread
-XOCEAN_IMPL(xocean_thread_self)()
+XOC_Thread *
+XOC_IMPL(xoc_thread_self)()
 {
-    return (XOceanThread){ pthread_self() };
+    return (XOC_Thread *)pthread_self();
 }
 
 void
-XOCEAN_IMPL(xocean_thread_sleep_milliseconds)(
-    const xocean_size_t milliseconds
+XOC_IMPL(xoc_thread_sleep_milliseconds)(
+    const xoc_size_t milliseconds
 ){
     struct timespec ts = {
         .tv_sec  = milliseconds / 1000 ,
         .tv_nsec = milliseconds % 1000 * 1000000
     };
-    __xocean_thread_full_sleep(&ts);
+    __xoc_thread_full_sleep(&ts);
 }
 
 void
-XOCEAN_IMPL(xocean_thread_sleep_microseconds)(
-    const xocean_size_t microseconds
+XOC_IMPL(xoc_thread_sleep_microseconds)(
+    const xoc_size_t microseconds
 ){
     struct timespec ts = {
         .tv_sec  = microseconds / 1000000 ,
         .tv_nsec = microseconds % 1000000 * 1000
     };
-    __xocean_thread_full_sleep(&ts);
+    __xoc_thread_full_sleep(&ts);
 }
 
 
 void
-XOCEAN_IMPL(_xocean_thread_sleep_nanoseconds)(
-    const xocean_size_t nanoseconds
+XOC_IMPL(_xoc_thread_sleep_nanoseconds)(
+    const xoc_size_t nanoseconds
 ){
     struct timespec ts = { 
         .tv_sec  = nanoseconds / 1000000000 ,
         .tv_nsec = nanoseconds % 1000000000 ,
     };
-    __xocean_thread_full_sleep(&ts);
+    __xoc_thread_full_sleep(&ts);
 }
 
 void
-XOCEAN_IMPL(xocean_thread_yield)()
+XOC_IMPL(xoc_thread_yield)()
 {
     pthread_yield();
 }
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 bool
-XOCEAN_IMPL(xocean_thread_is_equal)(
-    const XOceanThread x ,
-    const XOceanThread y
+XOC_IMPL(xoc_thread_is_equal)(
+    const XOC_Thread *    x ,
+    const XOC_Thread *    y
 ){
-    return x.thread_handle == y.thread_handle;
+    return pthread_equal((pthread_t)x , (pthread_t)y);
 }

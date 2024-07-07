@@ -5,19 +5,19 @@ extern "C" {
 #endif // __cplusplus
 
 
-xocean_stat_t
-__xocean_mmap_error()
+xoc_stat_t
+__xoc_mmap_error()
 {
     switch (errno)
     {
-        case EBADF:     return XOCEAN_INVALID_HANDLE;
-        case ENOMEM:    return XOCEAN_OUT_OF_MEMORY;
+        case EBADF:     return XOC_INVALID_HANDLE;
+        case ENOMEM:    return XOC_OUT_OF_MEMORY;
         case EINVAL:
-        case EOVERFLOW: return XOCEAN_INVALID_ARG;
-        case ENFILE:    return XOCEAN_NO_RESOURCE;
-        case EACCES:    return XOCEAN_BAD_TYPE;
-        case EPERM:     return XOCEAN_PERMISSION_DENIED;
-        default:        return XOCEAN_UNKNOWN_ERROR;
+        case EOVERFLOW: return XOC_INVALID_ARG;
+        case ENFILE:    return XOC_NO_RESOURCE;
+        case EACCES:    return XOC_BAD_TYPE;
+        case EPERM:     return XOC_PERMISSION_DENIED;
+        default:        return XOC_UNKNOWN_ERROR;
     }
 }
 

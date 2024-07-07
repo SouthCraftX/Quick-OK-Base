@@ -1,23 +1,23 @@
 #include "include/platform_spec/win32/thread.h"
 
-XOCEAN_FORCE_INLINE
-xocean_stat_t
-__xocean_thread_creating_error()
+XOC_FORCE_INLINE
+xoc_stat_t
+__xoc_thread_creating_error()
 {
     switch (GetLastError())
     {
-        case ERROR_NO_ENOUGH_MEMORY:    return XOCEAN_OUT_OF_MEMORY; 
-        case ERROR_INVALID_PARAMETER:   return XOCEAN_INVALID_ARG;
-        default:                        return XOCEAN_UNKNOWN_ERROR;
+        case ERROR_NO_ENOUGH_MEMORY:    return XOC_OUT_OF_MEMORY; 
+        case ERROR_INVALID_PARAMETER:   return XOC_INVALID_ARG;
+        default:                        return XOC_UNKNOWN_ERROR;
     }
 }
 
-xocean_stat_t
-XOCEAN_IMPL(xocean_thread_init)(
-    XOceanThread *          thread ,
-    const xocean_pointer_t  func ,
-    const xocean_pointer_t  arg ,
-    const xocean_size_t     stack_size 
+xoc_stat_t
+XOC_IMPL(xoc_thread_init)(
+    XOC_Thread *          thread ,
+    const xoc_pointer_t  func ,
+    const xoc_pointer_t  arg ,
+    const xoc_size_t     stack_size 
 ){
     HANDLE thread_handle;
     thread_handle =  CreateThread(NULL , stack_size , 
@@ -25,47 +25,47 @@ XOCEAN_IMPL(xocean_thread_init)(
                                   0 , NULL);
 
     if(!thread_handle)
-        return __xocean_thread_creating_error();
+        return __xoc_thread_creating_error();
     
     thread->thread_handle = thread_handle;
-    return XOCEAN_OK;
+    return XOC_OK;
 }
 
-xocean_stat_t
-XOCEAN_IMPL(xocean_thread_get_priority)(
-    XOceanThread        thread ,
-    xocean_flag32_t *   priority
+xoc_stat_t
+XOC_IMPL(xoc_thread_get_priority)(
+    XOC_Thread        thread ,
+    xoc_flag32_t *   priority
 ){
     // @todo Support REALTIME_PRIORITY_CLASS
     switch (GetThreadPriority(thread.thread_handle))
     {
         case THREAD_PRIORITY_IDLE:
         case THREAD_PRIORITY_LOWEST:  
-            *priority = XOCEAN_THREAD_PRIORITY_LOWEST;
-            return XOCEAN_OK;
+            *priority = XOC_THREAD_PRIORITY_LOWEST;
+            return XOC_OK;
 
         case THREAD_PRIORITY_BELOW_NORMAL: 
-            *priority = XOCEAN_THREAD_PRIORITY_LOW;
-            return XOCEAN_OK;
+            *priority = XOC_THREAD_PRIORITY_LOW;
+            return XOC_OK;
         
         case THREAD_PRIORITY_NORMAL:
-            *priority = XOCEAN_THREAD_PRIORITY_NORMAL;
-            return XOCEAN_OK;
+            *priority = XOC_THREAD_PRIORITY_NORMAL;
+            return XOC_OK;
 
         case THREAD_PRIORITY_ABOVE_NORMAL:
-            *priority = XOCEAN_THREAD_PRIORITY_HIGH;
-            return XOCEAN_OK;
+            *priority = XOC_THREAD_PRIORITY_HIGH;
+            return XOC_OK;
 
         case THREAD_PRIORITY_HIGHEST:
-            *priority = XOCEAN_THREAD_PRIORITY_HIGHEST;
-            return XOCEAN_OK;
+            *priority = XOC_THREAD_PRIORITY_HIGHEST;
+            return XOC_OK;
 
         case THREAD_PRIORITY_TIME_CRITICAL:
         case 31:    // REALTIME_PRIORITY_CLASS
-            *priority = XOCEAN_THREAD_PRIORITY_CRAZY;
-            return XOCEAN_OK;
+            *priority = XOC_THREAD_PRIORITY_CRAZY;
+            return XOC_OK;
 
         default:
-            return __xocean_thread_priority_error();
+            return __xoc_thread_priority_error();
     }
 }

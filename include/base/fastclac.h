@@ -1,73 +1,73 @@
 #pragma once
 #include "types.h"
 
-struct _XOceanDivisionInt64
+struct _XOCDivisionInt64
 {
-    xocean_int64_t  remainder;
-    xocean_int64_t  quotient;
+    xoc_int64_t  remainder;
+    xoc_int64_t  quotient;
 };
-typedef struct _XOceanDivisionInt64 XOceanDivisionInt64;
+typedef struct _XOCDivisionInt64 XOCDivisionInt64;
 
-struct _XOceanDivisionInt32
+struct _XOCDivisionInt32
 {
-    xocean_int32_t  remainder;
-    xocean_int32_t  quotient;
+    xoc_int32_t  remainder;
+    xoc_int32_t  quotient;
 };
-typedef struct _XOceanDivisionInt32 XOceanDivisionInt32;
+typedef struct _XOCDivisionInt32 XOCDivisionInt32;
 
-#define XOCEAN_DIVISION_I64(r , q) \
-        ((XOceanDivisionInt64){ .quotient = (q) , .remainder = (r) })
-#define XOCEAN_DIVISION_I32(r , q) \
-        ((XOceanDivisionInt32){ .quotient = (q) , .remainder = (r) })
-#define XOCEAN_DIV_I64(x , y) XOCEAN_DIVISION_I64((x) % (y) , (x) / (y))
-#define XOCEAN_DIV_I32(x , y) XOCEAN_DIVISION_I32((x) % (y) , (x) / (y))
+#define XOC_DIVISION_I64(r , q) \
+        ((XOCDivisionInt64){ .quotient = (q) , .remainder = (r) })
+#define XOC_DIVISION_I32(r , q) \
+        ((XOCDivisionInt32){ .quotient = (q) , .remainder = (r) })
+#define XOC_DIV_I64(x , y) XOC_DIVISION_I64((x) % (y) , (x) / (y))
+#define XOC_DIV_I32(x , y) XOC_DIVISION_I32((x) % (y) , (x) / (y))
 
-#if XOCEAN_SYSTEM_BIT(64)
-typedef XOceanDivisionInt64 XOceanDivision;
-#   define XOCEAN_DIVISION  XOCEAN_DIVISION_I64
-#   define XOCEAN_DIV       XOCEAN_DIV_I64
+#if XOC_SYSTEM_BIT(64)
+typedef XOCDivisionInt64 XOCDivision;
+#   define XOC_DIVISION  XOC_DIVISION_I64
+#   define XOC_DIV       XOC_DIV_I64
 #else
-typedef XOceanDivisionInt32 XOceanDivision;
-#   define XOCEAN_DIVISION  XOCEAN_DIVISION_I32
-#   define XOCEAN_DIV       XOCEAN_DIV_I32
+typedef XOCDivisionInt32 XOCDivision;
+#   define XOC_DIVISION  XOC_DIVISION_I32
+#   define XOC_DIV       XOC_DIV_I32
 #endif
 
-#define XOCEAN_MAX(x,y) (((x) > (y)) ? (x) : (y))
-#define XOCEAN_MIN(x,y) (((x) < (y)) ? (x) : (y))
+#define XOC_MAX(x,y) (((x) > (y)) ? (x) : (y))
+#define XOC_MIN(x,y) (((x) < (y)) ? (x) : (y))
 
-#define XOCEAN_SQR(x) ((x)*(x))
-#define XOCEAN_CUBE(x) ((x)*(x)*(x))
+#define XOC_SQR(x) ((x)*(x))
+#define XOC_CUBE(x) ((x)*(x)*(x))
 
-#define XOCEAN_ABS(x) (((x) < 0) ? -(x) : (x))
+#define XOC_ABS(x) (((x) < 0) ? -(x) : (x))
 
-#define XOCEAN_ALIGN_UP(x,align) (((x) + (align) - 1) & ~((align) - 1))
-#define XOCEAN_ALIGN_DOWN(x,align) ((x) & ~((align) - 1))
+#define XOC_ALIGN_UP(x,align) (((x) + (align) - 1) & ~((align) - 1))
+#define XOC_ALIGN_DOWN(x,align) ((x) & ~((align) - 1))
 
-#define XOCEAN_HAS_FLAG(x,f) (x & f)
+#define XOC_HAS_FLAG(x,f) (x & f)
 
-#define XOCEAN_SWAP(x,y) do { typeof(x) tmp = x; x = y; y = tmp; } while (false)
+#define XOC_SWAP(x,y) do { typeof(x) tmp = x; x = y; y = tmp; } while (false)
 
-#define XOCEAN_SNULL(x,t) ((x) ? (x->t) : NULL)
+#define XOC_SNULL(x,t) ((x) ? (x->t) : NULL)
 
 
 
 
 // Thanks to sodiumcl10
-#define XOCEAN_FIND_ZEROS_INDEX64(x,n) 
+#define XOC_FIND_ZEROS_INDEX64(x,n) 
 
 #if defined(__GNUC__)
-#   define XOCEAN_PARITY32(x) __builtin_parity(x)
-#   define XOCEAN_POPCOUNT32(x) __builtin_popcount(x)
-#   define XOCEAN_PARITY64(x) __builtin_parityll(x)
-#   define XOCEAN_POPCOUNT64(x) __builtin_popcountll(x)
+#   define XOC_PARITY32(x) __builtin_parity(x)
+#   define XOC_POPCOUNT32(x) __builtin_popcount(x)
+#   define XOC_PARITY64(x) __builtin_parityll(x)
+#   define XOC_POPCOUNT64(x) __builtin_popcountll(x)
 #else
-#define XOCEAN_PARITY(x) 
+#define XOC_PARITY(x) 
 #endif
 
 #if defined(__GNUC__)
-#   define XOCEAN_CAS(r,o,n) __sync_val_compare_and_swap(r,o,n)
+#   define XOC_CAS(r,o,n) __sync_val_compare_and_swap(r,o,n)
 #elif defined(_MSC_VER)
-#   define XOCEAN_CAS(r,o,n) _InterlockedCompareExchange(r,n,o)
+#   define XOC_CAS(r,o,n) _InterlockedCompareExchange(r,n,o)
 #else
-#   error "XOceanLib: CAS not implemented:Need complier support"
+#   error "XOCLib: CAS not implemented:Need complier support"
 #endif 

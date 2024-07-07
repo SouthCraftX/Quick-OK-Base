@@ -6,14 +6,14 @@
 extern "C" {
 #endif // defined(__cplusplus)
 
-struct _XOceanBitmap8   
+struct _XOCBitmap8   
 {
-    xocean_uint8_t data;
+    xoc_uint8_t data;
 };
-typedef _XOceanBitmap8 XOceanBitmap8;
+typedef _XOCBitmap8 XOCBitmap8;
 
-XOCEAN_FORCE_INLINE
-xocean_size_t xocean_bitmap8_get_1_count(XOceanBitmap8 bitmap)
+XOC_FORCE_INLINE
+xoc_size_t xoc_bitmap8_get_1_count(XOCBitmap8 bitmap)
 {
 
 }

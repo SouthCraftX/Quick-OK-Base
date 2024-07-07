@@ -1,12 +1,12 @@
 #include "encoder.h"
 
-XOCEAN_GLOBAL_LOCAL XOCEAN_FORCE_INLINE
+XOC_GLOBAL_LOCAL XOC_FORCE_INLINE
 void
-__xocean_dec_quality_to_str(
-    xocean_int16_t      dec ,
-    xocean_cstring_t    str
+__xoc_dec_quality_to_str(
+    xoc_int16_t      dec ,
+    xoc_cstring_t    str
 ){
-    XOceanDivisionInt32 division = XOCEAN_DIVISION_I32(dec , 10);
+    XOCDivisionInt32 division = XOC_DIVISION_I32(dec , 10);
     if (division.quotient)
     {
         str[0] = '0' + division.quotient;
@@ -19,10 +19,10 @@ __xocean_dec_quality_to_str(
     }  
 }
 
-XOCEAN_GLOBAL_LOCAL XOCEAN_FORCE_INLINE
+XOC_GLOBAL_LOCAL XOC_FORCE_INLINE
 bool
-__xocean_set_video_quality(
-    XOceanVideoQuality * video_quality ,
+__xoc_set_video_quality(
+    XOCVideoQuality * video_quality ,
     AVCodecContext *     codec_ctx ,
     AVDictionary * *     opt
 ){
@@ -43,23 +43,23 @@ __xocean_set_video_quality(
         
     switch (video_quality->type)
     {
-        case XOCEAN_VIDEO_QUALITY_QP:
+        case XOC_VIDEO_QUALITY_QP:
             codec_ctx->qmax = video_quality->qp.max_qp;
             codec_ctx->qmin = video_quality->qp.min_qp;
-            __xocean_dec_quality_to_str(video_quality->qp.qp , tmp_str);
+            __xoc_dec_quality_to_str(video_quality->qp.qp , tmp_str);
             ret = av_opt_set(codec_ctx->priv_data, "qp", tmp_str , 
                              AV_OPT_SEARCH_CHILDREN);
             if(ret) goto ERR_ARG;
             break;
 
-        case XOCEAN_VIDEO_QUALITY_BITRATE:
+        case XOC_VIDEO_QUALITY_BITRATE:
             codec_ctx->bit_rate = video_quality->bitrate.bitrate;
             codec_ctx->rc_max_rate = video_quality->bitrate.bitrate;
             codec_ctx->rc_min_rate = video_quality->bitrate.bitrate;
             break;
 
-        case XOCEAN_VIDEO_QUALITY_CRF:
-            __xocean_dec_quality_to_str(video_quality->crf.crf , tmp_str);
+        case XOC_VIDEO_QUALITY_CRF:
+            __xoc_dec_quality_to_str(video_quality->crf.crf , tmp_str);
             ret = av_opt_set(codec_ctx->priv_data, "crf", tmp_str , 
                              AV_OPT_SEARCH_CHILDREN);
             if(ret) goto ERR_ARG;
@@ -72,10 +72,10 @@ __xocean_set_video_quality(
     return false;
 }
 
-XOCEAN_GLOBAL_LOCAL
+XOC_GLOBAL_LOCAL
 void
-__xocean_set_video_info(
-    XOceanVideoInfo *   video_info ,
+__xoc_set_video_info(
+    XOCVideoInfo *   video_info ,
     AVCodecContext *    codec_ctx
 ){
     AVRational rad = av_d2q(1 , video_info->fps);
@@ -86,40 +86,40 @@ __xocean_set_video_info(
     codec_ctx->pix_fmt = video_info->pix_fmt;
 }
 
-XOCEAN_GLOBAL_LOCAL XOCEAN_FORCE_INLINE
+XOC_GLOBAL_LOCAL XOC_FORCE_INLINE
 void
-__xocean_set_av_frame(
+__xoc_set_av_frame(
     AVFrame *           frame ,
-    XOceanVideoInfo *   video_info
+    XOCVideoInfo *   video_info
 ){
     frame->format = video_info->pix_fmt;
     frame->width  = video_info->width;
     frame->height = video_info->height;
 }
 
-XOCEAN_GLOBAL_LOCAL
-xocean_stat_t
-__xocean_generic_video_encoder_init(
-    XOceanVideoEncoder *        encoder ,
+XOC_GLOBAL_LOCAL
+xoc_stat_t
+__xoc_generic_video_encoder_init(
+    XOCVideoEncoder *        encoder ,
     const enum AVCodecID        codec_id ,
-    const XOceanVideoInfo *     video_info ,
-    const XOceanVideoQuality *  video_quality ,
-    xocean_ccstring_t           video_path
+    const XOCVideoInfo *     video_info ,
+    const XOCVideoQuality *  video_quality ,
+    xoc_ccstring_t           video_path
 ){
     AVCodec * codec = avcodec_find_encoder(codec_id);
     if (!codec)
-        return XOCEAN_CODEC_NOT_FOUND;
+        return XOC_CODEC_NOT_FOUND;
     
     AVCodecContext * codec_ctx = avcodec_alloc_context3(codec);
-    if(XOCEAN_UNLIKELY(!codec_ctx))
-        return XOCEAN_OUT_OF_MEMORY;
+    if(XOC_UNLIKELY(!codec_ctx))
+        return XOC_OUT_OF_MEMORY;
     
     AVDictionary * opt = NULL;
 
-    if(__xocean_set_video_quality(codec_ctx , video_quality , opt))
+    if(__xoc_set_video_quality(codec_ctx , video_quality , opt))
     {
         avcodec_close(codec_ctx);
-        return XOCEAN_INVALID_ARG;
+        return XOC_INVALID_ARG;
     }
 
     AVFormatContext * format_ctx;
@@ -128,17 +128,17 @@ __xocean_generic_video_encoder_init(
         if(opt) 
             av_dict_free(&opt);
         avcodec_close(codec_ctx);
-        return XOCEAN_INIT_VIDEO_FORMAT_FAILED;
+        return XOC_INIT_VIDEO_FORMAT_FAILED;
     }
 
     AVStream * stream = avformat_new_stream(format_ctx , NULL);
-    if(XOCEAN_UNLIKELY(!stream))
+    if(XOC_UNLIKELY(!stream))
     {
         if(opt) 
             av_dict_free(&opt);
         avcodec_close(codec_ctx);
         avformat_free_context(format_ctx);
-        return XOCEAN_ADD_MEDIA_STREAM_FAILED;
+        return XOC_ADD_MEDIA_STREAM_FAILED;
     }
 
     if(avcodec_parameters_from_context(stream->codecpar , codec_ctx))
@@ -147,31 +147,31 @@ __xocean_generic_video_encoder_init(
             av_dict_free(&opt);
         avcodec_close(codec_ctx);
         avformat_free_context(format_ctx);
-        return XOCEAN_UNKNOWN_ERROR;
+        return XOC_UNKNOWN_ERROR;
     }
     
 
     AVPacket * packet = av_packet_alloc();
-    if(XOCEAN_UNLIKELY(!packet))
+    if(XOC_UNLIKELY(!packet))
     {
         if(opt) 
             av_dict_free(&opt);
         avcodec_close(codec_ctx);
         avformat_free_context(format_ctx);
-        return XOCEAN_OUT_OF_MEMORY;
+        return XOC_OUT_OF_MEMORY;
     }
 
     AVFrame * frame = av_frame_alloc();
-    if(XOCEAN_UNLIKELY(!frame))
+    if(XOC_UNLIKELY(!frame))
     {
         if(opt) 
             av_dict_free(&opt);
         av_packet_free(&packet);
         avcodec_close(codec_ctx);
         avformat_free_context(format_ctx);
-        return XOCEAN_OUT_OF_MEMORY;
+        return XOC_OUT_OF_MEMORY;
     }
-    __xocean_set_av_frame(frame , video_info);
+    __xoc_set_av_frame(frame , video_info);
 
     if(avcodec_open2(codec_ctx , codec , &opt) < 0)
     {
@@ -180,7 +180,7 @@ __xocean_generic_video_encoder_init(
         av_packet_free(&packet);
         avcodec_close(codec_ctx);
         avformat_free_context(format_ctx);
-        return XOCEAN_OPEN_CODEC_FAILED;
+        return XOC_OPEN_CODEC_FAILED;
     }
     
     
@@ -193,7 +193,7 @@ __xocean_generic_video_encoder_init(
         av_frame_free(&frame);
         avcodec_close(codec_ctx);
         avformat_free_context(format_ctx);
-        return XOCEAN_OUT_OF_MEMORY;
+        return XOC_OUT_OF_MEMORY;
     }
 
     if(avio_open(&format_ctx->pb , video_path , AVIO_FLAG_WRITE) < 0)
@@ -204,7 +204,7 @@ __xocean_generic_video_encoder_init(
         av_frame_free(&frame);
         avcodec_close(codec_ctx);
         avformat_free_context(format_ctx);
-        return XOCEAN_OPEN_FILE_FAILED;
+        return XOC_OPEN_FILE_FAILED;
     }
 
     if(avformat_write_header(format_ctx , &opt) < 0)
@@ -216,7 +216,7 @@ __xocean_generic_video_encoder_init(
         av_frame_free(&frame);
         avcodec_close(codec_ctx);
         avformat_free_context(format_ctx);
-        return XOCEAN_BAD_MEDIA_HEADER;
+        return XOC_BAD_MEDIA_HEADER;
     }
 
     encoder->codec      =   codec;
@@ -227,18 +227,18 @@ __xocean_generic_video_encoder_init(
     encoder->format_ctx =   format_ctx;
     encoder->stream     =   stream;
 
-    return XOCEAN_OK;
+    return XOC_OK;
 }
 
-xocean_stat_t
-XOCEAN_IMPL(xocean_video_encoder_init)(
-    XOceanVideoEncoder *        encoder ,
-    const XOceanVideoInfo *     video_info ,
-    const XOceanVideoQuality *  video_quality ,
+xoc_stat_t
+XOC_IMPL(xoc_video_encoder_init)(
+    XOCVideoEncoder *        encoder ,
+    const XOCVideoInfo *     video_info ,
+    const XOCVideoQuality *  video_quality ,
     enum AVCodecID              codec_id ,
-    xocean_ccstring_t           video_path
+    xoc_ccstring_t           video_path
 ){
-    return __xocean_generic_video_encoder_init(
+    return __xoc_generic_video_encoder_init(
         encoder , 
         video_info , 
         video_quality , 
@@ -247,16 +247,16 @@ XOCEAN_IMPL(xocean_video_encoder_init)(
     );
 }
 
-xocean_stat_t
-XOCEAN_IMPL(xocean_hardware_video_encoder_init)(
-    XOceanHardwareVideoEncoder *encoder ,
-    const XOceanVideoInfo *     video_info ,
-    const XOceanVideoQuality *  video_quality ,
+xoc_stat_t
+XOC_IMPL(xoc_hardware_video_encoder_init)(
+    XOCHardwareVideoEncoder *encoder ,
+    const XOCVideoInfo *     video_info ,
+    const XOCVideoQuality *  video_quality ,
     const enum AVHWDeviceType   hardware_type ,
     const enum AVCodecID        hardware_codec_id ,
-    xocean_ccstring_t           video_path
+    xoc_ccstring_t           video_path
 ){
-    xocean_stat_t ret = __xocean_generic_video_encoder_init(
+    xoc_stat_t ret = __xoc_generic_video_encoder_init(
         &encoder->base ,
         hardware_codec_id ,
         video_info ,
@@ -269,12 +269,12 @@ XOCEAN_IMPL(xocean_hardware_video_encoder_init)(
     AVBufferRef * hw_device_ctx;
     if(av_hwdevice_ctx_create(&hw_device_ctx , hardware_type , NULL , 
                            encoder->base.opt , 0) < 0)
-        return XOCEAN_INIT_HARDWARE_FAILED;
+        return XOC_INIT_HARDWARE_FAILED;
 
     AVBufferRef * hw_frames_ref = av_hwframe_ctx_alloc(hw_device_ctx);
     if(!hw_frames_ref)
     {
-        return XOCEAN_OUT_OF_MEMORY;
+        return XOC_OUT_OF_MEMORY;
     }
     
     AVHWFramesContext * hw_frame_ctx = (AVHWFramesContext *)hw_frames_ref->data;
@@ -287,25 +287,25 @@ XOCEAN_IMPL(xocean_hardware_video_encoder_init)(
     if(!hw_frame)
     {
         // todo
-        return XOCEAN_OUT_OF_MEMORY;
+        return XOC_OUT_OF_MEMORY;
     }
     
 
     if(av_hwframe_get_buffer(encoder->base.codec_ctx->hw_frames_ctx , hw_frame , 0) < 0)
-        return XOCEAN_OUT_OF_MEMORY;
+        return XOC_OUT_OF_MEMORY;
 
     
 }
 
-xocean_stat_t
-__xocean_encode_frame(
+xoc_stat_t
+__xoc_encode_frame(
     AVCodecContext *    codec_ctx ,
     AVFrame *           frame ,
     AVPacket *          packet ,
     AVFormatContext *   format_ctx
 ){
     if(avcodec_send_frame(codec_ctx , frame) < 0)
-        return XOCEAN_UNKNOWN_ERROR;
+        return XOC_UNKNOWN_ERROR;
     
     int ret;
     while(ret >= 0)
@@ -314,36 +314,36 @@ __xocean_encode_frame(
         if(ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
             break;
         else if(ret < 0)
-            return XOCEAN_UNKNOWN_ERROR;
+            return XOC_UNKNOWN_ERROR;
         if(av_write_frame(format_ctx , packet) < 0)
-            return XOCEAN_UNKNOWN_ERROR;
+            return XOC_UNKNOWN_ERROR;
         av_packet_unref(packet);
     }
     
-    return XOCEAN_OK;
+    return XOC_OK;
 }
 
-xocean_stat_t
-XOCEAN_IMPL(xocean_video_encoder_write_frame)(
-    XOceanVideoEncoder *    encoder ,
-    xocean_pointer_t        frame
+xoc_stat_t
+XOC_IMPL(xoc_video_encoder_write_frame)(
+    XOCVideoEncoder *    encoder ,
+    xoc_pointer_t        frame
 ){
-    if(XOCEAN_UNLIKELY(av_frame_make_writable(encoder->frame) < 0))
-        return XOCEAN_UNKNOWN_ERROR;
+    if(XOC_UNLIKELY(av_frame_make_writable(encoder->frame) < 0))
+        return XOC_UNKNOWN_ERROR;
 
     // Todo
 
     encoder->frame->pts = 1;
-    return __xocean_encode_frame(encoder->codec_ctx , encoder->frame ,
+    return __xoc_encode_frame(encoder->codec_ctx , encoder->frame ,
                                  &encoder->packet , encoder->output_stream);
 }
 
 void
-XOCEAN_IMPL(xocean_video_encoder_stop)(
-    XOceanVideoEncoder *    encoder
+XOC_IMPL(xoc_video_encoder_stop)(
+    XOCVideoEncoder *    encoder
 ){
     // Flush it
-    __xocean_encode_frame(encoder->codec_ctx , NULL , encoder->packet , &
+    __xoc_encode_frame(encoder->codec_ctx , NULL , encoder->packet , &
                           encoder->output_stream);
     avio_close(encoder->format_ctx->pb);    
     avformat_free_context(encoder->format_ctx);

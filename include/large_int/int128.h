@@ -5,274 +5,274 @@
 extern "C" {
 #endif // __cplusplus
 
-struct _XOceanInt128;
-typedef struct _XOceanInt128 XOceanInt128;
-typedef XOceanInt128 xocean_int128_t;
+struct _XOCInt128;
+typedef struct _XOCInt128 XOCInt128;
+typedef XOCInt128 xoc_int128_t;
 
-#define XOCEAN_INT128(x)  ((xocean_int128_t){x})
-#define XOCEAN_INT128_MIN XOCEAN_INT128(0x80000000000000000000000000000000)
-#define XOCEAN_INT128_MAX XOCEAN_INT128(0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF)
+#define XOC_INT128(x)  ((xoc_int128_t){x})
+#define XOC_INT128_MIN XOC_INT128(0x80000000000000000000000000000000)
+#define XOC_INT128_MAX XOC_INT128(0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF)
 
-#if defined(__GNUC__) && XOCEAN_SYSTEM_BIT(64) 
-typedef __int128 __xocean_sys_int128_t;
+#if defined(__GNUC__) && XOC_SYSTEM_BIT(64) 
+typedef __int128 __xoc_sys_int128_t;
 #elif __STDC_VERSION__ > 202300
-typedef int128_t __xocean_sys_int128_t;
+typedef int128_t __xoc_sys_int128_t;
 #endif 
 
-#if defined(__GNUC__) && XOCEAN_SYSTEM_BIT(64) 
-XOCEAN_ALIGNAS(16)      // SIMD requires align as that
-struct _XOceanInt128
+#if defined(__GNUC__) && XOC_SYSTEM_BIT(64) 
+XOC_ALIGNAS(16)      // SIMD requires align as that
+struct _XOCInt128
 {
-    __xocean_sys_int128_t  i;
+    __xoc_sys_int128_t  i;
 };
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 bool
-xocean_int128_equal(
-    xocean_int128_t a , 
-    xocean_int128_t b
+xoc_int128_equal(
+    xoc_int128_t a , 
+    xoc_int128_t b
 ){
     return a.i == b.i;
 }
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 bool
-xocean_int128_not(
-    xocean_int128_t a
+xoc_int128_not(
+    xoc_int128_t a
 ){
     return !a.i;
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_add(
-    xocean_int128_t a , 
-    xocean_int128_t b
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_add(
+    xoc_int128_t a , 
+    xoc_int128_t b
 ){
-    return (xocean_int128_t){ a.i + b.i };
+    return (xoc_int128_t){ a.i + b.i };
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_sub(
-    xocean_int128_t a , 
-    xocean_int128_t b
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_sub(
+    xoc_int128_t a , 
+    xoc_int128_t b
 ){
-    return (xocean_int128_t){ a.i - b.i };
+    return (xoc_int128_t){ a.i - b.i };
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_mul(
-    xocean_int128_t a , 
-    xocean_int128_t b
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_mul(
+    xoc_int128_t a , 
+    xoc_int128_t b
 ){
-    return (xocean_int128_t){ a.i * b.i };
+    return (xoc_int128_t){ a.i * b.i };
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_div(
-    xocean_int128_t a , 
-    xocean_int128_t b
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_div(
+    xoc_int128_t a , 
+    xoc_int128_t b
 ){
-    return (xocean_int128_t){ a.i / b.i };
+    return (xoc_int128_t){ a.i / b.i };
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_mod(
-    xocean_int128_t a , 
-    xocean_int128_t b
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_mod(
+    xoc_int128_t a , 
+    xoc_int128_t b
 ){
-    return (xocean_int128_t){ a.i % b.i };
+    return (xoc_int128_t){ a.i % b.i };
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int64_t
-xocean_int128_trunl64(
-    xocean_int128_t a
+XOC_FORCE_INLINE
+xoc_int64_t
+xoc_int128_trunl64(
+    xoc_int128_t a
 ){
-    return (xocean_int64_t)a.i;
+    return (xoc_int64_t)a.i;
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int64_t
-xocean_int128_trunh64(
-    xocean_int128_t a
+XOC_FORCE_INLINE
+xoc_int64_t
+xoc_int128_trunh64(
+    xoc_int128_t a
 ){
-    return (xocean_int64_t)((a.i) >> 63);
+    return (xoc_int64_t)((a.i) >> 63);
 }
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 bool
-xocean_int128_or(
-    xocean_int128_t a , 
-    xocean_int128_t b
+xoc_int128_or(
+    xoc_int128_t a , 
+    xoc_int128_t b
 ){
     return  a.i || b.i ;
 }
 
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 bool
-xocean_int128_and(
-    xocean_int128_t a, 
-    xocean_int128_t b
+xoc_int128_and(
+    xoc_int128_t a, 
+    xoc_int128_t b
 ){
     return a.i && b.i ;
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_nor(
-    xocean_int128_t a ,
-    xocean_int128_t b
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_nor(
+    xoc_int128_t a ,
+    xoc_int128_t b
 ){
-    return (xocean_int128_t){ a.i | b.i };
+    return (xoc_int128_t){ a.i | b.i };
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_xor(
-    xocean_int128_t a ,
-    xocean_int128_t b
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_xor(
+    xoc_int128_t a ,
+    xoc_int128_t b
 ){
-    return (xocean_int128_t){ a.i ^ b.i };
+    return (xoc_int128_t){ a.i ^ b.i };
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_rs(
-    xocean_int128_t a ,
-    xocean_uint8_t  n
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_rs(
+    xoc_int128_t a ,
+    xoc_uint8_t  n
 ){
-    return (xocean_int128_t){ a.i >> n };
+    return (xoc_int128_t){ a.i >> n };
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_ls(
-    xocean_int128_t a ,
-    xocean_uint8_t  n
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_ls(
+    xoc_int128_t a ,
+    xoc_uint8_t  n
 ){
-    return (xocean_int128_t){ a.i << n };
+    return (xoc_int128_t){ a.i << n };
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_rseq(
-    xocean_int128_t *   a,
-    xocean_uint8_t      n
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_rseq(
+    xoc_int128_t *   a,
+    xoc_uint8_t      n
 ){
-    *a = xocean_int128_rs(*a, n);
+    *a = xoc_int128_rs(*a, n);
     return *a;
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_lseq(
-    xocean_int128_t *   a ,
-    xocean_uint8_t      n
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_lseq(
+    xoc_int128_t *   a ,
+    xoc_uint8_t      n
 ){
-    *a = xocean_int128_ls(*a, n);
+    *a = xoc_int128_ls(*a, n);
     return *a;
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_addeq(
-    xocean_int128_t *   a ,
-    xocean_int128_t     b
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_addeq(
+    xoc_int128_t *   a ,
+    xoc_int128_t     b
 ){
-    *a = xocean_int128_add(*a, b);
+    *a = xoc_int128_add(*a, b);
     return *a;
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_bnot(
-    xocean_int128_t a
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_bnot(
+    xoc_int128_t a
 ){
-    return (xocean_int128_t){ ~a.i };
+    return (xoc_int128_t){ ~a.i };
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_bnoteq(
-    xocean_int128_t *   a ,
-    xocean_int128_t     b
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_bnoteq(
+    xoc_int128_t *   a ,
+    xoc_int128_t     b
 ){
-    *a = xocean_int128_bnot(xocean_int128_sub(*a, b));
+    *a = xoc_int128_bnot(xoc_int128_sub(*a, b));
     return *a;
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_addeq(
-    xocean_int128_t *   a ,
-    xocean_int128_t     b
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_addeq(
+    xoc_int128_t *   a ,
+    xoc_int128_t     b
 ){
-    *a = xocean_int128_add(*a, b);
+    *a = xoc_int128_add(*a, b);
     return *a;
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_subeq(
-    xocean_int128_t *   a ,
-    xocean_int128_t     b
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_subeq(
+    xoc_int128_t *   a ,
+    xoc_int128_t     b
 ){
-    *a = xocean_int128_sub(*a, b);
+    *a = xoc_int128_sub(*a, b);
     return *a;
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_muleq(
-    xocean_int128_t *   a ,
-    xocean_int128_t     b
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_muleq(
+    xoc_int128_t *   a ,
+    xoc_int128_t     b
 ){
-    *a = xocean_int128_mul(*a, b);
+    *a = xoc_int128_mul(*a, b);
     return *a;
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_diveq(
-    xocean_int128_t *   a ,
-    xocean_int128_t     b
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_diveq(
+    xoc_int128_t *   a ,
+    xoc_int128_t     b
 ){
-    *a = xocean_int128_div(*a, b);
+    *a = xoc_int128_div(*a, b);
     return *a;
 }
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 bool
-xocean_int128_noteq(
-    xocean_int128_t     a ,
-    xocean_int128_t     b
+xoc_int128_noteq(
+    xoc_int128_t     a ,
+    xoc_int128_t     b
 ){
     return a.i != b.i;
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_xoreq(
-    xocean_int128_t *   a ,
-    xocean_int128_t     b
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_xoreq(
+    xoc_int128_t *   a ,
+    xoc_int128_t     b
 ){
-    *a = xocean_int128_xor(*a, b);
+    *a = xoc_int128_xor(*a, b);
     return *a;
 }
 
-XOCEAN_FORCE_INLINE
-xocean_int128_t
-xocean_int128_noreq(
-    xocean_int128_t *   a ,
-    xocean_int128_t     b
+XOC_FORCE_INLINE
+xoc_int128_t
+xoc_int128_noreq(
+    xoc_int128_t *   a ,
+    xoc_int128_t     b
 ){
-    *a = xocean_int128_nor(*a, b);
+    *a = xoc_int128_nor(*a, b);
     return *a;
 }
 

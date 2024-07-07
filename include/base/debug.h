@@ -4,29 +4,68 @@
 
 #if defined(__cplusplus)
 extern "C" {
-#endif
+#endif 
 
-#define XOCEAN_ASSERT(e)
-#define XOCEAN_ASSERT_MSG(e , m)
+#if defined(XOC_DEBUG)
 
-#if defined(XOCEAN_DEBUG)
+#   define XOC_ASSERT(expr)  ((expr) ? 0 : __xoc_assert_fail(#expr , NULL ,\
+           __FILE__ , __func__ , __LINE__))
 
-#   undef XOCEAN_ASSERT
-#   undef XOCEAN_ASSERT_MSG
-#   undef XOCEAN_ASSERT_NULLPTR
+#   define XOC_REPORT_BUG(message) __xoc_report_bug(message , __FILE__ , \
+           __func__ , __LINE__)
 
-XOCEAN_NORETURN void _xocean_assert_fail(
-    xocean_ccstring expr,
-    xocean_ccstring_t reason, 
-    xocean_ccstring_t file,
-    xocean_int32_t line
+#   define XOC_NULLPTR_ASSERT(ptr) ((ptr) ? 0 : __xoc_nullptr_assert_fail( \
+           __FILE__ , __func__ , __LINE__))
+
+XOC_NORETURN 
+void 
+__xoc_assert_fail(
+    xoc_ccstring     expr ,
+    xoc_ccstring_t   reason , 
+    xoc_ccstring_t   source_file ,
+    xoc_ccstring_t   func_name ,
+    xoc_int32_t      line
 ){
-    XOCEAN_ERRPRINT("Assertion failed: %s, reason: %s, file %s, line %d\n", 
-                    expr, reason, file, line);
-    XOCEAN_ABORT();
+    XOC_ERRPRINT("Assertion failed: %s, reason: %s, source file %s, "
+                    "function %s, line %d\n",    
+                    expr , reason , source_file , func_name ,line);
+    XOC_ABORT();
 }
 
-#endif // XOCEAN_DEBUG
+XOC_NORETURN
+void
+__xoc_nullptr_assert_fail(
+    xoc_ccstring_t   source_file ,
+    xoc_ccstring_t   func_name ,
+    xoc_int32_t      line
+){
+    XOC_ERRPRINT("Null pointer assertion failed, source file %s, "
+                    "function %s, line %d\n",    
+                    source_file , func_name , line);
+    XOC_ABORT(); 
+}
+
+XOC_NORETURN
+void 
+__xoc_report_bug(
+    xoc_ccstring_t   message ,
+    xoc_ccstring_t   source_file ,
+    xoc_ccstring_t   func_name ,
+    xoc_int32_t      line
+){
+    XOC_ERRPRINT("Bug report: %s, source file %s, function %s, line %d\n",    
+                    message , source_file , func_name , line);
+    XOC_ABORT();
+}
+
+#else
+#   define XOC_ASSERT(expr)
+#   define XOC_REPORT_BUG(message)
+#   define XOC_NULLPTR_ASSERT(ptr)
+
+#endif // XOC_DEBUG
+
+
 
 #if defined(__cplusplus)
 }

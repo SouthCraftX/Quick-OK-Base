@@ -7,31 +7,32 @@
 extern "C"{
 #endif // __cplusplus
 
-struct _XOceanErrorDescriptor
+// This structure is designed not to be exposed to the user.
+struct _XOC_ErrorDescriptor
 {
-    xocean_flag32_t     ref_count;  /* Read-only */
-    xocean_stat_t       error_code; /* Read-only */
-    xocean_ccstring_t   where_err;  /* Read-only*/
+    xoc_flag32_t     ref_count;  
+    xoc_stat_t       error_code; 
+    xoc_ccstring_t   where_err;
 
-    xocean_ccstring_t
+    xoc_ccstring_t
     (*fn_what)(
-        XOceanErrorDescriptor *
+        XOC_ErrorDescriptor *
     );
 
 
-    XOceanErrorDescriptor * next_error;
-    xocean_intmax_t private_data[];
+    XOC_ErrorDescriptor * next_error;
+    xoc_intmax_t private_data[];
 };
-typedef struct _XOceanErrorDescriptor XOceanErrorDescriptor;
+typedef struct _XOC_ErrorDescriptor XOC_ErrorDescriptor;
 
 void
-XOCEAN_IMPL(xocean_error_descriptor_unref)(
-    XOceanErrorDescriptor *
+XOC_IMPL(xoc_error_descriptor_unref)(
+    XOC_ErrorDescriptor *
 );
 
-XOceanErrorDescriptor *
-XOCEAN_IMPL(xocean_error_descriptor_ref)(
-    XOceanErrorDescriptor *
+XOC_ErrorDescriptor *
+XOC_IMPL(xoc_error_descriptor_ref)(
+    XOC_ErrorDescriptor *
 );
 
 

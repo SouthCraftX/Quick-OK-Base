@@ -4,9 +4,9 @@
 
 
 int
-__xocean_thread_adjust_high_priority(
-    XOceanThread                thread ,
-    enum XOceanThreadPriority   priority
+__xoc_thread_adjust_high_priority(
+    XOC_Thread                thread ,
+    enum XOC_ThreadPriority   priority
 ){
     const int crazy = sched_get_priority_max(SCHED_RR) ,
               highest = crazy * .8 ,
@@ -15,15 +15,15 @@ __xocean_thread_adjust_high_priority(
     
     switch (priority)
     {   
-        case XOCEAN_THREAD_PRIORITY_CRAZY:      
+        case XOC_THREAD_PRIORITY_CRAZY:      
             priority_value = crazy; 
             break;
 
-        case XOCEAN_THREAD_PRIORITY_HIGHEST:    
+        case XOC_THREAD_PRIORITY_HIGHEST:    
             priority_value = highest; 
             break;
 
-        case XOCEAN_THREAD_PRIORITY_HIGH:
+        case XOC_THREAD_PRIORITY_HIGH:
             priority_value = high; 
             break;
     }
@@ -31,10 +31,10 @@ __xocean_thread_adjust_high_priority(
 
 }
 
-xocean_stat_t
-XOCEAN_IMPL(xocean_thread_adjust_priority)(
-    XOceanThread                thread ,
-    enum XOceanThreadPriority   priority
+xoc_stat_t
+XOC_IMPL(xoc_thread_adjust_priority)(
+    XOC_Thread                thread ,
+    enum XOC_ThreadPriority   priority
 ){
     
 }

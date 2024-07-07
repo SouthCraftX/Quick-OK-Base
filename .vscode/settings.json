@@ -50,7 +50,11 @@
         "x86intrin.h": "c",
         "compare": "c",
         "crc.h": "c",
-        "expected": "c"
+        "expected": "c",
+        "unistd.h": "c",
+        "*.inc": "c",
+        "cassert": "c",
+        "common.h": "c"
     },
     "terminal.integrated.profiles.windows": {
         "MSYS2 UCRT": {

@@ -4,37 +4,37 @@
 extern "C" {
 #endif // __cplusplus    
 
-struct _XOceanPrefetchedFile
+struct _XOCPrefetchedFile
 {
-    xocean_pointer_t    data;
-    xocean_pointer_t    end;
-    xocean_pointer_t    cur;
-    xocean_size_t       size;
+    xoc_pointer_t    data;
+    xoc_pointer_t    end;
+    xoc_pointer_t    cur;
+    xoc_size_t       size;
 };
-typedef struct _XOceanPrefetchedFile XOceanPrefetchedFile;
+typedef struct _XOCPrefetchedFile XOCPrefetchedFile;
 
-xocean_stat_t
-XOCEAN_INTERFACE(xocean_prefetched_file_open)(
-    XOceanPrefetchedFile *  file ,
-    xocean_ccstring_t       path ,
-    const xocean_offset_t   offset ,
-    const xocean_size_t     size
+xoc_stat_t
+XOC_INTERFACE(xoc_prefetched_file_open)(
+    XOCPrefetchedFile *  file ,
+    xoc_ccstring_t       path ,
+    const xoc_offset_t   offset ,
+    const xoc_size_t     size
 );
 
-xocean_size_t
-XOCEAN_INTERFACE(xocean_prefetched_file_copyread)(
-    XOceanPrefetchedFile *  file ,
-    xocean_pointer_t        buf ,
-    xocean_size_t           size
+xoc_size_t
+XOC_INTERFACE(xoc_prefetched_file_copyread)(
+    XOCPrefetchedFile *  file ,
+    xoc_pointer_t        buf ,
+    xoc_size_t           size
 );
 
-XOCEAN_FORCE_INLINE
-xocean_offset_t
-__xocean_prefetched_file_fix_offset(
-    const XOceanPrefetchedFile *    file ,
-    const xocean_offset_t           offset
+XOC_FORCE_INLINE
+xoc_offset_t
+__xoc_prefetched_file_fix_offset(
+    const XOCPrefetchedFile *    file ,
+    const xoc_offset_t           offset
 ){
-    xocean_pointer_t pos = file->cur + offset;
+    xoc_pointer_t pos = file->cur + offset;
     if (pos > file->end)
     {
         return pos - file->end;
@@ -46,26 +46,26 @@ __xocean_prefetched_file_fix_offset(
     return offset;
 }
 
-XOCEAN_FORCE_INLINE
-xocean_size_t
-xocean_prefetched_file_read(
-    XOceanPrefetchedFile *  file ,
-    xocean_pointer_t *      p_buf ,
-    xocean_size_t           size
+XOC_FORCE_INLINE
+xoc_size_t
+xoc_prefetched_file_read(
+    XOCPrefetchedFile *  file ,
+    xoc_pointer_t *      p_buf ,
+    xoc_size_t           size
 );
 
-XOCEAN_FORCE_INLINE
-xocean_offset_t
-xocean_prefetched_file_seek(
-    XOceanPrefetchedFile *  file ,
-    const xocean_offset_t   offset ,
-    const xocean_stat_t     move_method
+XOC_FORCE_INLINE
+xoc_offset_t
+xoc_prefetched_file_seek(
+    XOCPrefetchedFile *  file ,
+    const xoc_offset_t   offset ,
+    const xoc_stat_t     move_method
 ){
     switch (move_method)
     {
-        case XOCEAN_FILE_MOVE_FROM_BEGIN:
+        case XOC_FILE_MOVE_FROM_BEGIN:
 
-        case XOCEAN_FILE_MOVE_FROM_CURRENT:
+        case XOC_FILE_MOVE_FROM_CURRENT:
 
 
     }

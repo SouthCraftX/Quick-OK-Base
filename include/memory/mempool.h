@@ -2,40 +2,40 @@
 #include "../base.h"
 #include "./mimalloc/include/mimalloc.h"
 
-#define XOCEAN_MEMPOOL_CHUCK_SIZE 16
-#define XOCEAN_MEMPOOL_BLOCK_MEM_SIZE ((sizeof(xocean_size_t) << 3) * XOCEAN_MEMPOOL_CHUCK_SIZE)
+#define XOC_MEMPOOL_CHUCK_SIZE 16
+#define XOC_MEMPOOL_BLOCK_MEM_SIZE ((sizeof(xoc_size_t) << 3) * XOC_MEMPOOL_CHUCK_SIZE)
 
 #if defined(__cplusplus)
 extern "C" {
 #endif // __cplusplus
 
-struct _XOceanMempoolBlockAssistInfo
+struct _XOCMempoolBlockAssistInfo
 {
     bool            full;
-    xocean_uint8_t  last_alloc_end;
+    xoc_uint8_t  last_alloc_end;
 };
-typedef struct _XOceanMempoolBlockAssistInfo XOceanMempoolBlockAssistInfo;
+typedef struct _XOCMempoolBlockAssistInfo XOCMempoolBlockAssistInfo;
 
-struct _XOceanMempoolBlock
+struct _XOCMempoolBlock
 {
-    XOceanMempoolBlockAssistInfo assist_info;
-    xocean_size_t bitmap;
-    xocean_intmax_t mem[XOCEAN_MEMPOOL_BLOCK_MEM_SIZE];
+    XOCMempoolBlockAssistInfo assist_info;
+    xoc_size_t bitmap;
+    xoc_intmax_t mem[XOC_MEMPOOL_BLOCK_MEM_SIZE];
 };
-typedef struct _XOceanMempoolBlock XOceanMempoolBlock;
+typedef struct _XOCMempoolBlock XOCMempoolBlock;
 
-struct _XOceanMempool
+struct _XOCMempool
 {
-    XOceanMempoolBlock * head;
-    XOceanMempoolBlock * next;
-    XOceanMempoolBlock * prev;
+    XOCMempoolBlock * head;
+    XOCMempoolBlock * next;
+    XOCMempoolBlock * prev;
 };
-typedef struct _XOceanMempool XOceanMempool;
+typedef struct _XOCMempool XOCMempool;
 
-XOCEAN_NODISCARD
-XOceanMempoolBlock * xocean_mempool_block_new(xocean_size_t size)
+XOC_NODISCARD
+XOCMempoolBlock * xoc_mempool_block_new(xoc_size_t size)
 {
-    XOceanMempoolBlock * block = (XOceanMempoolBlock *)mi_malloc(sizeof(XOceanMempoolBlock));
+    XOCMempoolBlock * block = (XOCMempoolBlock *)mi_malloc(sizeof(XOCMempoolBlock));
     if(block)
     {
         block->assist_info.full = false;
@@ -45,16 +45,16 @@ XOceanMempoolBlock * xocean_mempool_block_new(xocean_size_t size)
     return block;
 }
 
-XOCEAN_FORCE_INLINE
-void xocean_mempool_block_delete(XOceanMempoolBlock * block)
+XOC_FORCE_INLINE
+void xoc_mempool_block_delete(XOCMempoolBlock * block)
 {
     mi_free(block);
 }
 
-XOCEAN_NODISCARD XOCEAN_FORCE_INLINE
-bool xocean_mempool_block_is_full(XOceanMempoolBlock * block)
+XOC_NODISCARD XOC_FORCE_INLINE
+bool xoc_mempool_block_is_full(XOCMempoolBlock * block)
 {
-    return (block->bitmap == XOCEAN_SIZE_T_MAX);
+    return (block->bitmap == XOC_SIZE_T_MAX);
 }
 
 

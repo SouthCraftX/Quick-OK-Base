@@ -31,7 +31,7 @@
                 "/usr/lib/modules/6.8.2-arch2-1/build/include/"
             ],
             "defines": [
-                "XOCEAN_WANT_SIMD_256"
+                "XOC_WANT_SIMD_256"
             ],
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "c23",

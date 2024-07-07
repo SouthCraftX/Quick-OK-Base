@@ -3,11 +3,11 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-struct _XOceanAsyncFile
+struct _XOCAsyncFile
 {
     io_context_t        io_ctx;
     struct iocb        *iocb_list;
     struct kiocb *      req;
     int                 fd;
-    xocean_uint32_t     nr_events;
+    xoc_uint32_t     nr_events;
 };

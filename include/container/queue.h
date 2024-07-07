@@ -6,97 +6,97 @@
 extern "C" {
 #endif // __cplusplus
 
-struct _XOceanQueue
+struct _XOC_Queue
 {
-    XOceanList list;
+    XOC_List list;
 };
-typedef struct _XOceanQueue XOceanQueue;
+typedef struct _XOC_Queue XOC_Queue;
 
-XOCEAN_FORCE_INLINE
-xocean_stat_t
-XOCEAN_IMPL(xocean_queue_init)(
-    XOceanQueue *   queue ,
-    xocean_size_t   element_size ,
-    xocean_flag32_t mode
+XOC_FORCE_INLINE
+xoc_stat_t
+XOC_IMPL(xoc_queue_init)(
+    XOC_Queue *   queue ,
+    xoc_size_t   element_size ,
+    xoc_flag32_t mode
 ){
-    return xocean_list_init((XOceanList *)queue , element_size , mode);
+    return xoc_list_init((XOC_List *)queue , element_size , mode);
 }
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 bool
-XOCEAN_IMPL(xocean_queue_add)(
-    XOceanQueue *           queue ,
-    const xocean_pointer_t  element
+XOC_IMPL(xoc_queue_add)(
+    XOC_Queue *           queue ,
+    const xoc_pointer_t  element
 ){
-    return xocean_list_insert_head((XOceanList *)queue , element);
+    return xoc_list_insert_head((XOC_List *)queue , element);
 }
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 void
-XOCEAN_IMPL(xocean_queue_add_node)(
-    XOceanQueue *           queue ,
-    XOceanListNode *        node
+XOC_IMPL(xoc_queue_add_node)(
+    XOC_Queue *           queue ,
+    XOC_ListNode *        node
 ){
-    xocean_list_insert_head((XOceanList *)queue , node->data);
+    xoc_list_insert_head((XOC_List *)queue , node->data);
 }
 
 
-XOCEAN_FORCE_INLINE
-xocean_size_t
-XOCEAN_IMPL(xocean_queue_get_element_count)(
-    XOceanQueue * queue
+XOC_FORCE_INLINE
+xoc_size_t
+XOC_IMPL(xoc_queue_get_element_count)(
+    XOC_Queue * queue
 ){
-    return xocean_list_get_element_count((XOceanList *)queue);
+    return xoc_list_get_element_count((XOC_List *)queue);
 }
 
-XOCEAN_FORCE_INLINE
-xocean_size_t
-XOCEAN_IMPL(xocean_queue_get_element_size)(
-    XOceanQueue * queue
+XOC_FORCE_INLINE
+xoc_size_t
+XOC_IMPL(xoc_queue_get_element_size)(
+    XOC_Queue * queue
 ){
-    return xocean_list_get_element_size((XOceanList *)queue);
+    return xoc_list_get_element_size((XOC_List *)queue);
 }
 
-XOCEAN_FORCE_INLINE
-xocean_size_t
-XOCEAN_IMPL(xocean_queue_get_data_size)(
-    XOceanQueue * queue
+XOC_FORCE_INLINE
+xoc_size_t
+XOC_IMPL(xoc_queue_get_data_size)(
+    XOC_Queue * queue
 ){
-    return xocean_list_get_data_size((XOceanList *)queue);
+    return xoc_list_get_data_size((XOC_List *)queue);
 }
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 bool
-XOCEAN_IMPL(xocean_queue_pull)(
-    XOceanQueue *           queue ,
-    xocean_pointer_t        element
+XOC_IMPL(xoc_queue_pull)(
+    XOC_Queue *           queue ,
+    xoc_pointer_t        element
 ){
     if(queue->list.element_count)
     {
-        xocean_memory_copy(queue->list.head->data , element , 
-                           queue->list.element_size + sizeof(XOceanListNode));
-        xocean_list_remove_head((XOceanList *)queue);
+        xoc_memory_copy(queue->list.head->data , element , 
+                           queue->list.element_size + sizeof(XOC_ListNode));
+        xoc_list_remove_head((XOC_List *)queue);
         return true;
     }
     return false;
 }
 
-XOCEAN_FORCE_INLINE
+XOC_FORCE_INLINE
 void
-XOCEAN_IMPL(xocean_queue_destory)(
-    XOceanQueue * queue
+XOC_IMPL(xoc_queue_destory)(
+    XOC_Queue * queue
 ){
-    xocean_list_destory((XOceanList *)queue);
+    xoc_list_destory((XOC_List *)queue);
 }
 
-#define xocean_queue_init       XOCEAN_INTERFACE(xocean_queue_init)
-#define xocean_queue_destory    XOCEAN_INTERFACE(xocean_queue_destory)
-#define xocean_queue_pull       XOCEAN_INTERFACE(xocean_queue_pull)
-#define xocean_queue_add        XOCEAN_INTERFACE(xocean_queue_add)
-#define xocean_queue_get_element_size \
-        XOCEAN_INTERFACE(xocean_queue_get_element_size)
-#define xocean_queue_get_data_size  \
-        XOCEAN_INTERFACE(xocean_queue_get_data_size)
+#define xoc_queue_init       XOC_INTERFACE(xoc_queue_init)
+#define xoc_queue_destory    XOC_INTERFACE(xoc_queue_destory)
+#define xoc_queue_pull       XOC_INTERFACE(xoc_queue_pull)
+#define xoc_queue_add        XOC_INTERFACE(xoc_queue_add)
+#define xoc_queue_get_element_size \
+        XOC_INTERFACE(xoc_queue_get_element_size)
+#define xoc_queue_get_data_size  \
+        XOC_INTERFACE(xoc_queue_get_data_size)
 
 #if defined(__cplusplus)
 }

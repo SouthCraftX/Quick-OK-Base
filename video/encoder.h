@@ -13,24 +13,24 @@ extern "C" {
 #include <libavutil/hwcontext.h>
 #include <libavutil/imgutils.h>
 
-#define XOCEAN_VIDEO_PROFILE_BASELINE   "baseline"
-#define XOCEAN_VIDEO_PROFILE_MAIN       "main"
-#define XOCEAN_VIDEO_PROFILE_HIGH       "high"
-#define XOCEAN_VIDEO_PROFILE_EXTENDED   "extended"
+#define XOC_VIDEO_PROFILE_BASELINE   "baseline"
+#define XOC_VIDEO_PROFILE_MAIN       "main"
+#define XOC_VIDEO_PROFILE_HIGH       "high"
+#define XOC_VIDEO_PROFILE_EXTENDED   "extended"
 
-#define XOCEAN_VIDEO_PRESET_PLACEBO     "placebo"
-#define XOCEAN_VIDEO_PRESET_VERYSLOW    "veryslow"
-#define XOCEAN_VIDEO_PRESET_SLOW        "slow"
-#define XOCEAN_VIDEO_PRESET_MEDIUM      "medium"
-#define XOCEAN_VIDEO_PROSET_FAST        "fast"
-#define XOCEAN_VIDEO_PRESET_VERYFAST    "veryfast"
-#define XOCEAN_VIDEO_PRESET_ULTRAFAST   "ultrafast"
+#define XOC_VIDEO_PRESET_PLACEBO     "placebo"
+#define XOC_VIDEO_PRESET_VERYSLOW    "veryslow"
+#define XOC_VIDEO_PRESET_SLOW        "slow"
+#define XOC_VIDEO_PRESET_MEDIUM      "medium"
+#define XOC_VIDEO_PROSET_FAST        "fast"
+#define XOC_VIDEO_PRESET_VERYFAST    "veryfast"
+#define XOC_VIDEO_PRESET_ULTRAFAST   "ultrafast"
 
 
 
-struct _XOceanVideoEncoder
+struct _XOCVideoEncoder
 {
-    XOceanVideoInfo     video_info;
+    XOCVideoInfo     video_info;
     AVCodecContext *    codec_ctx;
     AVFormatContext *   format_ctx;
     AVCodec *           codec;
@@ -39,48 +39,48 @@ struct _XOceanVideoEncoder
     AVDictionary *      opt;
     AVStream *          stream;
 };
-typedef struct _XOceanVideoEncoder XOceanVideoEncoder;
+typedef struct _XOCVideoEncoder XOCVideoEncoder;
 
 
-struct _XOceanHardwareVideoEncoder
+struct _XOCHardwareVideoEncoder
 {
-    XOceanVideoEncoder  base;
+    XOCVideoEncoder  base;
     AVFrame *           hw_frame;
     AVBufferRef *       hw_device_ctx;
     AVBufferRef *       hw_frames_ref;
     AVHWFramesContext * hw_frames_ctx;
 };
-typedef struct _XOceanHardwareVideoEncoder XOceanHardwareVideoEncoder;
-int a =sizeof(XOceanHardwareVideoEncoder);
+typedef struct _XOCHardwareVideoEncoder XOCHardwareVideoEncoder;
+int a =sizeof(XOCHardwareVideoEncoder);
 
-xocean_stat_t
-XOCEAN_INTERFACE(xocean_video_encoder_init)(
-    XOceanVideoEncoder *        encoder ,
-    const XOceanVideoInfo *     video_info ,
-    const XOceanVideoQuality *  video_quality ,
+xoc_stat_t
+XOC_INTERFACE(xoc_video_encoder_init)(
+    XOCVideoEncoder *        encoder ,
+    const XOCVideoInfo *     video_info ,
+    const XOCVideoQuality *  video_quality ,
     enum AVCodecID              codec_id ,
-    xocean_ccstring_t           video_path
+    xoc_ccstring_t           video_path
 );
 
 
-xocean_stat_t
-XOCEAN_INTERFACE(xocean_hardware_video_encoder_init)(
-    XOceanVideoEncoder *        encoder ,
-    const XOceanVideoInfo *     video_info ,
-    const XOceanVideoQuality *  video_quality ,
+xoc_stat_t
+XOC_INTERFACE(xoc_hardware_video_encoder_init)(
+    XOCVideoEncoder *        encoder ,
+    const XOCVideoInfo *     video_info ,
+    const XOCVideoQuality *  video_quality ,
     const enum AVHWDeviceType   hardware_type ,
-    xocean_ccstring_t           video_path
+    xoc_ccstring_t           video_path
 );
 
-xocean_stat_t
-XOCEAN_INTERFACE(xocean_video_encoder_write_frame)(
-    XOceanVideoEncoder *    encoder ,
-    xocean_pointer_t        frame
+xoc_stat_t
+XOC_INTERFACE(xoc_video_encoder_write_frame)(
+    XOCVideoEncoder *    encoder ,
+    xoc_pointer_t        frame
 );
 
 void
-XOCEAN_INTERFACE(xocean_video_encoder_stop)(
-    XOceanVideoEncoder *    encoder
+XOC_INTERFACE(xoc_video_encoder_stop)(
+    XOCVideoEncoder *    encoder
 );
 
 
