@@ -11,18 +11,21 @@
 #define XOC_FILE_READONLY    O_RDONLY
 #define XOC_FILE_WRITEONLY   O_WRONLY
 #define XOC_FILE_READWRITE   O_RDWR
-#define XOC_FILE_APPEND      O_APPEND
-#define XOC_FILE_TRUNCATE    O_TRUNC
-#define XOC_FILE_AUTO_CREATE O_CREAT
-#define XOC_FILE_EXISING     O_EXCL
+
+#define XOC_FILE_CLEAN_OPEN  ( O_CREAT | O_TRUNC)
+#define XOC_FILE_OPEN_EXISTING  O_EXCL
+#define XOC_FILE_TRUNCATE_EXISTING (O_TRUNC | O_EXCL)
+#define XOC_FILE_NO_BUFFERING  O_DIRECT
+#define XOC_FILE_SEQUENTIAL  0
+#define XOC_FILE_RANDOM_ACCESS 0
 
 #define __XOC_POSIX_ONCE_READ_LIMIT 0x7ffff000
 
 xoc_stat_t 
 XOC_IMPL(xoc_file_open)(
-    XOC_File **       file ,
+    XOC_File **      file ,
     xoc_ccstring_t   path ,
-    xoc_flag32_t     mode 
+    xoc_flag8_t      access_mode , 
 ){
     int fd = open(path , mode);
     if(fd == -1)
@@ -38,15 +41,16 @@ void
 XOC_IMPL(xoc_file_close)(
     XOC_File * file
 ){
-    close(__xoc_read_ptr_as_int(file));
+    if(file)
+        close(__xoc_read_ptr_as_int(file));
 }
 
 XOC_FORCE_INLINE
 xoc_uint32_t 
 __xoc_file_read32(
-    XOC_File *    file ,
-    xoc_byte_t * buf ,
-    xoc_size_t   size
+    XOC_File *      file ,
+    xoc_byte_t *    buf ,
+    xoc_size_t      size
 ){
     read(__xoc_read_ptr_as_int(file) , buf , size);
 }

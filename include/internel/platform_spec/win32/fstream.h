@@ -2,39 +2,17 @@
 
 #include <fileapi.h>
 
-static DWORD xoc_access_mode_list[] = {FILE_GENERIC_READ , FILE_GENERIC_WRITE , 
-                                   FILE_GENERIC_READ | FILE_GENERIC_WRITE , 0};
+#define XOC_FILE_READ           GENERIC_READ
+#define XOC_FILE_WRITE          GENERIC_WRITE
+#define XOC_FILE_READ_WRITE     (GENERIC_READ | GENERIC_WRITE)
 
-XOC_NOEXPORT XOC_FORCE_INLINE
-DWORD _xoc_file_win_translate_flag_and_attributes(
-    xoc_flag32_t mode
-){
-    return (XOC_HAS_FLAG(mode , XOC_FILE_NO_CACHING) ? FILE_FLAG_NO_BUFFERING : 0) &
-           (XOC_HAS_FLAG(mode , XOC_FILE_SEQUENTIAL) ? FILE_SEQUENTIAL_SCAN : 0) &
-}
+#define XOC_FILE_TRUNCATE_EXISTING  TRUNCATE_EXISTING
+#define XOC_FILE_OPEN_EXISTING      OPEN_EXISTING
+#define XOC_FILE_CLEAN_OPEN         CREATE_ALWAYS  
 
-XOC_NOEXPORT XOC_FORCE_INLINE
-DWORD _xoc_file_win_translate_open_mode(
-    xoc_flag32_t mode
-){
-    return (mode >> 8) & 0xff;
-}
-
-XOC_NOEXPORT XOC_FORCE_INLINE
-DWORD _xoc_file_win_translate_desired_access(
-    xoc_flag32_t mode
-){
-    return xoc_access_mode_list[mode & 0x3];
-}
-
-XOC_NOEXPORT XOC_FORCE_INLINE
-DWORD _xoc_file_win_translate_shared_mode(
-    xoc_flag32_t mode
-){
-    return (XOC_HAS_FLAG(mode , XOC_FILE_SHARED_READ) ? FILE_SHARE_READ : 0) &
-           (XOC_HAS_FLAG(mode , XOC_FILE_SHARED_WRITE) ? FILE_SHARE_WRITE : 0) &
-           (XOC_HAS_FLAG(mode , XOC_FILE_SHARED_DELETE) ? FILE_SHARE_DELETE : 0);
-}
+// Hints
+#define XOC_FILE_SEQUENTIAL      FILE_FLAG_SEQUENTIAL_SCAN
+#define XOC_FILE_RAMDOM_ACCESS   FILE_FLAG_RANDOM_ACCESS
 
 xoc_uint32_t 
 __xoc_file_read32(
@@ -69,25 +47,21 @@ xoc_size_t xoc_file_read64(
 
 XOC_API
 xoc_stat_t xoc_file_open(
-    XOC_File *        file , 
-    xoc_ccstring_t   path ,
-    xoc_flag32_t     mode
+    XOC_File *          file , 
+    xoc_ccstring_t      path ,
+    xoc_flag32_t        access_mode ,
+    xoc_flag32_t        open_mode ,
+    xoc_flag32_t        hints
 ){
     wchar_t wc_path[MAX_PATH] = { };
     LARGE_INTEGER file_size;
     MultiByteToWideChar(CP_THREAD_ACP , 0 , path , -1 , wc_path , MAX_PATH);
 
     HANDLE file_handle = CreateFileW(
-        wc_path ,
-        _xoc_file_win_translate_desired_access(mode) ,
-        _xoc_file_win_translate_shared_mode(mode) , 
-        NULL , 
-        _xoc_file_win_translate_open_mode(mode), 
-        FILE_ATTRIBUTE_NORMAL | _xoc_file_win_translate_flag_and_attributes(mode) ,
-        NULL
+        wc_path , access_mode , 0 , NULL , open_mode , hints , NULL
     );
 
-    if (file->handle == INVALID_HANDLE_VALUE)
+    if (file_handle == INVALID_HANDLE_VALUE)
     {
         switch(GetLastError())
         {
@@ -100,16 +74,15 @@ xoc_stat_t xoc_file_open(
                 return XOC_FILE_OPEN_FAILED;
         }
     }
-    file->handle = file_handle;
+    (HANDLE)file = file_handle;
     return XOC_OK;
 }
 
-XOC_API
+XOC_FORCE_INLINE
 void xoc_file_close(
     XOC_File * file
 ){
-    CloseHandle(file->handle);
-    file->handle = INVALID_HANDLE_VALUE;
+    CloseHandle((HANDLE)handle);
 }
 
 XOC_API 

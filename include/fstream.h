@@ -37,14 +37,16 @@ typedef struct _XOC_File XOC_File;
 
 xoc_stat_t 
 XOC_INTERFACE(xoc_file_open)(
-    XOC_File **       file , 
-    xoc_ccstring_t   path , 
-    xoc_flag32_t     mode
+    XOC_File **     file , 
+    xoc_ccstring_t  path , 
+    xoc_flag32_t    access_mode ,
+    xoc_flag32_t    open_mode ,
+    xoc_flag32_t    hint
 ) XOC_NONNULL(1 , 2);
 
-xoc_stat_t 
+xoc_size_t 
 XOC_INTERFACE(xoc_file_read_explicit)(
-    XOC_File *        file ,
+    XOC_File *       file ,
     xoc_byte_t *     buf ,
     xoc_size_t       desired_size ,
     xoc_size_t *     have_read_size
@@ -53,7 +55,7 @@ XOC_INTERFACE(xoc_file_read_explicit)(
 XOC_FORCE_INLINE
 xoc_stat_t
 XOC_INTERFACE(xoc_file_write_implicit)(
-    XOC_File *        file ,
+    XOC_File *       file ,
     xoc_byte_t *     buf ,
     xoc_size_t       desired_size
 ) {
@@ -62,18 +64,18 @@ XOC_INTERFACE(xoc_file_write_implicit)(
     );
 }
 
-xoc_stat_t
+xoc_size_t
 XOC_INTERFACE(xoc_file_write_explicit)(
-    XOC_File *        file ,
+    XOC_File *       file ,
     xoc_byte_t *     buf ,
     xoc_size_t       desired_size ,
-    xoc_size_t *     have_written_size
+    xoc_stat_t *     error
 ) XOC_NONNULL(1 , 2);
 
 XOC_FORCE_INLINE
 xoc_stat_t
 XOC_INTERFACE(xoc_file_read_implicit)(
-    XOC_File *        file ,
+    XOC_File *       file ,
     xoc_byte_t *     buf ,
     xoc_size_t       desired_size
 ){
@@ -87,13 +89,13 @@ XOC_INTERFACE(xoc_file_close)(
 
 xoc_stat_t 
 XOC_INTERFACE(xoc_file_alloc)(
-    XOC_File *    file ,
+    XOC_File *   file ,
     xoc_size_t   size
 ) XOC_NONNULL(1);
 
 xoc_offset_t 
 XOC_INTERFACE(xoc_file_seek)(
-    XOC_File *    file ,
+    XOC_File *   file ,
     xoc_offset_t offset ,
     xoc_flag32_t move_method 
 ) XOC_NONNULL(1);
