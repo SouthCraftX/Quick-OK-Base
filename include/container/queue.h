@@ -71,7 +71,7 @@ XOC_IMPL(xoc_queue_pull)(
     XOC_Queue *           queue ,
     xoc_pointer_t        element
 ){
-    if(queue->list.element_count)
+    if (queue->list.element_count)
     {
         xoc_memory_copy(queue->list.head->data , element , 
                            queue->list.element_size + sizeof(XOC_ListNode));

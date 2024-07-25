@@ -49,7 +49,7 @@ XOCRWLock * xoc_rwlock_new_ex(xoc_stat_t * stat)
 {
     XOC_ASSERT(stat);
     XOCRWLock * ret = (XOCRWLock*)mi_malloc_small(sizeof(XOCRWLock));
-    if(XOC_LIKELY(ret))
+    if (XOC_LIKELY(ret))
     {
         *stat = xoc_rwlock_init(ret);
         return ret;
@@ -77,7 +77,7 @@ struct xocRWLock
 xoc_stat_t xoc_rwlock_init(XOCRWLock * lock)
 {
     int ret = pthread_rwlock_init(&lock->rwlock, NULL);
-    if(XOC_UNLIKELY(ret))
+    if (XOC_UNLIKELY(ret))
     {
         switch(ret)
         {

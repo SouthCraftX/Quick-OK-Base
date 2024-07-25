@@ -56,3 +56,6 @@ memory/mimalloc/
 
 # asm
 *.asm
+
+# IDE
+.vscode/

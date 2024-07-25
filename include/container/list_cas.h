@@ -16,7 +16,7 @@ XOC_IMPL(xoc_list_insert_tail_cas)(
         list->heap , 
         sizeof(XOC_ListNode) + list->element_size
     );
-    if(node)
+    if (node)
     {
         node->next = NULL;
         xoc_memory_copy(node->data , element , list->element_size);

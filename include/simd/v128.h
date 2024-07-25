@@ -93,7 +93,7 @@ do                                                                             \
     );                                                                         \
     for(; x_now < x + sx ; x_now += 16 , y_now += 16 , res_now += 16)          \                                                               \
         xoc_128_add(x_now , y_now , res_now , ##type## , si128);            \
-    if(sy < sx)                                                                \
+    if (sy < sx)                                                                \
         xoc_i128_array_copy(res_now , x_now , sx - sy);                     \
 }                                                                              \
 while(false)

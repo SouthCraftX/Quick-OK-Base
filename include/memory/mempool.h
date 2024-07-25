@@ -36,7 +36,7 @@ XOC_NODISCARD
 XOCMempoolBlock * xoc_mempool_block_new(xoc_size_t size)
 {
     XOCMempoolBlock * block = (XOCMempoolBlock *)mi_malloc(sizeof(XOCMempoolBlock));
-    if(block)
+    if (block)
     {
         block->assist_info.full = false;
         block->assist_info.last_alloc_end = 0;

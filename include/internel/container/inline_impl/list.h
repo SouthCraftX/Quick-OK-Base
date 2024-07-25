@@ -110,7 +110,7 @@ XOC_IMPL(xoc_list_unref)(
     XOC_List * list
 ){
     list->ref_count--;
-    if(list->ref_count)
+    if (list->ref_count)
         return;
     list->destructor(list);
 }
@@ -155,12 +155,12 @@ XOC_IMPL(xoc_list_init)(
     xoc_flag32_t mode
 ){
     mi_heap_t * heap = __xoc_container_acquire_heap(mode);
-    if(heap)
+    if (heap)
     {
         const xoc_size_t prealloc_size = (element_size + sizeof(XOC_ListNode) *
             _xoc_get_container_init_alloc_element_count());
         xoc_pointer_t mem = mi_heap_malloc(heap , prealloc_size);
-        if(mem)
+        if (mem)
         {
             __xoc_list_prealloc(list , (xoc_byte_t *)mem , 
                                    element_size + sizeof(XOC_ListNode *));
@@ -211,7 +211,7 @@ XOC_IMPL(xoc_list_insert_ahead)(
                                 __xoc_list_node_clac_size(list));
     if (new_node)
     {
-        if(p_element)
+        if (p_element)
             xoc_memory_copy(p_element , new_node->data , list->element_size);
         new_node->next = list->cur->next;
         new_node->prev = list->cur;
@@ -245,7 +245,7 @@ XOC_IMPL(xoc_list_insert_backward)(
                                 __xoc_list_node_clac_size(list));
     if (new_node)
     {
-        if(p_element)
+        if (p_element)
             xoc_memory_copy(p_element , new_node->data , list->element_size);
         new_node->next = list->cur;
         new_node->prev = list->cur->prev;
@@ -265,7 +265,7 @@ XOC_IMPL(xoc_list_insert_multiple_ahead)(
     xoc_size_t inserted_count = 0;
     for ( ; inserted_count < count ; inserted_count++)
     {
-        if(XOC_INTERFACE(xoc_list_insert_ahead)(list , p_elements))
+        if (XOC_INTERFACE(xoc_list_insert_ahead)(list , p_elements))
         {
             p_elements += list->element_size;
         }
@@ -285,7 +285,7 @@ XOC_IMPL(xoc_list_insert_multiple_backward)(
     xoc_size_t inserted_count = 0;
     for ( ; inserted_count < count ; inserted_count++)
     {
-        if(XOC_INTERFACE(xoc_list_insert_backward)(list , p_elements))
+        if (XOC_INTERFACE(xoc_list_insert_backward)(list , p_elements))
         {
             p_elements += list->element_size;
         }
@@ -305,7 +305,7 @@ XOC_IMPL(xoc_list_insert_tail)(
         list->heap , 
         sizeof(XOC_ListNode) + list->element_size
     );
-    if(node)
+    if (node)
     {
         list->tail->next = node;
         node->prev = list->tail;
@@ -327,7 +327,7 @@ XOC_IMPL(xoc_list_insert_head)(
     XOC_ListNode * node = (XOC_ListNode*)mi_heap_malloc(
         list->heap ,
         sizeof(XOC_ListNode) + list->element_size);
-    if(XOC_LIKELY(node))
+    if (XOC_LIKELY(node))
     {
         list->head->prev = node;
         node->next = list->head;
@@ -432,7 +432,7 @@ XOC_IMPL(xoc_list_remove_front)(
         mi_free(now);
         now = prev;
     }
-    if(now) // Is it not the first node?
+    if (now) // Is it not the first node?
     {
         list->head->prev = now;
         now->next = list->head;
@@ -458,7 +458,7 @@ XOC_IMPL(xoc_list_remove_backward)(
         mi_free(now);
         now = next;
     }
-    if(now) // Is it not the last node?
+    if (now) // Is it not the last node?
     {
         list->cur->next = now;
         now->prev = list->cur;

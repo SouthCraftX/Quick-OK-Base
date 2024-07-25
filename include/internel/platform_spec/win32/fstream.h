@@ -1,4 +1,9 @@
-#include "fstream.h"
+#pragma once
+#define __XOC_WIN32_FSTREAM_H__
+
+#if !defined(__XOC_FSTREAM_H__)
+#   error Never include this header file directly, use <xocean/fstream.h> instead.
+#endif // __XOC_FSTREAM_H__
 
 #include <fileapi.h>
 
@@ -16,12 +21,12 @@
 
 xoc_uint32_t 
 __xoc_file_read32(
-    XOC_File      file ,
+    XOC_File *   file ,
     xoc_byte_t * buf ,
     xoc_uint32_t size
 ){
     DWORD have_read;
-    return ReadFile(file->handle , buf , size , &have_read , NULL) ? have_read : 0;
+    return ReadFile((HANDLE)file , buf , size , &have_read , NULL) ? have_read : 0;
 }
 
 #   if XOC_SYSTEM_BIT(64)
@@ -36,7 +41,7 @@ xoc_size_t xoc_file_read64(
     for(remain = size ; remain > 0 ; remain -= 0xffffffff)
     {
         once_read = xoc_file_read(file , buf , 0xffffffff);
-        if(!once_read)
+        if (!once_read)
             return have_read;
         have_read += once_read;
     }
@@ -53,7 +58,7 @@ xoc_stat_t xoc_file_open(
     xoc_flag32_t        open_mode ,
     xoc_flag32_t        hints
 ){
-    wchar_t wc_path[MAX_PATH] = { };
+    wchar_t wc_path[MAX_PATH];
     LARGE_INTEGER file_size;
     MultiByteToWideChar(CP_THREAD_ACP , 0 , path , -1 , wc_path , MAX_PATH);
 
@@ -134,11 +139,11 @@ xoc_offset_t xoc_file_seek(
 #   else
     LARGE_INTEGER li_offset = {.LowPart = offset , .HighPart = 0};
 #   endif
-    BOOL ret = SetFilePointerEx(file->handle , 
+    BOOL ret = SetFilePointerEx((HANDLE)file , 
                                 li_offset , 
                                 &after_moving_offset , 
                                 move_method);
-    if(ret)
+    if (ret)
     {
         return xoc_win_large_interger_to_offset(after_moving_offset);
     }

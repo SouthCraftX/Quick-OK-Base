@@ -10,13 +10,13 @@ int main()
     DWORD rd;
     void * m = malloc(sz);
 
-    if(!m)
+    if (!m)
     {
         cout << "alloc failed";
         abort();
     }
     HANDLE file = CreateFileW(L"H:/la", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-    if(file == INVALID_HANDLE_VALUE)
+    if (file == INVALID_HANDLE_VALUE)
     {
         cout << "open file failed";
         free(m);

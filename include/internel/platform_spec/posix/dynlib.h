@@ -24,7 +24,7 @@ XOC_IMPL(xoc_dynamic_library_open)(
     xoc_ccstring_t       path
 ){
     xoc_pointer_t lib =  dlopen(path , 0);
-    if(lib)
+    if (lib)
     {
         *library = lib;
         return XOC_OK;

@@ -59,7 +59,7 @@ __xoc_file_read64(
     for(remain = size ; remain > 0 ; remain -= 0xffffffff)
     {
         once_read = __xoc_file_read32(file , buf , 0xffffffff);
-        if(!once_read)
+        if (!once_read)
             return have_read;
         have_read += once_read;
     }
@@ -109,7 +109,7 @@ XOC_IMPL(xoc_file_open)(
         NULL
     );
 
-    if(file_handle == INVALID_HANDLE_VALUE)
+    if (file_handle == INVALID_HANDLE_VALUE)
     {
         switch(GetLastError())
         {
@@ -188,7 +188,7 @@ XOC_IMPL(xoc_file_seek)(
                                 li_offset , 
                                 &after_moving_offset , 
                                 move_method);
-    if(ret)
+    if (ret)
     {
         return xoc_win_large_interger_to_offset(after_moving_offset);
     }

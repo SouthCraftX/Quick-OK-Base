@@ -1,4 +1,5 @@
 #pragma once
+#define __XOC_BASE_PLATFORM_H__
 
 #if defined(__cplusplus)
 extern "C" {
@@ -53,7 +54,7 @@ extern "C" {
        defined(__ia64__) 
 #       undef XOC_64BIT_ACTIVE
 #       define XOC_64BIT_ACTIVE 1
-#   elif defined(__i386__) || defined(__ppc__) || defined(__LP32__) || \ 
+#   elif defined(__i386__) || defined(__ppc__) || defined(__LP32__) || \
          defined(__x86_32__) || defined(__amd32) || defined(__m68k__)
 #       undef XOC_32BIT_ACTIVE
 #       define XOC_32BIT_ACTIVE 1
@@ -106,13 +107,13 @@ extern "C" {
 #define XOC_x86_ACTIVE 0
 #define XOC_ARM_ACTIVE 0
 
-#if defined(__i386__) || defined(__x86_32__) || defined(__amd32) || \ 
+#if defined(__i386__) || defined(__x86_32__) || defined(__amd32) || \
     defined(__INTEL__) || defined(_M_IX86) || defined(_M_X64) || \
     defined(_X86_) || defined(_M_IA64) || defined(_M_AMD64)
 #   undef XOC_x86_ACTIVE
 #   define XOC_x86_ACTIVE 1
 #elif defined(__arm__) || defined(__thumb__) || defined(__TARGET_ARCH_ARM) || \
-      defined(__TARGET_ARCH_THUMB) || defined(_ARM_) || defined(_M_ARM) || \ 
+      defined(__TARGET_ARCH_THUMB) || defined(_ARM_) || defined(_M_ARM) || \
       defined(_M_ARMT) || defined(__aarch64__) || defined(_M_ARM64)
 #   undef XOC_ARM_ACTIVE
 #   define XOC_ARM_ACTIVE 1

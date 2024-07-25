@@ -13,7 +13,7 @@ __xoc_dec_quality_to_str(
         str[1] = '0' + division.remainder;
         str[2] = 0;
     }
-    else{
+    else {
         str[0] = '0' + division.remainder;
         str[1] = 0;
     }  
@@ -29,15 +29,15 @@ __xoc_set_video_quality(
     char tmp_str[3];
     int ret;
 
-    if(video_quality->preset)
+    if (video_quality->preset)
     {
-        if(av_dict_set(opt , "preset" , video_quality->preset , 0))
+        if (av_dict_set(opt , "preset" , video_quality->preset , 0))
             return true;
     }
 
-    if(video_quality->profile)
+    if (video_quality->profile)
     {
-        if(av_dict_set(opt , "profile" , video_quality->profile , 0))
+        if (av_dict_set(opt , "profile" , video_quality->profile , 0))
             return true;
     }
         
@@ -49,7 +49,7 @@ __xoc_set_video_quality(
             __xoc_dec_quality_to_str(video_quality->qp.qp , tmp_str);
             ret = av_opt_set(codec_ctx->priv_data, "qp", tmp_str , 
                              AV_OPT_SEARCH_CHILDREN);
-            if(ret) goto ERR_ARG;
+            if (ret) goto ERR_ARG;
             break;
 
         case XOC_VIDEO_QUALITY_BITRATE:
@@ -62,7 +62,7 @@ __xoc_set_video_quality(
             __xoc_dec_quality_to_str(video_quality->crf.crf , tmp_str);
             ret = av_opt_set(codec_ctx->priv_data, "crf", tmp_str , 
                              AV_OPT_SEARCH_CHILDREN);
-            if(ret) goto ERR_ARG;
+            if (ret) goto ERR_ARG;
             break;
 
         ERR_ARG:
@@ -111,39 +111,39 @@ __xoc_generic_video_encoder_init(
         return XOC_CODEC_NOT_FOUND;
     
     AVCodecContext * codec_ctx = avcodec_alloc_context3(codec);
-    if(XOC_UNLIKELY(!codec_ctx))
+    if (XOC_UNLIKELY(!codec_ctx))
         return XOC_OUT_OF_MEMORY;
     
     AVDictionary * opt = NULL;
 
-    if(__xoc_set_video_quality(codec_ctx , video_quality , opt))
+    if (__xoc_set_video_quality(codec_ctx , video_quality , opt))
     {
         avcodec_close(codec_ctx);
         return XOC_INVALID_ARG;
     }
 
     AVFormatContext * format_ctx;
-    if(avformat_alloc_output_context2(&format_ctx , NULL , NULL , video_path) < 0)
+    if (avformat_alloc_output_context2(&format_ctx , NULL , NULL , video_path) < 0)
     {
-        if(opt) 
+        if (opt) 
             av_dict_free(&opt);
         avcodec_close(codec_ctx);
         return XOC_INIT_VIDEO_FORMAT_FAILED;
     }
 
     AVStream * stream = avformat_new_stream(format_ctx , NULL);
-    if(XOC_UNLIKELY(!stream))
+    if (XOC_UNLIKELY(!stream))
     {
-        if(opt) 
+        if (opt) 
             av_dict_free(&opt);
         avcodec_close(codec_ctx);
         avformat_free_context(format_ctx);
         return XOC_ADD_MEDIA_STREAM_FAILED;
     }
 
-    if(avcodec_parameters_from_context(stream->codecpar , codec_ctx))
+    if (avcodec_parameters_from_context(stream->codecpar , codec_ctx))
     {
-        if(opt) 
+        if (opt) 
             av_dict_free(&opt);
         avcodec_close(codec_ctx);
         avformat_free_context(format_ctx);
@@ -152,9 +152,9 @@ __xoc_generic_video_encoder_init(
     
 
     AVPacket * packet = av_packet_alloc();
-    if(XOC_UNLIKELY(!packet))
+    if (XOC_UNLIKELY(!packet))
     {
-        if(opt) 
+        if (opt) 
             av_dict_free(&opt);
         avcodec_close(codec_ctx);
         avformat_free_context(format_ctx);
@@ -162,9 +162,9 @@ __xoc_generic_video_encoder_init(
     }
 
     AVFrame * frame = av_frame_alloc();
-    if(XOC_UNLIKELY(!frame))
+    if (XOC_UNLIKELY(!frame))
     {
-        if(opt) 
+        if (opt) 
             av_dict_free(&opt);
         av_packet_free(&packet);
         avcodec_close(codec_ctx);
@@ -173,9 +173,9 @@ __xoc_generic_video_encoder_init(
     }
     __xoc_set_av_frame(frame , video_info);
 
-    if(avcodec_open2(codec_ctx , codec , &opt) < 0)
+    if (avcodec_open2(codec_ctx , codec , &opt) < 0)
     {
-        if(opt) 
+        if (opt) 
             av_dict_free(&opt);
         av_packet_free(&packet);
         avcodec_close(codec_ctx);
@@ -185,9 +185,9 @@ __xoc_generic_video_encoder_init(
     
     
 
-    if(av_frame_get_buffer(frame , 0) < 0)
+    if (av_frame_get_buffer(frame , 0) < 0)
     {
-        if(opt) 
+        if (opt) 
             av_dict_free(&opt);
         av_packet_free(&packet);
         av_frame_free(&frame);
@@ -196,9 +196,9 @@ __xoc_generic_video_encoder_init(
         return XOC_OUT_OF_MEMORY;
     }
 
-    if(avio_open(&format_ctx->pb , video_path , AVIO_FLAG_WRITE) < 0)
+    if (avio_open(&format_ctx->pb , video_path , AVIO_FLAG_WRITE) < 0)
     {
-        if(opt) 
+        if (opt) 
             av_dict_free(&opt);
         av_packet_free(&packet);
         av_frame_free(&frame);
@@ -207,9 +207,9 @@ __xoc_generic_video_encoder_init(
         return XOC_OPEN_FILE_FAILED;
     }
 
-    if(avformat_write_header(format_ctx , &opt) < 0)
+    if (avformat_write_header(format_ctx , &opt) < 0)
     {
-        if(opt) 
+        if (opt) 
             av_dict_free(&opt);
         avio_close(format_ctx->pb);
         av_packet_free(&packet);
@@ -263,16 +263,16 @@ XOC_IMPL(xoc_hardware_video_encoder_init)(
         video_quality ,
         video_path
     );
-    if(ret)
+    if (ret)
         return ret;
 
     AVBufferRef * hw_device_ctx;
-    if(av_hwdevice_ctx_create(&hw_device_ctx , hardware_type , NULL , 
+    if (av_hwdevice_ctx_create(&hw_device_ctx , hardware_type , NULL , 
                            encoder->base.opt , 0) < 0)
         return XOC_INIT_HARDWARE_FAILED;
 
     AVBufferRef * hw_frames_ref = av_hwframe_ctx_alloc(hw_device_ctx);
-    if(!hw_frames_ref)
+    if (!hw_frames_ref)
     {
         return XOC_OUT_OF_MEMORY;
     }
@@ -284,14 +284,14 @@ XOC_IMPL(xoc_hardware_video_encoder_init)(
     encoder->base.codec_ctx->hw_frames_ctx = av_buffer_ref(hw_frames_ref);
 
     AVFrame * hw_frame = av_frame_alloc();
-    if(!hw_frame)
+    if (!hw_frame)
     {
         // todo
         return XOC_OUT_OF_MEMORY;
     }
     
 
-    if(av_hwframe_get_buffer(encoder->base.codec_ctx->hw_frames_ctx , hw_frame , 0) < 0)
+    if (av_hwframe_get_buffer(encoder->base.codec_ctx->hw_frames_ctx , hw_frame , 0) < 0)
         return XOC_OUT_OF_MEMORY;
 
     
@@ -304,18 +304,18 @@ __xoc_encode_frame(
     AVPacket *          packet ,
     AVFormatContext *   format_ctx
 ){
-    if(avcodec_send_frame(codec_ctx , frame) < 0)
+    if (avcodec_send_frame(codec_ctx , frame) < 0)
         return XOC_UNKNOWN_ERROR;
     
     int ret;
     while(ret >= 0)
     {
         ret = avcodec_receive_packet(codec_ctx , packet);
-        if(ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
+        if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
             break;
-        else if(ret < 0)
+        else if (ret < 0)
             return XOC_UNKNOWN_ERROR;
-        if(av_write_frame(format_ctx , packet) < 0)
+        if (av_write_frame(format_ctx , packet) < 0)
             return XOC_UNKNOWN_ERROR;
         av_packet_unref(packet);
     }
@@ -328,7 +328,7 @@ XOC_IMPL(xoc_video_encoder_write_frame)(
     XOCVideoEncoder *    encoder ,
     xoc_pointer_t        frame
 ){
-    if(XOC_UNLIKELY(av_frame_make_writable(encoder->frame) < 0))
+    if (XOC_UNLIKELY(av_frame_make_writable(encoder->frame) < 0))
         return XOC_UNKNOWN_ERROR;
 
     // Todo

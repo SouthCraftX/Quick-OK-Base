@@ -22,7 +22,7 @@ __xoc_pooled_thread_run_task(
     XOC_ThreadPoolTask * task
 ){
     xoc_stat_t ret = (*task->func)(task->arg);
-    if(task->p_ret)
+    if (task->p_ret)
         *p_ret = ret;
 }
 
@@ -48,7 +48,7 @@ XOC_IMPL(xoc_thread_pool_init)(
     
     XOC_Thread * threads = mi_malloc(sizeof(XOC_Thread) * max_thread_num);
     
-    if(XOC_UNLIKELY(!threads))
+    if (XOC_UNLIKELY(!threads))
         return XOC_OUT_OF_MEMORY;
     
     const xoc_stat_t queue_init_ret = xoc_queue_init(
@@ -57,7 +57,7 @@ XOC_IMPL(xoc_thread_pool_init)(
         0
     );
 
-    if(XOC_UNLIKELY(queue_init_ret))
+    if (XOC_UNLIKELY(queue_init_ret))
     {
         mi_free(threads);
         return queue_init_ret;

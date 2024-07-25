@@ -74,12 +74,12 @@ XOC_IMPL(xoc_memmap_init)(
     map_handle = CreateFileMappingW(XOC_SNULL(file , handle) , NULL , 
                                     fl_prot , 0 , 0 , NULL);
 
-    if(!map_handle)
+    if (!map_handle)
         return xoc_mmap_handle_create_error();
 
     begin = MapViewOfFileEx(memmap->map , desired_access , offset_high , offset_low , 
                             len , suggested_addr);
-    if(begin)
+    if (begin)
     {
         memmap->map = map_handle;
         memmap->begin = begin;

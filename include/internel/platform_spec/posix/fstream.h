@@ -28,7 +28,7 @@ XOC_IMPL(xoc_file_open)(
     xoc_flag8_t      access_mode , 
 ){
     int fd = open(path , mode);
-    if(fd == -1)
+    if (fd == -1)
     {
         return __xoc_file_handle_open_error(); 
     }
@@ -41,7 +41,7 @@ void
 XOC_IMPL(xoc_file_close)(
     XOC_File * file
 ){
-    if(file)
+    if (file)
         close(__xoc_read_ptr_as_int(file));
 }
 
@@ -66,7 +66,7 @@ XOC_IMPL(__xoc_file_read32)(
            remain_size -= __XOC_POSIX_ONCE_READ_LIMIT
     ){
         once_read = __xoc_file_read32(file , buf , __XOC_POSIX_ONCE_READ_LIMIT);
-        if(once_read)
+        if (once_read)
         {
             xoc_file_auto_handle_read_error(file , once_read);
             buf += once_read;
@@ -95,7 +95,7 @@ __xoc_auto_handle_file_seek_error(
         }
     }
 
-    if(current_offset)
+    if (current_offset)
         *current_offset = offset;
 
     return XOC_OK;

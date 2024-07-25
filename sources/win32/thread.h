@@ -1,4 +1,4 @@
-#include "include/platform_spec/win32/thread.h"
+
 
 XOC_FORCE_INLINE
 xoc_stat_t
@@ -14,20 +14,19 @@ __xoc_thread_creating_error()
 
 xoc_stat_t
 XOC_IMPL(xoc_thread_init)(
-    XOC_Thread *          thread ,
-    const xoc_pointer_t  func ,
-    const xoc_pointer_t  arg ,
-    const xoc_size_t     stack_size 
+    XOC_Thread **           thread ,
+    const xoc_pointer_t     func ,
+    const xoc_pointer_t     arg ,
+    const xoc_size_t        stack_size 
 ){
-    HANDLE thread_handle;
-    thread_handle =  CreateThread(NULL , stack_size , 
-                                  (LPTHREAD_START_ROUTINE)func , arg , 
-                                  0 , NULL);
+    HANDLE thread_handle = CreateThread(
+        NULL , stack_size , (LPTHREAD_START_ROUTINE)func , arg , 0 , NULL
+    );
 
-    if(!thread_handle)
+    if (!thread_handle)
         return __xoc_thread_creating_error();
     
-    thread->thread_handle = thread_handle;
+    (HANDLE)(*thread) = thread_handle;
     return XOC_OK;
 }
 
@@ -66,6 +65,6 @@ XOC_IMPL(xoc_thread_get_priority)(
             return XOC_OK;
 
         default:
-            return __xoc_thread_priority_error();
+            return __xoc_thread_priority_setting_error();
     }
 }

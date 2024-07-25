@@ -1,6 +1,7 @@
 #pragma once
 
 #include <assert.h>
+#include "platform.h"
 
 #if defined(__GNUC__)
 #   include "internel/gnuc_spec/types.h"
@@ -46,4 +47,4 @@ typedef     xoc_int64_t  xoc_flag64_t;
 typedef     char*               xoc_cstring_t;
 typedef     const xoc_cstring_t xoc_ccstring_t;
 
-
+#define XOC_INVALID_ADDRESS ((xoc_pointer_t)(-1))

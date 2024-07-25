@@ -7,7 +7,7 @@ uint64_t f(uint64_t x,uint64_t n)
     uint64_t mask = ((1ull<<n)-1)<<(64-n);
     for(int i = 64 - n; ~i ;--i)
     {
-        if(!(x & mask)) return i;
+        if (!(x & mask)) return i;
         mask >>=1;
     }
 }
