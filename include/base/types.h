@@ -4,11 +4,11 @@
 #include "platform.h"
 
 #if defined(__GNUC__)
-#   include "internel/gnuc_spec/types.h"
+#   include "internal/gnuc_spec/types.h"
 #elif defined(_MSC_VER)
-#   include "internel/msvc_spec/types.h"
+#   include "internal/msvc_spec/types.h"
 #else
-#   include "internel/stdc_spec/types.h"
+#   include "internal/stdc_spec/types.h"
 #endif 
 
 #if XOC_SYSTEM_BIT(64)

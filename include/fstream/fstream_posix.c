@@ -1,5 +1,5 @@
 #include "fstream.h"
-#include "internel/platform_spec/posix/common.h"
+#include "internal/platform_spec/posix/common.h"
 #include <fcntl.h>
 
 #define __XOC_POSIX_ONCE_READ_LIMIT 0x7ffff000
@@ -14,7 +14,7 @@ xoc_stat_t XOC_IMPL(xoc_file_alloc)(
     XOC_File *    file ,
     xoc_size_t   size
 ){
-    switch(posix_fallocate(__xoc_read_ptr_as_int(file) , 0 , size))
+    switch(posix_fallocate(__xoc_read_pointer_as_int(file) , 0 , size))
     {
         case 0:         return XOC_OK;
         case ENOSPC:    return XOC_DISK_NO_SPACE;

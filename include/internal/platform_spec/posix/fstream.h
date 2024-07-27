@@ -32,7 +32,7 @@ XOC_IMPL(xoc_file_open)(
     {
         return __xoc_file_handle_open_error(); 
     }
-    __xoc_write_ptr_as_int(file , fd);
+    __xoc_write_pointer_as_int(file , fd);
     return XOC_OK;
 }
 
@@ -42,7 +42,7 @@ XOC_IMPL(xoc_file_close)(
     XOC_File * file
 ){
     if (file)
-        close(__xoc_read_ptr_as_int(file));
+        close(__xoc_read_pointer_as_int(file));
 }
 
 XOC_FORCE_INLINE
@@ -52,7 +52,7 @@ __xoc_file_read32(
     xoc_byte_t *    buf ,
     xoc_size_t      size
 ){
-    read(__xoc_read_ptr_as_int(file) , buf , size);
+    read(__xoc_read_pointer_as_int(file) , buf , size);
 }
 
 xoc_size_t 
@@ -74,7 +74,7 @@ XOC_IMPL(__xoc_file_read32)(
         }
         return have_read;
     }
-    have_read += __xoc_file_read32(__xoc_read_ptr_as_int(file) , buf , remain_size);
+    have_read += __xoc_file_read32(__xoc_read_pointer_as_int(file) , buf , remain_size);
     return have_read;
 }
 
@@ -109,7 +109,7 @@ XOC_IMPL(xoc_file_seek)(
     xoc_flag32_t     move_method ,
     xoc_offset_t *   current_offset
 ){
-    off_t off = lseek(__xoc_read_ptr_as_int(file) , desired_offset , move_method);
+    off_t off = lseek(__xoc_read_pointer_as_int(file) , desired_offset , move_method);
     return __xoc_auto_handle_file_seek_error(off , current_offset);
 }
 
@@ -119,7 +119,7 @@ XOC_IMPL(xoc_fstream_prealloc)(
     XOC_File *    file , 
     xoc_size_t   size
 ){
-    return fallocate(__xoc_read_ptr_as_int(file) , 0 , 0 , size) ? 
+    return fallocate(__xoc_read_pointer_as_int(file) , 0 , 0 , size) ? 
            __xoc_file_prealloc_error() : XOC_OK;
 }
 

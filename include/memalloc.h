@@ -122,5 +122,5 @@ XOC_INTERFACE(xoc_free)(
 // XOC_MEMALLOC_API_IMPLEMENTED
 // By default, the implementation is provided by mimalloc.
 #if !defined(XOC_MEMALLOC_API_IMPLEMENTED)
-#   include "internel/memalloc_mi.h"
+#   include "internal/memalloc_mi.h"
 #endif 

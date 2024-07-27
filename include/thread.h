@@ -180,7 +180,7 @@ XOC_INTERFACE(xoc_thread_is_equal)(
 #endif // __cplusplus
 
 #if XOC_PLATFORM(WINDOWS)
-#   include "internel/platform_spec/win32/thread.h"
+#   include "internal/platform_spec/win32/thread.h"
 #elif XOC_PLATFORM(POSIX)
-#   include "internel/platform_spec/posix/thread.h"
+#   include "internal/platform_spec/posix/thread.h"
 #endif // XOC_PLATFORM

@@ -22,7 +22,7 @@ XOC_INTERFACE(xoc_list_get_cur)(
 }
 #endif // __cplusplus
 
-#include "internel/container/inline_impl/list.h"
+#include "internal/container/inline_impl/list.h"
 
 #define xoc_list_init            XOC_INTERFACE(xoc_list_init)
 #define xoc_list_get_element_size \

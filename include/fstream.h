@@ -1,3 +1,12 @@
+/*******************************************************************************
+ *  @file       include/fstream.h
+ *  @addtogroup Headers under the MIT License
+ *  @author     XOcean <https://github.com/SouthCraftX>
+ * 
+ *  @addtogroup Simple System-API Redirecting Layer
+ *  @addtogroup File Stream 
+ */
+
 #pragma once
 #define __XOC_FSTREAM_H__
 
@@ -35,9 +44,14 @@ extern "C" {
 struct _XOC_File;
 typedef struct _XOC_File XOC_File;
 
+/// @brief  Open a file
+/// @param  p_file A pointer to a file object.
+/// @param  path   The path of the file.
+/// @return The status of the operation.
+/// @sa     xoc_file_close()
 xoc_stat_t 
 XOC_INTERFACE(xoc_file_open)(
-    XOC_File **     file , 
+    XOC_File **     p_file , 
     xoc_ccstring_t  path , 
     xoc_flag32_t    access_mode ,
     xoc_flag32_t    open_mode ,
@@ -107,10 +121,18 @@ xoc_offset_t XOC_INTERFACE(xoc_file_get_pos)(
     return XOC_INTERFACE(xoc_file_seek)(file , 0 , XOC_FILE_MOVE_FROM_CURRENT);
 }
 
+/// @brief  Get the size of a file.
+/// @param  file The file object.
+/// @param  p_size A pointer to size.
+/// @return The status of the operation.
+/// @retval XOC_OK The operation is successful.
+/// @retval XOC_
+/// @note   Only file or device that supports file-like operations can use this
+///         function. 
 xoc_stat_t 
 XOC_INTERFACE(xoc_file_get_size)(
-    XOC_File*     file ,
-    xoc_size_t * size
+    XOC_File *      file ,
+    xoc_size_t *    p_size
 ) XOC_NONNULL(1 , 2);
 
 // Make operated size optional.
@@ -145,9 +167,9 @@ XOC_INTERFACE(xoc_file_get_size)(
 #endif // __cplusplus
 
 #if XOC_PLATFORM(WINDOWS)
-#   include "internel/platform_spec/win32/fstream.h"
+#   include "internal/platform_spec/win32/fstream.h"
 #elif XOC_PLATFORM(POSIX)
-#   include "internel/platform_spec/posix/fstream.h"
+#   include "internal/platform_spec/posix/fstream.h"
 #else
 #   error "XOCLib: File stream interfaces not implemented"
 #endif // 
