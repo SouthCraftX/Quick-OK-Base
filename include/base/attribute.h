@@ -26,6 +26,7 @@
 #   define XOC_PURE          __attribute__((pure))
 #   define XOC_USED          __attribute__((used))
 #   define XOC_ABORT()       __builtin_trap()
+#   define XOC_STACK_ALLOC(n) __builtin_alloca(n)
 #   define XOC_ERRPRINTF(f,...) __buildin_printf(__VA_ARGS__)
 #elif defined(_MSC_VER)
 #   info "Warning:Missing feature for XOC_LIKELY and XOCEAB_UNLIKELY"
@@ -50,7 +51,7 @@
 #   define XOC_CONSTRUCTOR          
 #   define XOC_USED
 #   define XOC_NOEXPORT
-
+#   define XOC_STACK_ALLOC(n) _alloca(n)
 #   define XOC_ABORT() __debugbreak()
 #   define XOC_ERRPRINT(f,...) printf(f,__VA_ARGS__)
 #else
@@ -73,6 +74,8 @@
 #   define XOC_EXPORT
 #   define XOC_NOEXPORT
 #   define XOC_IMPORT
+#   define XOC_PURE
+#   define XOC_STACK_ALLOC(n) xoc_alloc(n)
 #   define XOC_ABORT() abort()
 #endif
 

@@ -1,10 +1,18 @@
 #pragma once
+#define __XOC_ALGORITHMS_RANDOM_H__
 
 #include "../base.h"
 
 #if defined(__cplusplus)
 extern "C" {
 #endif // __cplusplus
+
+/// U -> Upper case  L -> lower case  N -> Number  S -> Special
+#define XOC_CHAR_SET_ULN "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+#define XOC_CHAR_SET_ULNS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+{}[]|\\:;\"'<>,.?/`~"
+
+#define XOC_CHAR_SET_ULN_LEN 63
+#define XOC_CHAR_SET_ULNS_LEN 93
 
 xoc_int32_t
 XOC_INTERFACE(xoc_rand32)(
@@ -43,3 +51,8 @@ XOC_INTERFACE(xoc_rand_string_utf8)(
 #if defined(__cplusplus)
 }
 #endif // __cplusplus
+
+#define xoc_rand32 XOC_INTERFACE(xoc_rand32)
+#define xoc_rand64 XOC_INTERFACE(xoc_rand64)
+#define xoc_rand_string XOC_INTERFACE(xoc_rand_string)
+#define xoc_sys_rand_buf XOC_INTERFACE(xoc_sys_rand_buf)

@@ -38,16 +38,11 @@
 #undef XOC_SM_OTHER_EXEC
 #define XOC_SM_OTHER_EXEC S_IXOTH
 
-struct _XOC_SharedMemory
-{
-    int             shm_fd;
-    xoc_pointer_t   shm_addr;
-};
-
 XOC_FORCE_INLINE
-xoc_pointer_t
-XOC_IMPL(xoc_shared_memory_get_address)(
-    XOC_SharedMemory *  shared_memory
+void
+XOC_IMPL(xoc_shared_memory_close)(
+    XOC_SharedMemory * shared_memory
 ){
-    return shared_memory->shm_addr;
+    if (shared_memory)
+        shm_unlink((xoc_ccstring_t)shared_memory);
 }

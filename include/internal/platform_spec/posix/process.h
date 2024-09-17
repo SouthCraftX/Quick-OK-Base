@@ -9,6 +9,7 @@
 #endif // !defined(__XOC_PROCESS_H__)
 
 #include <unistd.h>
+#include <linux/fcntl.h>
 #include "common.h"
 
 xoc_pid_t
@@ -31,10 +32,12 @@ XOC_IMPL(xoc_process_get_pid) (
     return __xoc_read_pointer_as_int(process);
 }
 
+
 xoc_stat_t
 XOC_IMPL(xoc_process_create)(
     XOC_Process **      p_process ,
-    xoc_ccstring_t      command_line ,
+    xoc_ccstring_t      application_path ,
+    xoc_ccstring_t      arguments_line ,
     xoc_ccstring_t      environment ,
     xoc_ccstring_t      working_directory ,
     xoc_uint16_t        command_line_length ,
@@ -42,5 +45,6 @@ XOC_IMPL(xoc_process_create)(
     xoc_uint16_t        working_directory_length ,
     XOC_ProcessStdio *  p_stdio
 ){
+    
     
 }

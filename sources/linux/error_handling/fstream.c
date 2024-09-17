@@ -14,7 +14,7 @@ __xoc_file_open_error()
         case EINVAL:        return XOC_INVALID_ARG;
         case EPERM:
         case EACCES:        return XOC_PERMISSION_DENIED;
-        case EEXIST:        return XOC_FILE_ALREADY_EXISTS;
+        case EEXIST:        return XOC_ALREADY_EXISTS;
         case EMFILE:        return XOC_NO_RESOURCE;
         case EBUSY:         return XOC_TARGET_BUSY;
         case ENAMETOOLONG:  return XOC_TOO_LONG;

@@ -53,7 +53,8 @@ typedef xoc_flag32_t    xoc_pid_t;
 xoc_stat_t
 XOC_INTERFACE(xoc_process_create)(
     XOC_Process **      p_process ,
-    xoc_ccstring_t      command_line ,
+    xoc_ccstring_t      application_path ,
+    xoc_ccstring_t      arguments_line ,
     xoc_ccstring_t      environment ,
     xoc_ccstring_t      working_directory ,
     xoc_uint16_t        command_line_length ,

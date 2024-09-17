@@ -7,6 +7,7 @@ struct _XOC_SharedMemory;
 typedef struct _XOC_SharedMemory XOC_SharedMemory;
 
 // --------- Security control flags -----------
+// Their values are implementation-defined
 
 /// @brief The owner of the shared memory object can read
 #define XOC_SM_OWNER_READ   
@@ -46,8 +47,6 @@ typedef struct _XOC_SharedMemory XOC_SharedMemory;
 /// @brief All users can execute
 #define XOC_SM_ALL_EXEC     (XOC_SM_OWNER_EXEC | XOC_SM_GROUP_EXEC | \
                             XOC_SM_OTHER_EXEC)
-// --------------------------------------------
-
 
 /// @brief      All users can read, write and execute
 /// @warning    It is strongly recommended to avoid using this flag. All users 
@@ -56,6 +55,7 @@ typedef struct _XOC_SharedMemory XOC_SharedMemory;
 ///             security flags only.
 #define XOC_SM_ALL_ACCESS   (XOC_SM_ALL_READ | XOC_SM_ALL_WRITE | \
                             XOC_SM_ALL_EXEC)
+// --------------------------------------------
 
 /// @brief      Open a shared memory object.
 /// @param      p_shared_memory Pointer to a shared memory object.
@@ -65,8 +65,12 @@ typedef struct _XOC_SharedMemory XOC_SharedMemory;
 /// @param      access_mode The access mode of the shared memory object.
 /// @param      security The security flags of the shared memory object.
 /// @param      p_memory_size Pointer to the size of the shared memory object.
-/// @param      p_name_length The length of the name of the shared memory object.
-/// @details    If p_name is NULL, 
+/// @param      p_name_length Pointer to the length of the name of the shared 
+///             memory object. If p_name is not NULL, *p_name_length will be
+///             taken as the length of the name. Otherwise, *p_name_length will
+///             written with the length of the generated name if p_name_length 
+///             is not NULL.
+/// @details    - If p_name is NULL, 
 ///             which indicates the function to generate a unique name and write
 ///             it to the name parameter, with the size of the name written to 
 ///             *p_name_length parameter if p_name_length is not NULL. 
@@ -74,10 +78,14 @@ typedef struct _XOC_SharedMemory XOC_SharedMemory;
 ///             *p_name will be taken as the name of the shared memory object, 
 ///             and the *p_name_length tells the length of the name.
 ///             If error occurs, nothing will be written.
+///             For capability consideration, the length of the name is limited
+///             between 5 and 255 characters.
 /// @return     The status of the operation.
 /// @retval     XOC_OK The operation was successful.
-/// @retval     XOC_OUT_OF_MEMORY No enough memory to allocate the shared memory object.
-/// @retval     XOC_PERMISSION_DENIED No permission to open the shared memory object.
+/// @retval     XOC_OUT_OF_MEMORY No enough memory to allocate the shared memory
+///             object.
+/// @retval     XOC_PERMISSION_DENIED No permission to open the shared memory 
+///             object.
 /// @sa         xoc_shared_memory_get_address() , xoc_shared_memory_close()
 xoc_stat_t
 XOC_INTERFACE(xoc_shared_memory_open)(
@@ -85,15 +93,9 @@ XOC_INTERFACE(xoc_shared_memory_open)(
     xoc_cstring_t *     p_name ,
     xoc_flag32_t        access_mode ,
     xoc_flag32_t        security_flags ,
-    xoc_size_t *        p_memory_size ,
-    xoc_size_t          name_length
-) XOC_NONNULL(1);
-
-/// @brief  Get the address of the shared memory object.
-/// @return The address of the shared memory object. 
-xoc_pointer_t
-XOC_INTERFACE(xoc_shared_memory_get_address)(
-    XOC_SharedMemory * shared_memory
+    xoc_pointer_t *     p_memory ,
+    xoc_size_t          memory_size ,
+    xoc_size_t *        p_name_length
 ) XOC_NONNULL(1);
 
 /// @brief  Close the shared memory object.

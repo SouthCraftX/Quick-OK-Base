@@ -6,6 +6,7 @@
 #endif
 
 #include <unistd.h>
+#include <sys/syscall.h>
 #include "common.h"
 
 #define XOC_FILE_READONLY    O_RDONLY
@@ -52,7 +53,8 @@ __xoc_file_read32(
     xoc_byte_t *    buf ,
     xoc_size_t      size
 ){
-    read(__xoc_read_pointer_as_int(file) , buf , size);
+    syscall(SYS_read  , __xoc_read_pointer_as_int(file) , buf , size);
+    //read(__xoc_read_pointer_as_int(file) , buf , size);
 }
 
 xoc_size_t 
@@ -104,7 +106,7 @@ __xoc_auto_handle_file_seek_error(
 XOC_FORCE_INLINE
 xoc_stat_t
 XOC_IMPL(xoc_file_seek)(
-    XOC_File *        file ,
+    XOC_File *       file ,
     xoc_offset_t     desired_offset ,
     xoc_flag32_t     move_method ,
     xoc_offset_t *   current_offset
