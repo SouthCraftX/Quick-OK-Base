@@ -89,6 +89,7 @@ XOC_INTERFACE(xoc_realloc)(
 /// @retval NULL if no enough memory is available, in that case, the original 
 ///         memory is perserved.
 /// @sa     xoc_free()
+XOC_NODISCARD
 xoc_pointer_t
 XOC_INTERFACE(xoc_recalloc)(
     xoc_pointer_t   memory ,

@@ -1,6 +1,8 @@
 #pragma once
 #define __XOC_BASE_H__
 
+
+
 #include "base/attribute.h"
 #include "base/platform.h"
 #include "base/types.h"

@@ -24,6 +24,7 @@
 #   define XOC_NOEXPORT      __attribute__((visibility("hidden"))) // wtf why gcc/linux always export all symbols on linux by default?!
 #   define XOC_PRIVATE_FUNC  __attribute__((visibility("internal")))
 #   define XOC_PURE          __attribute__((pure))
+#   define XOC_NO_SIDE_EFFECTS  __attribute__((const))
 #   define XOC_USED          __attribute__((used))
 #   define XOC_ABORT()       __builtin_trap()
 #   define XOC_STACK_ALLOC(n) __builtin_alloca(n)

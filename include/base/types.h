@@ -45,6 +45,6 @@ typedef     xoc_int32_t  xoc_flag32_t;
 typedef     xoc_int64_t  xoc_flag64_t;
 
 typedef     char*               xoc_cstring_t;
-typedef     const xoc_cstring_t xoc_ccstring_t;
+typedef     char const  *       xoc_ccstring_t;
 
 #define XOC_INVALID_ADDRESS ((xoc_pointer_t)(-1))

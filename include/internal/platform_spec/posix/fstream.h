@@ -26,7 +26,9 @@ xoc_stat_t
 XOC_IMPL(xoc_file_open)(
     XOC_File **      file ,
     xoc_ccstring_t   path ,
-    xoc_flag8_t      access_mode , 
+    xoc_flag32_t      access_mode ,
+    xoc_flag32_t      open_mode
+    xoc_flag32_t      hints
 ){
     int fd = open(path , mode);
     if (fd == -1)

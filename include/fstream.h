@@ -77,7 +77,9 @@ XOC_INTERFACE(xoc_file_open)(
     XOC_File **         p_file , 
     xoc_ccstring_t      path , 
     xoc_size_t          path_size ,
-    XOC_FileOpenMode    mode
+    xoc_flag32_t        access_mode ,
+    xoc_flag32_t        open_mode ,
+    xoc_flag32_t        hints
 ) XOC_NONNULL(1 , 2);
 
 /// @brief  Read data from a file

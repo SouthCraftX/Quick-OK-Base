@@ -45,7 +45,7 @@ typedef XOCDivisionInt32 XOCDivision;
 
 #define XOC_HAS_FLAG(x,f) (x & f)
 
-#define XOC_SWAP(x,y) do { typeof(x) tmp = x; x = y; y = tmp; } while (false)
+#define XOC_SWAP(x,y) do { typeof(x) tmp = x; x = y; y = tmp; } while (xoc_false)
 
 #define XOC_SNULL(x,t) ((x) ? (x->t) : NULL)
 
