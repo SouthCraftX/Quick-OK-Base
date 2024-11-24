@@ -1,5 +1,5 @@
 #pragma once
-#define __XOC_SEMAPHORE_H__
+#define __QO_SEMAPHORE_H__
 
 #if defined(__cplusplus)
 extern "C" {

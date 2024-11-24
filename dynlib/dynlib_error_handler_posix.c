@@ -3,8 +3,8 @@
 // for debug
 #include <dlfcn.h>
 
-xoc_stat_t
-__xoceam_dynamic_library_error()
+qo_stat_t
+__qoeam_dynamic_library_error()
 {
     dlerror
 }

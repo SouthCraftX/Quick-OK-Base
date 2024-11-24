@@ -1,5 +1,5 @@
 #pragma once
-#define __XOC_BASE_H__
+#define __QO_BASE_H__
 
 
 
@@ -12,6 +12,6 @@
 #include "base/fastclac.h"
 #include "base/limit.h"
 
-#if XOC_PLATFORM(WINDOWS)
+#if QO_PLATFORM(WINDOWS)
 #include "base/win32_common.h"
-#endif // XOC_PLATFORM(WINDOWS)
+#endif // QO_PLATFORM(WINDOWS)

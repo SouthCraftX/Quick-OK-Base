@@ -6,64 +6,64 @@
 extern "C" {
 #endif 
 
-#if defined(XOC_DEBUG)
+#if defined(QO_DEBUG)
 
-#   define XOC_ASSERT(expr)  ((expr) ? 0 : __xoc_assert_fail(#expr , NULL ,\
+#   define QO_ASSERT(expr)  ((expr) ? 0 : __qo_assert_fail(#expr , NULL ,\
            __FILE__ , __func__ , __LINE__))
 
-#   define XOC_REPORT_BUG(message) __xoc_report_bug(message , __FILE__ , \
+#   define QO_REPORT_BUG(message) __qo_report_bug(message , __FILE__ , \
            __func__ , __LINE__)
 
-#   define XOC_NULLPTR_ASSERT(ptr) ((ptr) ? 0 : __xoc_nullptr_assert_fail( \
+#   define QO_NULLPTR_ASSERT(ptr) ((ptr) ? 0 : __qo_nullptr_assert_fail( \
            __FILE__ , __func__ , __LINE__))
 
-XOC_NORETURN 
+QO_NORETURN 
 void 
-__xoc_assert_fail(
-    xoc_ccstring     expr ,
-    xoc_ccstring_t   reason , 
-    xoc_ccstring_t   source_file ,
-    xoc_ccstring_t   func_name ,
-    xoc_int32_t      line
+__qo_assert_fail(
+    qo_ccstring     expr ,
+    qo_ccstring_t   reason , 
+    qo_ccstring_t   source_file ,
+    qo_ccstring_t   func_name ,
+    qo_int32_t      line
 ){
-    XOC_ERRPRINT("Assertion failed: %s, reason: %s, source file %s, "
+    QO_ERRPRINT("Assertion failed: %s, reason: %s, source file %s, "
                     "function %s, line %d\n",    
                     expr , reason , source_file , func_name ,line);
-    XOC_ABORT();
+    QO_ABORT();
 }
 
-XOC_NORETURN
+QO_NORETURN
 void
-__xoc_nullptr_assert_fail(
-    xoc_ccstring_t   source_file ,
-    xoc_ccstring_t   func_name ,
-    xoc_int32_t      line
+__qo_nullptr_assert_fail(
+    qo_ccstring_t   source_file ,
+    qo_ccstring_t   func_name ,
+    qo_int32_t      line
 ){
-    XOC_ERRPRINT("Null pointer assertion failed, source file %s, "
+    QO_ERRPRINT("Null pointer assertion failed, source file %s, "
                     "function %s, line %d\n",    
                     source_file , func_name , line);
-    XOC_ABORT(); 
+    QO_ABORT(); 
 }
 
-XOC_NORETURN
+QO_NORETURN
 void 
-__xoc_report_bug(
-    xoc_ccstring_t   message ,
-    xoc_ccstring_t   source_file ,
-    xoc_ccstring_t   func_name ,
-    xoc_int32_t      line
+__qo_report_bug(
+    qo_ccstring_t   message ,
+    qo_ccstring_t   source_file ,
+    qo_ccstring_t   func_name ,
+    qo_int32_t      line
 ){
-    XOC_ERRPRINT("Bug report: %s, source file %s, function %s, line %d\n",    
+    QO_ERRPRINT("Bug report: %s, source file %s, function %s, line %d\n",    
                     message , source_file , func_name , line);
-    XOC_ABORT();
+    QO_ABORT();
 }
 
 #else
-#   define XOC_ASSERT(expr)
-#   define XOC_REPORT_BUG(message)
-#   define XOC_NULLPTR_ASSERT(ptr)
+#   define QO_ASSERT(expr)
+#   define QO_REPORT_BUG(message)
+#   define QO_NULLPTR_ASSERT(ptr)
 
-#endif // XOC_DEBUG
+#endif // QO_DEBUG
 
 
 

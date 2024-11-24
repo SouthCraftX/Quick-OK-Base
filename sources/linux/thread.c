@@ -4,9 +4,9 @@
 
 
 int
-__xoc_thread_adjust_high_priority(
-    XOC_Thread                thread ,
-    enum XOC_ThreadPriority   priority
+__qo_thread_adjust_high_priority(
+    QO_Thread                thread ,
+    enum QO_ThreadPriority   priority
 ){
     const int crazy = sched_get_priority_max(SCHED_RR) ,
               highest = crazy * .8 ,
@@ -15,15 +15,15 @@ __xoc_thread_adjust_high_priority(
     
     switch (priority)
     {   
-        case XOC_THREAD_PRIORITY_CRAZY:      
+        case QO_THREAD_PRIORITY_CRAZY:      
             priority_value = crazy; 
             break;
 
-        case XOC_THREAD_PRIORITY_HIGHEST:    
+        case QO_THREAD_PRIORITY_HIGHEST:    
             priority_value = highest; 
             break;
 
-        case XOC_THREAD_PRIORITY_HIGH:
+        case QO_THREAD_PRIORITY_HIGH:
             priority_value = high; 
             break;
     }
@@ -31,10 +31,10 @@ __xoc_thread_adjust_high_priority(
 
 }
 
-xoc_stat_t
-XOC_IMPL(xoc_thread_adjust_priority)(
-    XOC_Thread                thread ,
-    enum XOC_ThreadPriority   priority
+qo_stat_t
+QO_IMPL(qo_thread_adjust_priority)(
+    QO_Thread                thread ,
+    enum QO_ThreadPriority   priority
 ){
     
 }

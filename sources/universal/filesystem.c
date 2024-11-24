@@ -1,11 +1,11 @@
 #include "filesystem.h"
 
-xoc_ccstring_t
-XOC_IMPL(xoc_path_find_traversal)(
-    xoc_ccstring_t  path , 
-    xoc_size_t      length
+qo_ccstring_t
+QO_IMPL(qo_path_find_traversal)(
+    qo_ccstring_t  path , 
+    qo_size_t      length
 ){
-    xoc_ccstring_t traversal = xoc_string_find_substring(path , ".." , length);
+    qo_ccstring_t traversal = qo_string_find_substring(path , ".." , length);
     if (traversal)
     {
         if ( 

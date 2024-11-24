@@ -8,62 +8,62 @@
  */
 
 #pragma once
-#define __XOC_FSTREAM_H__
+#define __QO_FSTREAM_H__
 
 #   include "../base.h"
 
 // implementation-defined
-// #define XOC_FILE_READ                     (0)
-// #define XOC_FILE_WRITE                    (1)
-// #define XOC_FILE_READ_WRITE               (2)
+// #define QO_FILE_READ                     (0)
+// #define QO_FILE_WRITE                    (1)
+// #define QO_FILE_READ_WRITE               (2)
 // 
-// #define XOC_FILE_MOVE_FROM_BEGIN          (0)
-// #define XOC_FILE_MOVE_FROM_CURRENT        (1)
-// #define XOC_FILE_MOVE_FROM_END            (2)
+// #define QO_FILE_MOVE_FROM_BEGIN          (0)
+// #define QO_FILE_MOVE_FROM_CURRENT        (1)
+// #define QO_FILE_MOVE_FROM_END            (2)
 // 
-// #define XOC_FILE_APPEND                   (1 << 2)
-// #define XOC_FILE_CREATE_NEW               (1 << 8)
-// #define XOC_FILE_CREATE_ALWAYS            (2 << 8)
-// #define XOC_FILE_OPEN_EXISTING            (3 << 8)
-// #define XOC_FILE_OPEN_ALWAYS              (4 << 8)
-// #define XOC_FILE_OPEN_TRANCATELY          (5 << 8)
+// #define QO_FILE_APPEND                   (1 << 2)
+// #define QO_FILE_CREATE_NEW               (1 << 8)
+// #define QO_FILE_CREATE_ALWAYS            (2 << 8)
+// #define QO_FILE_OPEN_EXISTING            (3 << 8)
+// #define QO_FILE_OPEN_ALWAYS              (4 << 8)
+// #define QO_FILE_OPEN_TRANCATELY          (5 << 8)
 // 
-// #define XOC_FILE_SHARED_READ              (1 << 16)
-// #define XOC_FILE_SHARED_WRITE             (2 << 16)
-// #define XOC_FILE_SHARED_DELETE            (1 << 16)
-// #define XOC_FILE_NO_CACHING               (1 << 11)
-// #define XOC_FILE_SEQUENTIAL               (1 << 12)
-// #define XOC_FILE_DELETE_ON_CLOSE          (1 << 13)
-// #define XOC_FILE_RANDOM_ACCESS            (1 << 14)
+// #define QO_FILE_SHARED_READ              (1 << 16)
+// #define QO_FILE_SHARED_WRITE             (2 << 16)
+// #define QO_FILE_SHARED_DELETE            (1 << 16)
+// #define QO_FILE_NO_CACHING               (1 << 11)
+// #define QO_FILE_SEQUENTIAL               (1 << 12)
+// #define QO_FILE_DELETE_ON_CLOSE          (1 << 13)
+// #define QO_FILE_RANDOM_ACCESS            (1 << 14)
 
 
 #if defined(__cplusplus)
 extern "C" {
 #endif // __cplusplus
 
-struct _XOC_File;
-typedef struct _XOC_File XOC_File;
+struct _QO_File;
+typedef struct _QO_File QO_File;
 
 /// @brief  Struct indicates how to open a file.
-/// @sa     xoc_file_open()
-struct _XOC_FileOpenMode
+/// @sa     qo_file_open()
+struct _QO_FileOpenMode
 {
     /// @brief  The access mode of the file.
-    /// @sa     XOC_FILE_READ, XOC_FILE_WRITE, XOC_FILE_READ_WRITE
-    xoc_flag8_t access_mode;
+    /// @sa     QO_FILE_READ, QO_FILE_WRITE, QO_FILE_READ_WRITE
+    qo_flag8_t access_mode;
 
     /// @brief  The open mode of the file.
     /// @sa
-    xoc_flag8_t open_mode;
+    qo_flag8_t open_mode;
 
     /// @brief  The hints of the file. It may not be used if current platform 
     ///         does not support it. Set the first bit to 1 to force applying
-    ///         the hints(x & 0x8000), in that case, xoc_file_read() will fail 
+    ///         the hints(x & 0x8000), in that case, qo_file_read() will fail 
     ///         if not supported.
-    /// @sa     XOC_FILE_NO_CACHING, XOC_FILE_SEQUENTIAL
-    xoc_flag16_t hints;
+    /// @sa     QO_FILE_NO_CACHING, QO_FILE_SEQUENTIAL
+    qo_flag16_t hints;
 };
-typedef struct _XOC_FileOpenMode XOC_FileOpenMode;
+typedef struct _QO_FileOpenMode QO_FileOpenMode;
 
 /// @brief  Open a file
 /// @param  p_file A pointer to a file object.
@@ -71,123 +71,123 @@ typedef struct _XOC_FileOpenMode XOC_FileOpenMode;
 /// @param  path_size The size of the path. 0 is allowed, in that case the size 
 ///         of the path will be calculated automatically.
 /// @return The status of the operation.
-/// @sa     xoc_file_close()
-xoc_stat_t 
-XOC_INTERFACE(xoc_file_open)(
-    XOC_File **         p_file , 
-    xoc_ccstring_t      path , 
-    xoc_size_t          path_size ,
-    xoc_flag32_t        access_mode ,
-    xoc_flag32_t        open_mode ,
-    xoc_flag32_t        hints
-) XOC_NONNULL(1 , 2);
+/// @sa     qo_file_close()
+qo_stat_t 
+QO_INTERFACE(qo_file_open)(
+    QO_File **         p_file , 
+    qo_ccstring_t      path , 
+    qo_size_t          path_size ,
+    qo_flag32_t        access_mode ,
+    qo_flag32_t        open_mode ,
+    qo_flag32_t        hints
+) QO_NONNULL(1 , 2);
 
 /// @brief  Read data from a file
 /// @param  file The file object.
 /// @param  buffer A buffer that can hold the data at least `desired_size` bytes.
 /// @param  desired_size The size of the data to be read.
 /// @param  p_error A pointer to a status code. If the operation succeeds, the 
-///         status code will be set to `XOC_OK`. Other error codes may be set.
+///         status code will be set to `QO_OK`. Other error codes may be set.
 ///         NULL is allowed, in that case the status code will not be set.
 /// @return The size of the data that has been read. 0 will be returned 
 ///         if the operation fails.
-xoc_size_t 
-XOC_INTERFACE(xoc_file_read_explicit)(
-    XOC_File *       file ,
-    xoc_byte_t *     buffer ,
-    xoc_size_t       desired_size ,
-    xoc_stat_t *     p_error
-) XOC_NONNULL(1 , 2);
+qo_size_t 
+QO_INTERFACE(qo_file_read_explicit)(
+    QO_File *       file ,
+    qo_byte_t *     buffer ,
+    qo_size_t       desired_size ,
+    qo_stat_t *     p_error
+) QO_NONNULL(1 , 2);
 
-XOC_FORCE_INLINE
-xoc_stat_t
-XOC_INTERFACE(xoc_file_write_implicit)(
-    XOC_File *       file ,
-    xoc_byte_t *     buf ,
-    xoc_size_t       desired_size
+QO_FORCE_INLINE
+qo_stat_t
+QO_INTERFACE(qo_file_write_implicit)(
+    QO_File *       file ,
+    qo_byte_t *     buf ,
+    qo_size_t       desired_size
 ) {
-    return XOC_INTERFACE(xoc_file_write_explicit)(
+    return QO_INTERFACE(qo_file_write_explicit)(
         file , buf , desired_size , NULL
     );
 }
 
-xoc_size_t
-XOC_INTERFACE(xoc_file_write_explicit)(
-    XOC_File *       file ,
-    xoc_byte_t *     buf ,
-    xoc_size_t       desired_size ,
-    xoc_stat_t *     error
-) XOC_NONNULL(1 , 2);
+qo_size_t
+QO_INTERFACE(qo_file_write_explicit)(
+    QO_File *       file ,
+    qo_byte_t *     buf ,
+    qo_size_t       desired_size ,
+    qo_stat_t *     error
+) QO_NONNULL(1 , 2);
 
-XOC_FORCE_INLINE
-xoc_stat_t
-XOC_INTERFACE(xoc_file_read_implicit)(
-    XOC_File *       file ,
-    xoc_byte_t *     buf ,
-    xoc_size_t       desired_size
+QO_FORCE_INLINE
+qo_stat_t
+QO_INTERFACE(qo_file_read_implicit)(
+    QO_File *       file ,
+    qo_byte_t *     buf ,
+    qo_size_t       desired_size
 ){
-    return XOC_INTERFACE(xoc_file_read_explicit)(file , buf , desired_size , NULL);
+    return QO_INTERFACE(qo_file_read_explicit)(file , buf , desired_size , NULL);
 }
 
 /// @brief  Close a file
 /// @param  file The file object. NULL is allowed, in that case the function
 ///         will do nothing.
 void 
-XOC_INTERFACE(xoc_file_close)(
-    XOC_File *    file
+QO_INTERFACE(qo_file_close)(
+    QO_File *    file
 );
 
 /// @brief  Allocate a file
 /// @param  file The file object.
 /// @param  size The size of the file.
 /// @return The status of the operation.
-xoc_stat_t 
-XOC_INTERFACE(xoc_file_alloc)(
-    XOC_File *   file ,
-    xoc_size_t   size
-) XOC_NONNULL(1);
+qo_stat_t 
+QO_INTERFACE(qo_file_alloc)(
+    QO_File *   file ,
+    qo_size_t   size
+) QO_NONNULL(1);
 
 /// @brief  Move the file pointer.
 /// @param  file The file object.
 /// @param  offset The offset to move.
 /// @param  move_method The method to move the file pointer.
 /// @param  p_error A pointer to a status code. If the operation succeeds, the 
-///         status code will be set to `XOC_OK`. Other error codes may be set.
+///         status code will be set to `QO_OK`. Other error codes may be set.
 ///         NULL is allowed, in that case the status code will not be set.
 /// @return The offset of the file pointer after the operation.
-xoc_offset_t 
-XOC_INTERFACE(xoc_file_seek)(
-    XOC_File *      file ,
-    xoc_offset_t    offset ,
-    xoc_flag32_t    move_method ,
-    xoc_stat_t *    p_error
-) XOC_NONNULL(1);
+qo_offset_t 
+QO_INTERFACE(qo_file_seek)(
+    QO_File *      file ,
+    qo_offset_t    offset ,
+    qo_flag32_t    move_method ,
+    qo_stat_t *    p_error
+) QO_NONNULL(1);
 
 /// @brief  Get the current position of the file pointer.
 /// @param  file The file object.
 /// @return 
-XOC_FORCE_INLINE
-xoc_offset_t 
-XOC_INTERFACE(xoc_file_get_position)(
-    XOC_File *    file ,
-    xoc_stat_t *  p_error
+QO_FORCE_INLINE
+qo_offset_t 
+QO_INTERFACE(qo_file_get_position)(
+    QO_File *    file ,
+    qo_stat_t *  p_error
 ) {
-    return XOC_INTERFACE(xoc_file_seek)(file , 0 , XOC_FILE_MOVE_FROM_CURRENT);
-} XOC_NONNULL(1);
+    return QO_INTERFACE(qo_file_seek)(file , 0 , QO_FILE_MOVE_FROM_CURRENT);
+} QO_NONNULL(1);
 
 /// @brief  Get the size of a file.
 /// @param  file The file object.
 /// @param  p_size A pointer to size.
 /// @return The status of the operation.
-/// @retval XOC_OK The operation is successful.
-/// @retval XOC_
+/// @retval QO_OK The operation is successful.
+/// @retval QO_
 /// @note   Only file or device that supports file-like operations can use this
 ///         function. 
-xoc_stat_t 
-XOC_INTERFACE(xoc_file_get_size)(
-    XOC_File *      file ,
-    xoc_size_t *    p_size
-) XOC_NONNULL(1 , 2);
+qo_stat_t 
+QO_INTERFACE(qo_file_get_size)(
+    QO_File *      file ,
+    qo_size_t *    p_size
+) QO_NONNULL(1 , 2);
 
 /// @brief  Get the maximum length of a path.
 /// @return The maximum length of a path that XOceanLib can handle.
@@ -198,46 +198,46 @@ XOC_INTERFACE(xoc_file_get_size)(
 ///         Of note, you may fail to open a file before reaching the maximum
 ///         length of a path, as many file systems limit a file name to 255
 ///         characters, which may be smaller than the maximum length.
-/// @sa     xoc_file_open()
-XOC_PURE
-xoc_size_t
-XOC_INTERFACE(xoc_get_path_max_length)();
+/// @sa     qo_file_open()
+QO_PURE
+qo_size_t
+QO_INTERFACE(qo_get_path_max_length)();
 
 #if defined(__cplusplus)
 }
 #endif // __cplusplus
 
-#if XOC_PLATFORM(WINDOWS)
+#if QO_PLATFORM(WINDOWS)
 #   include "internal/platform_spec/win32/fstream.h"
-#elif XOC_PLATFORM(POSIX)
+#elif QO_PLATFORM(POSIX)
 #   include "internal/platform_spec/posix/fstream.h"
 #else
-#   error "XOCLib: File stream interfaces not implemented"
+#   error "QOLib: File stream interfaces not implemented"
 #endif // 
 
-// Make p_error optional for xoc_file_read and xoc_file_write
-#define __XOC_FILE_RW_SELECT(file , buf , desired_size , have_operated_size , \
+// Make p_error optional for qo_file_read and qo_file_write
+#define __QO_FILE_RW_SELECT(file , buf , desired_size , have_operated_size , \
                                 __target , ...) __target
 
-#define xoc_file_read(...)                                               \
-        __XOC_FILE_RW_SELECT                                             \
+#define qo_file_read(...)                                               \
+        __QO_FILE_RW_SELECT                                             \
         (                                                                   \
             __VA_ARGS__ ,                                                   \
-            XOC_INTERFACE(xoc_file_read_explicit) ,                   \
-            XOC_INTERFACE(xoc_file_read_implicit)                     \
+            QO_INTERFACE(qo_file_read_explicit) ,                   \
+            QO_INTERFACE(qo_file_read_implicit)                     \
         ) (__VA_ARGS__)
 
-#define xoc_file_write(...)                                              \
-        __XOC_FILE_RW_SELECT                                             \
+#define qo_file_write(...)                                              \
+        __QO_FILE_RW_SELECT                                             \
         (                                                                   \ 
             __VA_ARGS__ ,                                                   \
-            XOC_INTERFACE(xoc_file_read_explicit) ,                   \
-            XOC_INTERFACE(xoc_file_write_implicit)                    \
+            QO_INTERFACE(qo_file_read_explicit) ,                   \
+            QO_INTERFACE(qo_file_write_implicit)                    \
         ) (__VA_ARGS__)
 
-#define  xoc_file_open        XOC_INTERFACE(xoc_file_open)
-#define  xoc_file_close       XOC_INTERFACE(xoc_file_close)
-#define  xoc_file_alloc       XOC_INTERFACE(xoc_file_alloc)
-#define  xoc_file_seek        XOC_INTERFACE(xoc_file_seek)
-#define  xoc_file_get_pos     XOC_INTERFACE(xoc_file_get_pos)
-#define  xoc_file_get_size    XOC_INTERFACE(xoc_file_get_size)
+#define  qo_file_open        QO_INTERFACE(qo_file_open)
+#define  qo_file_close       QO_INTERFACE(qo_file_close)
+#define  qo_file_alloc       QO_INTERFACE(qo_file_alloc)
+#define  qo_file_seek        QO_INTERFACE(qo_file_seek)
+#define  qo_file_get_pos     QO_INTERFACE(qo_file_get_pos)
+#define  qo_file_get_size    QO_INTERFACE(qo_file_get_size)

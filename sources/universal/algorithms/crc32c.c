@@ -4,10 +4,10 @@
 
 
 
-xoc_int32_t
-XOC_IMPL(xoc_crc32c_4k)(
-    xoc_byte_t * buffer ,
-    xoc_size_t   size
+qo_int32_t
+QO_IMPL(qo_crc32c_4k)(
+    qo_byte_t * buffer ,
+    qo_size_t   size
 ){
 
 }

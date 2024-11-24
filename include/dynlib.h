@@ -1,5 +1,5 @@
 #pragma once
-#define XOC_DYNAMIC_LIBRARY_INCLUDED
+#define QO_DYNAMIC_LIBRARY_INCLUDED
 
 #include "../base.h"
 
@@ -7,24 +7,24 @@
 extern "C" {
 #endif // __cplusplus
 
-typedef xoc_pointer_t XOC_DynamicLibrary;  
+typedef qo_pointer_t QO_DynamicLibrary;  
 
-xoc_stat_t
-XOC_INTERFACE(xoc_dynamic_library_open)(
-    XOC_DynamicLibrary *  library ,
-    xoc_ccstring_t       path
+qo_stat_t
+QO_INTERFACE(qo_dynamic_library_open)(
+    QO_DynamicLibrary *  library ,
+    qo_ccstring_t       path
 );
 
-xoc_stat_t
-XOC_INTERFACE(xoc_dynamic_library_search_symbol)(
-    XOC_DynamicLibrary    library ,
-    xoc_ccstring_t       symbol_name ,
-    xoc_pointer_t *      symbol    
+qo_stat_t
+QO_INTERFACE(qo_dynamic_library_search_symbol)(
+    QO_DynamicLibrary    library ,
+    qo_ccstring_t       symbol_name ,
+    qo_pointer_t *      symbol    
 );
 
-xoc_stat_t
-XOC_INTERFACE(xoc_dynamic_library_close)(
-    XOC_DynamicLibrary    library
+qo_stat_t
+QO_INTERFACE(qo_dynamic_library_close)(
+    QO_DynamicLibrary    library
 );
 
 

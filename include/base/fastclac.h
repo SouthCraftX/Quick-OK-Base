@@ -1,73 +1,73 @@
 #pragma once
 #include "types.h"
 
-struct _XOCDivisionInt64
+struct _QODivisionInt64
 {
-    xoc_int64_t  remainder;
-    xoc_int64_t  quotient;
+    qo_int64_t  remainder;
+    qo_int64_t  quotient;
 };
-typedef struct _XOCDivisionInt64 XOCDivisionInt64;
+typedef struct _QODivisionInt64 QODivisionInt64;
 
-struct _XOCDivisionInt32
+struct _QODivisionInt32
 {
-    xoc_int32_t  remainder;
-    xoc_int32_t  quotient;
+    qo_int32_t  remainder;
+    qo_int32_t  quotient;
 };
-typedef struct _XOCDivisionInt32 XOCDivisionInt32;
+typedef struct _QODivisionInt32 QODivisionInt32;
 
-#define XOC_DIVISION_I64(r , q) \
-        ((XOCDivisionInt64){ .quotient = (q) , .remainder = (r) })
-#define XOC_DIVISION_I32(r , q) \
-        ((XOCDivisionInt32){ .quotient = (q) , .remainder = (r) })
-#define XOC_DIV_I64(x , y) XOC_DIVISION_I64((x) % (y) , (x) / (y))
-#define XOC_DIV_I32(x , y) XOC_DIVISION_I32((x) % (y) , (x) / (y))
+#define QO_DIVISION_I64(r , q) \
+        ((QODivisionInt64){ .quotient = (q) , .remainder = (r) })
+#define QO_DIVISION_I32(r , q) \
+        ((QODivisionInt32){ .quotient = (q) , .remainder = (r) })
+#define QO_DIV_I64(x , y) QO_DIVISION_I64((x) % (y) , (x) / (y))
+#define QO_DIV_I32(x , y) QO_DIVISION_I32((x) % (y) , (x) / (y))
 
-#if XOC_SYSTEM_BIT(64)
-typedef XOCDivisionInt64 XOCDivision;
-#   define XOC_DIVISION  XOC_DIVISION_I64
-#   define XOC_DIV       XOC_DIV_I64
+#if QO_SYSTEM_BIT(64)
+typedef QODivisionInt64 QODivision;
+#   define QO_DIVISION  QO_DIVISION_I64
+#   define QO_DIV       QO_DIV_I64
 #else
-typedef XOCDivisionInt32 XOCDivision;
-#   define XOC_DIVISION  XOC_DIVISION_I32
-#   define XOC_DIV       XOC_DIV_I32
+typedef QODivisionInt32 QODivision;
+#   define QO_DIVISION  QO_DIVISION_I32
+#   define QO_DIV       QO_DIV_I32
 #endif
 
-#define XOC_MAX(x,y) (((x) > (y)) ? (x) : (y))
-#define XOC_MIN(x,y) (((x) < (y)) ? (x) : (y))
+#define QO_MAX(x,y) (((x) > (y)) ? (x) : (y))
+#define QO_MIN(x,y) (((x) < (y)) ? (x) : (y))
 
-#define XOC_SQR(x) ((x)*(x))
-#define XOC_CUBE(x) ((x)*(x)*(x))
+#define QO_SQR(x) ((x)*(x))
+#define QO_CUBE(x) ((x)*(x)*(x))
 
-#define XOC_ABS(x) (((x) < 0) ? -(x) : (x))
+#define QO_ABS(x) (((x) < 0) ? -(x) : (x))
 
-#define XOC_ALIGN_UP(x,align) (((x) + (align) - 1) & ~((align) - 1))
-#define XOC_ALIGN_DOWN(x,align) ((x) & ~((align) - 1))
+#define QO_ALIGN_UP(x,align) (((x) + (align) - 1) & ~((align) - 1))
+#define QO_ALIGN_DOWN(x,align) ((x) & ~((align) - 1))
 
-#define XOC_HAS_FLAG(x,f) (x & f)
+#define QO_HAS_FLAG(x,f) (x & f)
 
-#define XOC_SWAP(x,y) do { typeof(x) tmp = x; x = y; y = tmp; } while (xoc_false)
+#define QO_SWAP(x,y) do { typeof(x) tmp = x; x = y; y = tmp; } while (qo_false)
 
-#define XOC_SNULL(x,t) ((x) ? (x->t) : NULL)
+#define QO_SNULL(x,t) ((x) ? (x->t) : NULL)
 
 
 
 
 // Thanks to sodiumcl10
-#define XOC_FIND_ZEROS_INDEX64(x,n) 
+#define QO_FIND_ZEROS_INDEX64(x,n) 
 
 #if defined(__GNUC__)
-#   define XOC_PARITY32(x) __builtin_parity(x)
-#   define XOC_POPCOUNT32(x) __builtin_popcount(x)
-#   define XOC_PARITY64(x) __builtin_parityll(x)
-#   define XOC_POPCOUNT64(x) __builtin_popcountll(x)
+#   define QO_PARITY32(x) __builtin_parity(x)
+#   define QO_POPCOUNT32(x) __builtin_popcount(x)
+#   define QO_PARITY64(x) __builtin_parityll(x)
+#   define QO_POPCOUNT64(x) __builtin_popcountll(x)
 #else
-#define XOC_PARITY(x) 
+#define QO_PARITY(x) 
 #endif
 
 #if defined(__GNUC__)
-#   define XOC_CAS(r,o,n) __sync_val_compare_and_swap(r,o,n)
+#   define QO_CAS(r,o,n) __sync_val_compare_and_swap(r,o,n)
 #elif defined(_MSC_VER)
-#   define XOC_CAS(r,o,n) _InterlockedCompareExchange(r,n,o)
+#   define QO_CAS(r,o,n) _InterlockedCompareExchange(r,n,o)
 #else
-#   error "XOCLib: CAS not implemented:Need complier support"
+#   error "QOLib: CAS not implemented:Need complier support"
 #endif 

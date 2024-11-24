@@ -1,21 +1,21 @@
 #pragma once
-#define __XOC_LIST_H__
+#define __QO_LIST_H__
 
 #include "base.h"
 
-struct _XOC_List;
-struct _XOC_ListNode;
-typedef struct _XOC_ListNode XOC_ListNode;
-typedef struct _XOC_List XOC_List;
+struct _QO_List;
+struct _QO_ListNode;
+typedef struct _QO_ListNode QO_ListNode;
+typedef struct _QO_List QO_List;
 
 #if defined(__cplusplus)
 extern "C" {
 #endif // __cplusplus
 
-XOC_FORCE_INLINE
-xoc_pointer_t
-XOC_INTERFACE(xoc_list_get_cur)(
-    XOC_List * list
+QO_FORCE_INLINE
+qo_pointer_t
+QO_INTERFACE(qo_list_get_cur)(
+    QO_List * list
 );
 
 #if defined(__cplusplus)
@@ -24,28 +24,28 @@ XOC_INTERFACE(xoc_list_get_cur)(
 
 #include "internal/container/inline_impl/list.h"
 
-#define xoc_list_init            XOC_INTERFACE(xoc_list_init)
-#define xoc_list_get_element_size \
-        XOC_INTERFACE(xoc_list_get_element_size)
-#define xoc_list_get_element_count \
-        XOC_INTERFACE(xoc_list_get_element_count)
-#define xoc_list_get_data_size   XOC_INTERFACE(xoc_list_get_data_size)
-#define xoc_list_insert_head     XOC_INTERFACE(xoc_list_insert_head)
-#define xoc_list_insert_tail     XOC_INTERFACE(xoc_list_insert_tail)
-#define xoc_list_insert_ahead    XOC_INTERFACE(xoc_list_insert_ahead)
-#define xoc_list_insert_backward XOC_INTERFACE(xoc_list_insert_backward)
-#define xoc_list_insert_multiple_ahead \
-        XOC_INTERFACE(xoc_list_insert_multiple_ahead)
-#define xoc_list_insert_multiple_backward \
-        XOC_INTERFACE(xoc_list_insert_multiple_backward)
-#define xoc_list_remove_head     XOC_INTERFACE(xoc_list_remove_head)
-#define xoc_list_remove_tail     XOC_INTERFACE(xoc_list_remove_tail)
-#define xoc_list_remove_cur      XOC_INTERFACE(xoc_list_remove_cur)
-#define xoc_list_remove_front    XOC_INTERFACE(xoc_list_remove_front)
-#define xoc_list_remove_back     XOC_INTERFACE(xoc_list_remove_back)
-#define xoc_list_remove_all      XOC_INTERFACE(xoc_list_remove_all)
-#define xoc_list_move_ahead      XOC_INTERFACE(xoc_list_move_ahead)
-#define xoc_list_move_backward   XOC_INTERFACE(xoc_list_move_backward)
-#define xoc_list_goto_head       XOC_INTERFACE(xoc_list_goto_head)
-#define xoc_list_goto_tail       XOC_INTERFACE(xoc_list_goto_tail)
-#define xoc_list_destory         XOC_INTERFACE(xoc_list_destory)
+#define qo_list_init            QO_INTERFACE(qo_list_init)
+#define qo_list_get_element_size \
+        QO_INTERFACE(qo_list_get_element_size)
+#define qo_list_get_element_count \
+        QO_INTERFACE(qo_list_get_element_count)
+#define qo_list_get_data_size   QO_INTERFACE(qo_list_get_data_size)
+#define qo_list_insert_head     QO_INTERFACE(qo_list_insert_head)
+#define qo_list_insert_tail     QO_INTERFACE(qo_list_insert_tail)
+#define qo_list_insert_ahead    QO_INTERFACE(qo_list_insert_ahead)
+#define qo_list_insert_backward QO_INTERFACE(qo_list_insert_backward)
+#define qo_list_insert_multiple_ahead \
+        QO_INTERFACE(qo_list_insert_multiple_ahead)
+#define qo_list_insert_multiple_backward \
+        QO_INTERFACE(qo_list_insert_multiple_backward)
+#define qo_list_remove_head     QO_INTERFACE(qo_list_remove_head)
+#define qo_list_remove_tail     QO_INTERFACE(qo_list_remove_tail)
+#define qo_list_remove_cur      QO_INTERFACE(qo_list_remove_cur)
+#define qo_list_remove_front    QO_INTERFACE(qo_list_remove_front)
+#define qo_list_remove_back     QO_INTERFACE(qo_list_remove_back)
+#define qo_list_remove_all      QO_INTERFACE(qo_list_remove_all)
+#define qo_list_move_ahead      QO_INTERFACE(qo_list_move_ahead)
+#define qo_list_move_backward   QO_INTERFACE(qo_list_move_backward)
+#define qo_list_goto_head       QO_INTERFACE(qo_list_goto_head)
+#define qo_list_goto_tail       QO_INTERFACE(qo_list_goto_tail)
+#define qo_list_destory         QO_INTERFACE(qo_list_destory)

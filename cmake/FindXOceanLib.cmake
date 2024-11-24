@@ -1,8 +1,8 @@
-find_path(XOCEANLIB_INCLUDE_DIR ./include ${CMAKE_SOURCE_DIR}/ModuleMode)
-find_library(XOCEANLIB_LIBRARY 
+find_path(QOEANLIB_INCLUDE_DIR ./include ${CMAKE_SOURCE_DIR}/ModuleMode)
+find_library(QOEANLIB_LIBRARY 
                 NAMES XOceanLib 
                 PATHS ./build ${CMAKE_SOURCE_DIR}/ModuleMode)
 
-if(XOCEANLIB_INCLUDE_DIR AND XOCEANLIB_LIBRARY)
-    set(XOCEANLIB_FOUND TRUE)
+if(QOEANLIB_INCLUDE_DIR AND QOEANLIB_LIBRARY)
+    set(QOEANLIB_FOUND TRUE)
 endif()

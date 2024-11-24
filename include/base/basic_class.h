@@ -9,58 +9,58 @@
 extern "C" {
 #endif // __cplusplus
 
-struct _XOCClassBase
+struct _QOClassBase
 {
-    xoc_stat_t   stat;
-    xoc_flag32_t trait;
+    qo_stat_t   stat;
+    qo_flag32_t trait;
 };
 
-typedef _XOCClassBase XOCClassBase;
-typedef XOCClassBase XOCClass;
+typedef _QOClassBase QOClassBase;
+typedef QOClassBase QOClass;
 
-XOC_FORCE_INLINE
-void xoc_class_set_stat(XOCClass * __class, xoc_stat_t stat)
+QO_FORCE_INLINE
+void qo_class_set_stat(QOClass * __class, qo_stat_t stat)
 {
     __class->stat = stat;
 }
 
-XOC_FORCE_INLINE
-xoc_stat_t xoc_class_get_stat(XOCClass * __class)
+QO_FORCE_INLINE
+qo_stat_t qo_class_get_stat(QOClass * __class)
 {
     return __class->stat;
 }
 
-XOC_FORCE_INLINE
-xoc_flag32_t xoc_class_get_trait(XOCClass * __class)
+QO_FORCE_INLINE
+qo_flag32_t qo_class_get_trait(QOClass * __class)
 {
     return __class->trait;
 }
 
-XOC_FORCE_INLINE
-void xoc_class_set_trait(XOCClass * __class, xoc_flag32_t trait)
+QO_FORCE_INLINE
+void qo_class_set_trait(QOClass * __class, qo_flag32_t trait)
 {
     __class->trait = trait;
 }
 
 enum
 {
-    XOC_CLASS_TYPE_NONE = 0,
-    XOC_CLASS_TYPE_FSTREAM_BASE,
-    XOC_CLASS_TYPE_IFSTREAM,
-    XOC_CLASS_TYPE_IOFSTREAM,
-    XOC_CLASS_TYPE_PIPE,
-    XOC_CLASS_TYPE_MEMPOOL,
-    XOC_CLASS_TYPE_FORWARD_LIST,
-    XOC_CLASS_TYPE_LIST,
-    XOC_CLASS_TYPE_MAP,
-    XOC_CLASS_TYPE_PAIR,
-    XOC_CLASS_TYPE_SET,
-    XOC_CLASS_TYPE_RBTREE,
-    XOC_CLASS_TYPE_ITERATOR_BASE,
-    XOC_CLASS_TYPE_ARRAY_ITERATOR,
-    XOC_CLASS_TYPE_LIST_ITERATOR,
+    QO_CLASS_TYPE_NONE = 0,
+    QO_CLASS_TYPE_FSTREAM_BASE,
+    QO_CLASS_TYPE_IFSTREAM,
+    QO_CLASS_TYPE_IOFSTREAM,
+    QO_CLASS_TYPE_PIPE,
+    QO_CLASS_TYPE_MEMPOOL,
+    QO_CLASS_TYPE_FORWARD_LIST,
+    QO_CLASS_TYPE_LIST,
+    QO_CLASS_TYPE_MAP,
+    QO_CLASS_TYPE_PAIR,
+    QO_CLASS_TYPE_SET,
+    QO_CLASS_TYPE_RBTREE,
+    QO_CLASS_TYPE_ITERATOR_BASE,
+    QO_CLASS_TYPE_ARRAY_ITERATOR,
+    QO_CLASS_TYPE_LIST_ITERATOR,
 
-} XOC_CLASS_TYPE;
+} QO_CLASS_TYPE;
 
 #if defined(__cplusplus)
 }

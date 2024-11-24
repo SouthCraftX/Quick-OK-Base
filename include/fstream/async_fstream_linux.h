@@ -3,11 +3,11 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-struct _XOCAsyncFile
+struct _QOAsyncFile
 {
     io_context_t        io_ctx;
     struct iocb        *iocb_list;
     struct kiocb *      req;
     int                 fd;
-    xoc_uint32_t     nr_events;
+    qo_uint32_t     nr_events;
 };

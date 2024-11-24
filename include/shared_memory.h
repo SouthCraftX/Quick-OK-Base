@@ -1,60 +1,60 @@
 #pragma once
-#define __XOC_SHARED_MEMORY_H__
+#define __QO_SHARED_MEMORY_H__
 
 #include "base.h"
 
-struct _XOC_SharedMemory;
-typedef struct _XOC_SharedMemory XOC_SharedMemory;
+struct _QO_SharedMemory;
+typedef struct _QO_SharedMemory QO_SharedMemory;
 
 // --------- Security control flags -----------
 // Their values are implementation-defined
 
 /// @brief The owner of the shared memory object can read
-#define XOC_SM_OWNER_READ   
+#define QO_SM_OWNER_READ   
 
 /// @brief The owner of the shared memory object can write
-#define XOC_SM_OWNER_WRITE  
+#define QO_SM_OWNER_WRITE  
 
 /// @brief The owner of the shared memory object can execute
-#define XOC_SM_OWNER_EXEC   
+#define QO_SM_OWNER_EXEC   
 
 /// @brief Users in the same group as the owner of the shared memory object can read
-#define XOC_SM_GROUP_READ 
+#define QO_SM_GROUP_READ 
 
 /// @brief Users in the same group as the owner of the shared memory object can write
-#define XOC_SM_GROUP_WRITE  
+#define QO_SM_GROUP_WRITE  
 
 /// @brief Users in the same group as the owner of the shared memory object can execute
-#define XOC_SM_GROUP_EXEC   
+#define QO_SM_GROUP_EXEC   
 
 /// @brief Users in groups other than the owner of the shared memory object can read
-#define XOC_SM_OTHER_READ   
+#define QO_SM_OTHER_READ   
 
 /// @brief Users in groups other than the owner of the shared memory object can write
-#define XOC_SM_OTHER_WRITE  
+#define QO_SM_OTHER_WRITE  
 
 /// @brief Users in groups other than the owner of the shared memory object can execute
-#define XOC_SM_OTHER_EXEC   
+#define QO_SM_OTHER_EXEC   
 
 /// @brief All users can read
-#define XOC_SM_ALL_READ     (XOC_SM_OWNER_READ | XOC_SM_GROUP_READ | \
-                            XOC_SM_OTHER_READ)
+#define QO_SM_ALL_READ     (QO_SM_OWNER_READ | QO_SM_GROUP_READ | \
+                            QO_SM_OTHER_READ)
 
 /// @brief All users can write
-#define XOC_SM_ALL_WRITE    (XOC_SM_OWNER_WRITE | XOC_SM_GROUP_WRITE | \
-                             XOC_SM_OTHER_WRITE)
+#define QO_SM_ALL_WRITE    (QO_SM_OWNER_WRITE | QO_SM_GROUP_WRITE | \
+                             QO_SM_OTHER_WRITE)
 
 /// @brief All users can execute
-#define XOC_SM_ALL_EXEC     (XOC_SM_OWNER_EXEC | XOC_SM_GROUP_EXEC | \
-                            XOC_SM_OTHER_EXEC)
+#define QO_SM_ALL_EXEC     (QO_SM_OWNER_EXEC | QO_SM_GROUP_EXEC | \
+                            QO_SM_OTHER_EXEC)
 
 /// @brief      All users can read, write and execute
 /// @warning    It is strongly recommended to avoid using this flag. All users 
 ///             having all access means that security and privacy are not 
 ///             guaranteed. The better practice is to use the nessessary 
 ///             security flags only.
-#define XOC_SM_ALL_ACCESS   (XOC_SM_ALL_READ | XOC_SM_ALL_WRITE | \
-                            XOC_SM_ALL_EXEC)
+#define QO_SM_ALL_ACCESS   (QO_SM_ALL_READ | QO_SM_ALL_WRITE | \
+                            QO_SM_ALL_EXEC)
 // --------------------------------------------
 
 /// @brief      Open a shared memory object.
@@ -81,33 +81,33 @@ typedef struct _XOC_SharedMemory XOC_SharedMemory;
 ///             For capability consideration, the length of the name is limited
 ///             between 5 and 255 characters.
 /// @return     The status of the operation.
-/// @retval     XOC_OK The operation was successful.
-/// @retval     XOC_OUT_OF_MEMORY No enough memory to allocate the shared memory
+/// @retval     QO_OK The operation was successful.
+/// @retval     QO_OUT_OF_MEMORY No enough memory to allocate the shared memory
 ///             object.
-/// @retval     XOC_PERMISSION_DENIED No permission to open the shared memory 
+/// @retval     QO_PERMISSION_DENIED No permission to open the shared memory 
 ///             object.
-/// @sa         xoc_shared_memory_get_address() , xoc_shared_memory_close()
-xoc_stat_t
-XOC_INTERFACE(xoc_shared_memory_open)(
-    XOC_SharedMemory ** p_shared_memory ,
-    xoc_cstring_t *     p_name ,
-    xoc_flag32_t        access_mode ,
-    xoc_flag32_t        security_flags ,
-    xoc_pointer_t *     p_memory ,
-    xoc_size_t          memory_size ,
-    xoc_size_t *        p_name_length
-) XOC_NONNULL(1);
+/// @sa         qo_shared_memory_get_address() , qo_shared_memory_close()
+qo_stat_t
+QO_INTERFACE(qo_shared_memory_open)(
+    QO_SharedMemory ** p_shared_memory ,
+    qo_cstring_t *     p_name ,
+    qo_flag32_t        access_mode ,
+    qo_flag32_t        security_flags ,
+    qo_pointer_t *     p_memory ,
+    qo_size_t          memory_size ,
+    qo_size_t *        p_name_length
+) QO_NONNULL(1);
 
 /// @brief  Close the shared memory object.
 /// @param  shared_memory The shared memory object to close. NULL is allowed,
 ///         in this case, nothing will be done.
 void
-XOC_INTERFACE(xoc_shared_memory_close)(
-    XOC_SharedMemory * shared_memory
+QO_INTERFACE(qo_shared_memory_close)(
+    QO_SharedMemory * shared_memory
 );
 
-#if XOC_PLATFORM(WINDOWS)
+#if QO_PLATFORM(WINDOWS)
 #   include "internal/platform_spec/win32/shared_memory.h"
 #else
 #   include "internal/platform_spec/posix/shared_memory.h"
-#endif // XOC_PLATFORM(WINDOWS)
+#endif // QO_PLATFORM(WINDOWS)

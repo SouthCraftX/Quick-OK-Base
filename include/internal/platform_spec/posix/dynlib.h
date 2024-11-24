@@ -3,43 +3,43 @@
 // for debug
 #include "dynlib.h"
 
-#if !defined(XOC_DYNAMIC_LIBRARY_INCLUDED)
+#if !defined(QO_DYNAMIC_LIBRARY_INCLUDED)
 #   error Do not include this file directly. Use dynlib.h instead
 #endif 
 
-#if (POSIX < 200809L) || ! XOC_PLATFORM(LINUX)
+#if (POSIX < 200809L) || ! QO_PLATFORM(LINUX)
 #   error This requires at least POSIX 1003.1-2008 
 #endif 
 
 #include <dlfcn.h>
 
-XOC_IMPORT
-xoc_stat_t
-__xoc_dynamic_library_error();
+QO_IMPORT
+qo_stat_t
+__qo_dynamic_library_error();
 
-XOC_FORCE_INLINE
-xoc_stat_t
-XOC_IMPL(xoc_dynamic_library_open)(
-    XOC_DynamicLibrary *  library ,
-    xoc_ccstring_t       path
+QO_FORCE_INLINE
+qo_stat_t
+QO_IMPL(qo_dynamic_library_open)(
+    QO_DynamicLibrary *  library ,
+    qo_ccstring_t       path
 ){
-    xoc_pointer_t lib =  dlopen(path , 0);
+    qo_pointer_t lib =  dlopen(path , 0);
     if (lib)
     {
         *library = lib;
-        return XOC_OK;
+        return QO_OK;
     }
-    return __xoc_dynamic_library_error();
+    return __qo_dynamic_library_error();
 }
 
-XOC_FORCE_INLINE
-xoc_stat_t
-XOC_IMPL(xoc_dynamic_library_search_symbol)(
-    XOC_DynamicLibrary    library ,
-    xoc_ccstring_t       symbol_name ,
-    xoc_pointer_t *      symbol
+QO_FORCE_INLINE
+qo_stat_t
+QO_IMPL(qo_dynamic_library_search_symbol)(
+    QO_DynamicLibrary    library ,
+    qo_ccstring_t       symbol_name ,
+    qo_pointer_t *      symbol
 ){
-    xoc_pointer_t sym = dlsym(library , symbol_name);
+    qo_pointer_t sym = dlsym(library , symbol_name);
     if (sym)
     {
         /* code */

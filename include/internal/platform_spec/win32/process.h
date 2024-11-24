@@ -1,9 +1,9 @@
 #pragma once
-#define __XOC_WIN32_PROCESS_H__
+#define __QO_WIN32_PROCESS_H__
 
 
-#if !defined(__XOC_PROCESS_H__)
-#error "Do not include this file directly. Use <xoc/process.h> instead."
+#if !defined(__QO_PROCESS_H__)
+#error "Do not include this file directly. Use <qo/process.h> instead."
 #endif
 
 #include <process.h>
@@ -13,29 +13,29 @@
 extern "C" {
 #endif // __cplusplus
 
-XOC_PURE
-xoc_stat_t
-__xoc_process_killing_error()
+QO_PURE
+qo_stat_t
+__qo_process_killing_error()
 {
     switch (GetLastError())
     {
-        case ERROR_INVALID_HANDLE:      return  XOC_INVALID_HANDLE;
-        case ERROR_ACCESS_DENIED:       return  XOC_PERMISSION_DENIED;
-        default:                        return  XOC_UNKNOWN_ERROR;
+        case ERROR_INVALID_HANDLE:      return  QO_INVALID_HANDLE;
+        case ERROR_ACCESS_DENIED:       return  QO_PERMISSION_DENIED;
+        default:                        return  QO_UNKNOWN_ERROR;
     }
 }
 
 /// @author XOcean
-/// @remark I placed xoc_proces_create() in ".c" file because it is a big 
+/// @remark I placed qo_proces_create() in ".c" file because it is a big 
 /// function and unlikely to be called often. Thus, it is not suitable to make 
 /// it inline.
 
-xoc_stat_t
-XOC_IMPL(xoc_process_adjust_priority)(
-    XOC_Process *             process ,
-    enum XOC_ThreadPriority   priority
+qo_stat_t
+QO_IMPL(qo_process_adjust_priority)(
+    QO_Process *             process ,
+    enum QO_ThreadPriority   priority
 ){
-    XOC_GLOBAL_LOCAL
+    QO_GLOBAL_LOCAL
     const DWORD priority_table[] = {
         IDEL_PRIORITY_CLASS,
         BELOW_NORMAL_PRIORITY_CLASS,
@@ -48,41 +48,41 @@ XOC_IMPL(xoc_process_adjust_priority)(
 
 }
 
-XOC_FORCE_INLINE
-XOC_Process *
-XOC_IMPL(xoc_process_get_current)()
+QO_FORCE_INLINE
+QO_Process *
+QO_IMPL(qo_process_get_current)()
 {
-    return (XOC_Process *)GetCurrentProcess();
+    return (QO_Process *)GetCurrentProcess();
 }
 
-XOC_FORCE_INLINE
-xoc_pid_t
-XOC_IMPL(xoc_process_get_pid)(
-    XOC_Process *   process
+QO_FORCE_INLINE
+qo_pid_t
+QO_IMPL(qo_process_get_pid)(
+    QO_Process *   process
 ){
     return GetProcessId((HANDLE)process);
 }
 
-XOC_FORCE_INLINE
-xoc_pid_t
-XOC_IMPL(xoc_process_get_current_pid)()
+QO_FORCE_INLINE
+qo_pid_t
+QO_IMPL(qo_process_get_current_pid)()
 {
     return GetCurrentProcessId();
 }
 
-XOC_FORCE_INLINE XOC_NORETURN
+QO_FORCE_INLINE QO_NORETURN
 void
-XOC_IMPL(xoc_process_exit_current)(
-    xoc_stat_t   exit_code
+QO_IMPL(qo_process_exit_current)(
+    qo_stat_t   exit_code
 ){
     ExitProcess((DWORD)exit_code);
 }
 
-xoc_stat_t
-XOC_IMPL(xoc_process_kill)(
-    XOC_Process *   process ,
-    xoc_bool_t      wait ,
-    xoc_stat_t *    exit_code
+qo_stat_t
+QO_IMPL(qo_process_kill)(
+    QO_Process *   process ,
+    qo_bool_t      wait ,
+    qo_stat_t *    exit_code
 ){
     const HANDLE process_handle = (HANDLE)process;
     TerminateProcess(process_handle , exit_code ? (DWORD)*exit_code : 0);

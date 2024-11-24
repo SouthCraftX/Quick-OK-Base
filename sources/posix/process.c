@@ -4,32 +4,32 @@
 #include <string.h>
 
 #define FIRST_ENV_PTR_COUNT 8
-#define FIRST_ENV_PTRS_SIZE (sizeof(xoc_ccstring_t) * FIRST_ENV_PTR_COUNT)
+#define FIRST_ENV_PTRS_SIZE (sizeof(qo_ccstring_t) * FIRST_ENV_PTR_COUNT)
 
-XOC_PURE
-xoc_stat_t
+QO_PURE
+qo_stat_t
 __changing_cwd_error()
 {
     switch (errno)
     {
-        case EACCES:        return XOC_PERMISSION_DENIED;
-        case EFAULT:        return XOC_ACCESS_VIOLATED;
-        case EIO:           return XOC_BAD_IO;
+        case EACCES:        return QO_PERMISSION_DENIED;
+        case EFAULT:        return QO_ACCESS_VIOLATED;
+        case EIO:           return QO_BAD_IO;
         case ELOOP:
         case ENOENT:
-        case ENOTDIR:       return XOC_BAD_PATH;
-        case ENOMEM:        return XOC_OUT_OF_MEMORY;
-        case ENAMETOOLONG:  return XOC_TOO_LONG;
+        case ENOTDIR:       return QO_BAD_PATH;
+        case ENOMEM:        return QO_OUT_OF_MEMORY;
+        case ENAMETOOLONG:  return QO_TOO_LONG;
     }
 }
 
 // True for allocation failure
-xoc_bool_t
+qo_bool_t
 __auto_realloc(
-    xoc_size_t *        p_cur_size ,
-    xoc_ccstring_t **   p_env_str_ptrs ,
-    xoc_ccstring_t **   p_cur_env_str ,
-    xoc_ccstring_t **   p_env_ptrs_end
+    qo_size_t *        p_cur_size ,
+    qo_ccstring_t **   p_env_str_ptrs ,
+    qo_ccstring_t **   p_cur_env_str ,
+    qo_ccstring_t **   p_env_ptrs_end
 ){
     if (*p_cur_env_str == *p_env_ptrs_end)
     {
@@ -38,16 +38,16 @@ __auto_realloc(
     
 }
 
-xoc_ccstring_t *
+qo_ccstring_t *
 __envl_to_envp(
-    xoc_ccstring_t      envl 
+    qo_ccstring_t      envl 
 ){
-    xoc_size_t          cur_size = FIRST_ENV_PTRS_SIZE;
-    xoc_ccstring_t *    env_str_ptrs = xoc_alloc(FIRST_ENV_PTRS_SIZE) ,
+    qo_size_t          cur_size = FIRST_ENV_PTRS_SIZE;
+    qo_ccstring_t *    env_str_ptrs = qo_alloc(FIRST_ENV_PTRS_SIZE) ,
                    *    cur_env_ptr = env_str_ptrs ,
                    *    env_ptrs_end;
     char * null_char = envl;
-    while (xoc_true)
+    while (qo_true)
     {
         char * null_char = strchr(envl , '\0');
         if (*(++null_char))
@@ -65,17 +65,17 @@ __envl_to_envp(
     
 }
 
-xoc_stat_t
-XOC_IMPL(xoc_process_create)(
-    XOC_Process **      p_process ,
-    xoc_ccstring_t      application_path ,
-    xoc_ccstring_t      arguments_line ,
-    xoc_ccstring_t      environment ,
-    xoc_ccstring_t      working_directory ,
-    xoc_uint16_t        command_line_length ,
-    xoc_uint16_t        environment_length ,
-    xoc_uint16_t        working_directory_length ,
-    XOC_ProcessStdio *  p_stdio
+qo_stat_t
+QO_IMPL(qo_process_create)(
+    QO_Process **      p_process ,
+    qo_ccstring_t      application_path ,
+    qo_ccstring_t      arguments_line ,
+    qo_ccstring_t      environment ,
+    qo_ccstring_t      working_directory ,
+    qo_uint16_t        command_line_length ,
+    qo_uint16_t        environment_length ,
+    qo_uint16_t        working_directory_length ,
+    QO_ProcessStdio *  p_stdio
 ){
     posix_spawnattr_t spawn_attr;
     posix_spawn_file_actions_t file_actions;

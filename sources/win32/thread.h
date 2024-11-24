@@ -1,70 +1,70 @@
 
 
-XOC_FORCE_INLINE
-xoc_stat_t
-__xoc_thread_creating_error()
+QO_FORCE_INLINE
+qo_stat_t
+__qo_thread_creating_error()
 {
     switch (GetLastError())
     {
-        case ERROR_NO_ENOUGH_MEMORY:    return XOC_OUT_OF_MEMORY; 
-        case ERROR_INVALID_PARAMETER:   return XOC_INVALID_ARG;
-        default:                        return XOC_UNKNOWN_ERROR;
+        case ERROR_NO_ENOUGH_MEMORY:    return QO_OUT_OF_MEMORY; 
+        case ERROR_INVALID_PARAMETER:   return QO_INVALID_ARG;
+        default:                        return QO_UNKNOWN_ERROR;
     }
 }
 
-xoc_stat_t
-XOC_IMPL(xoc_thread_init)(
-    XOC_Thread **           thread ,
-    const xoc_pointer_t     func ,
-    const xoc_pointer_t     arg ,
-    const xoc_size_t        stack_size 
+qo_stat_t
+QO_IMPL(qo_thread_init)(
+    QO_Thread **           thread ,
+    const qo_pointer_t     func ,
+    const qo_pointer_t     arg ,
+    const qo_size_t        stack_size 
 ){
     HANDLE thread_handle = CreateThread(
         NULL , stack_size , (LPTHREAD_START_ROUTINE)func , arg , 0 , NULL
     );
 
     if (!thread_handle)
-        return __xoc_thread_creating_error();
+        return __qo_thread_creating_error();
     
     (HANDLE)(*thread) = thread_handle;
-    return XOC_OK;
+    return QO_OK;
 }
 
-xoc_stat_t
-XOC_IMPL(xoc_thread_get_priority)(
-    XOC_Thread        thread ,
-    xoc_flag32_t *   priority
+qo_stat_t
+QO_IMPL(qo_thread_get_priority)(
+    QO_Thread        thread ,
+    qo_flag32_t *   priority
 ){
     // @todo Support REALTIME_PRIORITY_CLASS
     switch (GetThreadPriority(thread.thread_handle))
     {
         case THREAD_PRIORITY_IDLE:
         case THREAD_PRIORITY_LOWEST:  
-            *priority = XOC_THREAD_PRIORITY_LOWEST;
-            return XOC_OK;
+            *priority = QO_THREAD_PRIORITY_LOWEST;
+            return QO_OK;
 
         case THREAD_PRIORITY_BELOW_NORMAL: 
-            *priority = XOC_THREAD_PRIORITY_LOW;
-            return XOC_OK;
+            *priority = QO_THREAD_PRIORITY_LOW;
+            return QO_OK;
         
         case THREAD_PRIORITY_NORMAL:
-            *priority = XOC_THREAD_PRIORITY_NORMAL;
-            return XOC_OK;
+            *priority = QO_THREAD_PRIORITY_NORMAL;
+            return QO_OK;
 
         case THREAD_PRIORITY_ABOVE_NORMAL:
-            *priority = XOC_THREAD_PRIORITY_HIGH;
-            return XOC_OK;
+            *priority = QO_THREAD_PRIORITY_HIGH;
+            return QO_OK;
 
         case THREAD_PRIORITY_HIGHEST:
-            *priority = XOC_THREAD_PRIORITY_HIGHEST;
-            return XOC_OK;
+            *priority = QO_THREAD_PRIORITY_HIGHEST;
+            return QO_OK;
 
         case THREAD_PRIORITY_TIME_CRITICAL:
         case 31:    // REALTIME_PRIORITY_CLASS
-            *priority = XOC_THREAD_PRIORITY_CRAZY;
-            return XOC_OK;
+            *priority = QO_THREAD_PRIORITY_CRAZY;
+            return QO_OK;
 
         default:
-            return __xoc_thread_priority_setting_error();
+            return __qo_thread_priority_setting_error();
     }
 }

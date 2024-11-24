@@ -2,92 +2,92 @@
 
 #include "../thread/thread.h"
 
-#define XOC_THREAD_POOL_FORCE_EXIT       (1)
-#define XOC_THREAD_POOL_EXIT_NONBLOCK    (1 << 1)
+#define QO_THREAD_POOL_FORCE_EXIT       (1)
+#define QO_THREAD_POOL_EXIT_NONBLOCK    (1 << 1)
 
 #if defined(__cplusplus)
 extern "C" {
 #endif // __cplusplus
 
-struct _XOC_ThreadPool;
-typedef struct _XOC_ThreadPool XOC_ThreadPool;
+struct _QO_ThreadPool;
+typedef struct _QO_ThreadPool QO_ThreadPool;
 
-typedef void (*xoc_task_f)(void*);
+typedef void (*qo_task_f)(void*);
 
-struct _XOC_ThreadPoolTask
+struct _QO_ThreadPoolTask
 {
-    xoc_task_f       func;
-    xoc_pointer_t    arg;
-    xoc_stat_t *     p_ret;
+    qo_task_f       func;
+    qo_pointer_t    arg;
+    qo_stat_t *     p_ret;
 };
-typedef struct _XOC_ThreadPoolTask XOC_ThreadPoolTask;
+typedef struct _QO_ThreadPoolTask QO_ThreadPoolTask;
 
 
-xoc_stat_t
-XOC_INTERFACE(xoc_thread_pool_init)(
-    XOC_ThreadPool *  thread_pool ,
-    const xoc_size_t max_thread_num 
+qo_stat_t
+QO_INTERFACE(qo_thread_pool_init)(
+    QO_ThreadPool *  thread_pool ,
+    const qo_size_t max_thread_num 
 );
 
 void
-XOC_INTERFACE(xoc_thread_pool_destroy)(
-    XOC_ThreadPool *  thread_pool ,
-    xoc_flag32_t     mode
+QO_INTERFACE(qo_thread_pool_destroy)(
+    QO_ThreadPool *  thread_pool ,
+    qo_flag32_t     mode
 );
 
-xoc_stat_t
-XOC_INTERFACE(xoc_thread_pool_add_task)(
-    XOC_ThreadPool *      thread_pool ,
-    XOC_ThreadPoolTask    task
-);
-
-void
-XOC_INTERFACE(xoc_thread_pool_wait)(
-    XOC_ThreadPool *  thread_pool
+qo_stat_t
+QO_INTERFACE(qo_thread_pool_add_task)(
+    QO_ThreadPool *      thread_pool ,
+    QO_ThreadPoolTask    task
 );
 
 void
-XOC_INTERFACE(xoc_thread_pool_resume)(
-    XOC_ThreadPool *  thread_pool
+QO_INTERFACE(qo_thread_pool_wait)(
+    QO_ThreadPool *  thread_pool
 );
 
 void
-XOC_INTERFACE(xoc_thread_pool_suspend)(
-    XOC_ThreadPool *  thread_pool
+QO_INTERFACE(qo_thread_pool_resume)(
+    QO_ThreadPool *  thread_pool
 );
 
-xoc_size_t
-XOC_INTERFACE(xoc_thread_pool_get_task_count)(
-    XOC_ThreadPool *  thread_pool
+void
+QO_INTERFACE(qo_thread_pool_suspend)(
+    QO_ThreadPool *  thread_pool
 );
 
-xoc_size_t
-XOC_INTERFACE(xoc_thread_pool_get_working_thread_count)(
-    XOC_ThreadPool *  thread_pool
+qo_size_t
+QO_INTERFACE(qo_thread_pool_get_task_count)(
+    QO_ThreadPool *  thread_pool
 );
 
-xoc_size_t
-XOC_INTERFACE(xoc_thread_pool_get_idle_thread_count)(
-    XOC_ThreadPool *  thread_pool
+qo_size_t
+QO_INTERFACE(qo_thread_pool_get_working_thread_count)(
+    QO_ThreadPool *  thread_pool
 );
 
-xoc_size_t
-XOC_INTERFACE(xoc_thread_pool_get_max_thread_count)(
-    XOC_ThreadPool *  thread_pool
+qo_size_t
+QO_INTERFACE(qo_thread_pool_get_idle_thread_count)(
+    QO_ThreadPool *  thread_pool
 );
 
-xoc_stat_t
-XOC_INTERFACE(xoc_thread_pool_adjust_max_thread_num)(
-    XOC_ThreadPool *  thread_pool ,
-    xoc_size_t       max_thread_num ,
-    xoc_flag32_t     mode
+qo_size_t
+QO_INTERFACE(qo_thread_pool_get_max_thread_count)(
+    QO_ThreadPool *  thread_pool
 );
 
-xoc_stat_t
-XOC_INTERFACE(xoc_thread_pool_adjust_priority)(
-    XOC_ThreadPool *  thread_pool ,
-    xoc_priority_t   priority ,
-    xoc_size_t       to_adjust_thread_count
+qo_stat_t
+QO_INTERFACE(qo_thread_pool_adjust_max_thread_num)(
+    QO_ThreadPool *  thread_pool ,
+    qo_size_t       max_thread_num ,
+    qo_flag32_t     mode
+);
+
+qo_stat_t
+QO_INTERFACE(qo_thread_pool_adjust_priority)(
+    QO_ThreadPool *  thread_pool ,
+    qo_priority_t   priority ,
+    qo_size_t       to_adjust_thread_count
 );
 
 #if defined(__cplusplus)

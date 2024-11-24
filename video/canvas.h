@@ -7,24 +7,24 @@
 extern "C" {
 #endif // __cplusplus    
 
-struct _XOCCanvas
+struct _QOCanvas
 {
     SDL_Surface * surface;
 };
-typedef struct _XOCCanvas XOCCanvas;
+typedef struct _QOCanvas QOCanvas;
 
-XOC_FORCE_INLINE
-xoc_size_t
-xoc_canvas_get_width(
-    XOCCanvas * canvas
+QO_FORCE_INLINE
+qo_size_t
+qo_canvas_get_width(
+    QOCanvas * canvas
 ){
     return canvas->surface->w;
 }
 
-XOC_FORCE_INLINE
-xoc_size_t
-xoc_canvas_get_height(
-    XOCCanvas * canvas
+QO_FORCE_INLINE
+qo_size_t
+qo_canvas_get_height(
+    QOCanvas * canvas
 ){
     return canvas->surface->h;
 }

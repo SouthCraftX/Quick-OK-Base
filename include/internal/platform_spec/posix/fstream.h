@@ -1,137 +1,137 @@
 #pragma once
-#define __XOC_POSIX_FSTREAM_H__
+#define __QO_POSIX_FSTREAM_H__
 
-#if !defined(__XOC_FSTREAM_H__)
-#   error "Never include this header file directly. Use <xoc/fstream.h> instead."
+#if !defined(__QO_FSTREAM_H__)
+#   error "Never include this header file directly. Use <qo/fstream.h> instead."
 #endif
 
 #include <unistd.h>
 #include <sys/syscall.h>
 #include "common.h"
 
-#define XOC_FILE_READONLY    O_RDONLY
-#define XOC_FILE_WRITEONLY   O_WRONLY
-#define XOC_FILE_READWRITE   O_RDWR
+#define QO_FILE_READONLY    O_RDONLY
+#define QO_FILE_WRITEONLY   O_WRONLY
+#define QO_FILE_READWRITE   O_RDWR
 
-#define XOC_FILE_CLEAN_OPEN  ( O_CREAT | O_TRUNC)
-#define XOC_FILE_OPEN_EXISTING  O_EXCL
-#define XOC_FILE_TRUNCATE_EXISTING (O_TRUNC | O_EXCL)
-#define XOC_FILE_NO_BUFFERING  O_DIRECT
-#define XOC_FILE_SEQUENTIAL  0
-#define XOC_FILE_RANDOM_ACCESS 0
+#define QO_FILE_CLEAN_OPEN  ( O_CREAT | O_TRUNC)
+#define QO_FILE_OPEN_EXISTING  O_EXCL
+#define QO_FILE_TRUNCATE_EXISTING (O_TRUNC | O_EXCL)
+#define QO_FILE_NO_BUFFERING  O_DIRECT
+#define QO_FILE_SEQUENTIAL  0
+#define QO_FILE_RANDOM_ACCESS 0
 
-#define __XOC_POSIX_ONCE_READ_LIMIT 0x7ffff000
+#define __QO_POSIX_ONCE_READ_LIMIT 0x7ffff000
 
-xoc_stat_t 
-XOC_IMPL(xoc_file_open)(
-    XOC_File **      file ,
-    xoc_ccstring_t   path ,
-    xoc_flag32_t      access_mode ,
-    xoc_flag32_t      open_mode
-    xoc_flag32_t      hints
+qo_stat_t 
+QO_IMPL(qo_file_open)(
+    QO_File **      file ,
+    qo_ccstring_t   path ,
+    qo_flag32_t      access_mode ,
+    qo_flag32_t      open_mode
+    qo_flag32_t      hints
 ){
     int fd = open(path , mode);
     if (fd == -1)
     {
-        return __xoc_file_handle_open_error(); 
+        return __qo_file_handle_open_error(); 
     }
-    __xoc_write_pointer_as_int(file , fd);
-    return XOC_OK;
+    __qo_write_pointer_as_int(file , fd);
+    return QO_OK;
 }
 
-XOC_FORCE_INLINE
+QO_FORCE_INLINE
 void 
-XOC_IMPL(xoc_file_close)(
-    XOC_File * file
+QO_IMPL(qo_file_close)(
+    QO_File * file
 ){
     if (file)
-        close(__xoc_read_pointer_as_int(file));
+        close(__qo_read_pointer_as_int(file));
 }
 
-XOC_FORCE_INLINE
-xoc_uint32_t 
-__xoc_file_read32(
-    XOC_File *      file ,
-    xoc_byte_t *    buf ,
-    xoc_size_t      size
+QO_FORCE_INLINE
+qo_uint32_t 
+__qo_file_read32(
+    QO_File *      file ,
+    qo_byte_t *    buf ,
+    qo_size_t      size
 ){
-    syscall(SYS_read  , __xoc_read_pointer_as_int(file) , buf , size);
-    //read(__xoc_read_pointer_as_int(file) , buf , size);
+    syscall(SYS_read  , __qo_read_pointer_as_int(file) , buf , size);
+    //read(__qo_read_pointer_as_int(file) , buf , size);
 }
 
-xoc_size_t 
-XOC_IMPL(__xoc_file_read32)(
-    XOC_File *        file ,
-    xoc_byte_t *     buf ,
-    xoc_size_t       size
+qo_size_t 
+QO_IMPL(__qo_file_read32)(
+    QO_File *        file ,
+    qo_byte_t *     buf ,
+    qo_size_t       size
 ){
-    xoc_size_t remain_size = size , have_read = 0 , once_read;
-    for (; remain_size >= __XOC_POSIX_ONCE_READ_LIMIT; 
-           remain_size -= __XOC_POSIX_ONCE_READ_LIMIT
+    qo_size_t remain_size = size , have_read = 0 , once_read;
+    for (; remain_size >= __QO_POSIX_ONCE_READ_LIMIT; 
+           remain_size -= __QO_POSIX_ONCE_READ_LIMIT
     ){
-        once_read = __xoc_file_read32(file , buf , __XOC_POSIX_ONCE_READ_LIMIT);
+        once_read = __qo_file_read32(file , buf , __QO_POSIX_ONCE_READ_LIMIT);
         if (once_read)
         {
-            xoc_file_auto_handle_read_error(file , once_read);
+            qo_file_auto_handle_read_error(file , once_read);
             buf += once_read;
             have_read += once_read;
         }
         return have_read;
     }
-    have_read += __xoc_file_read32(__xoc_read_pointer_as_int(file) , buf , remain_size);
+    have_read += __qo_file_read32(__qo_read_pointer_as_int(file) , buf , remain_size);
     return have_read;
 }
 
-XOC_FORCE_INLINE 
-xoc_stat_t 
-__xoc_auto_handle_file_seek_error(
+QO_FORCE_INLINE 
+qo_stat_t 
+__qo_auto_handle_file_seek_error(
     off_t               offset ,
-    xoc_offset_t *   current_offset
+    qo_offset_t *   current_offset
 ){
     if (offset == -1)
     {
         switch (offset)
         {
             case EINVAL:
-            case EOVERFLOW: return XOC_INVALID_ARG;
-            case EBADF:     return XOC_INVALID_HANDLE;
-            case ESPIPE:    return XOC_BAD_TYPE;
+            case EOVERFLOW: return QO_INVALID_ARG;
+            case EBADF:     return QO_INVALID_HANDLE;
+            case ESPIPE:    return QO_BAD_TYPE;
         }
     }
 
     if (current_offset)
         *current_offset = offset;
 
-    return XOC_OK;
+    return QO_OK;
 }
 
-XOC_FORCE_INLINE
-xoc_stat_t
-XOC_IMPL(xoc_file_seek)(
-    XOC_File *       file ,
-    xoc_offset_t     desired_offset ,
-    xoc_flag32_t     move_method ,
-    xoc_offset_t *   current_offset
+QO_FORCE_INLINE
+qo_stat_t
+QO_IMPL(qo_file_seek)(
+    QO_File *       file ,
+    qo_offset_t     desired_offset ,
+    qo_flag32_t     move_method ,
+    qo_offset_t *   current_offset
 ){
-    off_t off = lseek(__xoc_read_pointer_as_int(file) , desired_offset , move_method);
-    return __xoc_auto_handle_file_seek_error(off , current_offset);
+    off_t off = lseek(__qo_read_pointer_as_int(file) , desired_offset , move_method);
+    return __qo_auto_handle_file_seek_error(off , current_offset);
 }
 
-XOC_FORCE_INLINE
-xoc_stat_t 
-XOC_IMPL(xoc_fstream_prealloc)(
-    XOC_File *    file , 
-    xoc_size_t   size
+QO_FORCE_INLINE
+qo_stat_t 
+QO_IMPL(qo_fstream_prealloc)(
+    QO_File *    file , 
+    qo_size_t   size
 ){
-    return fallocate(__xoc_read_pointer_as_int(file) , 0 , 0 , size) ? 
-           __xoc_file_prealloc_error() : XOC_OK;
+    return fallocate(__qo_read_pointer_as_int(file) , 0 , 0 , size) ? 
+           __qo_file_prealloc_error() : QO_OK;
 }
 
 #if 0
 
 #   include <WinBase.h>
 
-xoc_stat_t xoc_fstream_prealloc_handle_error()
+qo_stat_t qo_fstream_prealloc_handle_error()
 {
     switch (GetLastError())
     {
@@ -141,58 +141,58 @@ xoc_stat_t xoc_fstream_prealloc_handle_error()
         case ERROR_BAD_ARGUMENTS:
         case ERROR_FILE_NOT_FOUND:
         case ERROR_INVALID_HANDLE_STATE:
-            return XOC_INVALID_ARG;
+            return QO_INVALID_ARG;
 
         case ERROR_NOT_ENOUGH_MEMORY:
-            return XOC_OUT_OF_MEMORY;
+            return QO_OUT_OF_MEMORY;
 
         case ERROR_ACCESS_DENIED:
         case ERROR_SHARING_VIOLATION:
         case ERROR_PRIVILEGE_NOT_HELD:
-            return XOC_PERMISSION_DENIED;
+            return QO_PERMISSION_DENIED;
 
         case ERROR_BAD_FILE_TYPE:
-            return XOC_BAD_TYPE;
+            return QO_BAD_TYPE;
 
         case ERROR_FILE_OPERATION_ABORTED:
-            return XOC_SIGNAL_INTERRUPTED;
+            return QO_SIGNAL_INTERRUPTED;
 
         case ERROR_VOLUME_FULL:
         case ERROR_VOLUME_QUOTA_EXCEEDED:
-            return XOC_DISK_NO_SPACE;
+            return QO_DISK_NO_SPACE;
 
         case ERROR_HANDLE_TIMEOUT:
-            return XOC_TIMEOUT;
+            return QO_TIMEOUT;
 
         case ERROR_PIPE_BUSY:
-            return XOC_BUSY;
+            return QO_BUSY;
 
         case ERROR_INSUFFICIENT_BUFFER:
-            XOC_BUG(0);
+            QO_BUG(0);
 
         default:
-            return XOC_UNKNOWN;
+            return QO_UNKNOWN;
     }
 }
 
 #if 0
-xoc_stat_t xoc_fstream_prealloc(
-    XOCIOFStream * stream , 
-    xoc_size_t size
+qo_stat_t qo_fstream_prealloc(
+    QOIOFStream * stream , 
+    qo_size_t size
 ){
     FILE_ALLOCATE_INFORMATION falloc_info;
-#   if XOC_SYSTEM_BIT(64)
+#   if QO_SYSTEM_BIT(64)
     falloc_info.AllocationSize.QuadPart = size;
 #   else
     falloc_info.AllocationSize.LowPart = size;
     falloc_info.AllocationSize.HighPart = 0;
-#   endif // XOC_SYSTEM_BIT
-    return SetFileInformationByHandle((HANDLE)(((XOC_FileStreamBase*)stream)->handle) , 
+#   endif // QO_SYSTEM_BIT
+    return SetFileInformationByHandle((HANDLE)(((QO_FileStreamBase*)stream)->handle) , 
                                FileAllocationInfo , &falloc_info , 
-                               sizeof(falloc_info)) ? XOC_OK :
-                               xoc_fstream_prealloc_handle_error();
+                               sizeof(falloc_info)) ? QO_OK :
+                               qo_fstream_prealloc_handle_error();
 
 }
 #endif
 
-#endif // XOC_PLATFORM
+#endif // QO_PLATFORM

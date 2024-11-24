@@ -7,14 +7,14 @@
 extern "C" {
 #endif // __cplusplus
 
-struct _XOCAsyncFile;
-typedef struct _XOCAsyncFile XOCAsyncFile;
+struct _QOAsyncFile;
+typedef struct _QOAsyncFile QOAsyncFile;
 
-xoc_stat_t
-XOC_INTERFACE(xoc_async_file_open)(
-    XOCAsyncFile *   file , 
-    xoc_ccstring_t   path ,
-    xoc_flag32_t     mode
+qo_stat_t
+QO_INTERFACE(qo_async_file_open)(
+    QOAsyncFile *   file , 
+    qo_ccstring_t   path ,
+    qo_flag32_t     mode
 );
 
 

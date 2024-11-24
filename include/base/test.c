@@ -5,7 +5,7 @@
 #include "macros.h"
 int main()
 {
-    printf("32bit:%i",XOC_SYSTEM_BIT(32));
-    printf("\n64bit:%i",XOC_SYSTEM_BIT(64));
-    printf("le:%i",XOC_ENDIAN(LITTLE));
+    printf("32bit:%i",QO_SYSTEM_BIT(32));
+    printf("\n64bit:%i",QO_SYSTEM_BIT(64));
+    printf("le:%i",QO_ENDIAN(LITTLE));
 }

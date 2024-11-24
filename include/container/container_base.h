@@ -3,49 +3,49 @@
 #include "../base.h"
 #include <mimalloc.h>
 
-#define XOC_CONTAINER_PRIVATE_HEAP  (1)
-#define XOC_CONTAINER_NO_PREALLOC   (1 << 1)
+#define QO_CONTAINER_PRIVATE_HEAP  (1)
+#define QO_CONTAINER_NO_PREALLOC   (1 << 1)
 
-union _XOCContainerInfo
+union _QOContainerInfo
 {
-    xoc_stat_t i32;
+    qo_stat_t i32;
     struct 
     {
-        xoc_uint16_t trait;
-        xoc_uint16_t type;
+        qo_uint16_t trait;
+        qo_uint16_t type;
     };
 };
-typedef union _XOCContainerInfo XOCContainerInfo;
+typedef union _QOContainerInfo QOContainerInfo;
 
-XOC_GLOBAL_LOCAL xoc_size_t _xoc_container_init_alloc_element_count;
+QO_GLOBAL_LOCAL qo_size_t _qo_container_init_alloc_element_count;
 
-XOC_FORCE_INLINE
+QO_FORCE_INLINE
 void
-XOC_IMPL(xoc_set_container_init_alloc_element_count)(
-    xoc_size_t count
+QO_IMPL(qo_set_container_init_alloc_element_count)(
+    qo_size_t count
 ){
-    _xoc_container_init_alloc_element_count = count;
+    _qo_container_init_alloc_element_count = count;
 }
 
-XOC_FORCE_INLINE
-xoc_size_t
-XOC_IMPL(xoc_get_container_init_alloc_element_count)()
+QO_FORCE_INLINE
+qo_size_t
+QO_IMPL(qo_get_container_init_alloc_element_count)()
 {
-    return _xoc_container_init_alloc_element_count;
+    return _qo_container_init_alloc_element_count;
 }
 
-XOC_FORCE_INLINE
+QO_FORCE_INLINE
 mi_heap_t *
-__xoc_container_acquire_heap(
-    xoc_stat_t mode_from_new
+__qo_container_acquire_heap(
+    qo_stat_t mode_from_new
 ){
-    return XOC_HAS_FLAG(mode_from_new , XOC_CONTAINER_PRIVATE_HEAP) ?
+    return QO_HAS_FLAG(mode_from_new , QO_CONTAINER_PRIVATE_HEAP) ?
             mi_heap_new() : mi_heap_get_default();
     
 }
 
-#define xoc_set_container_init_alloc_element_count(count) \
-    XOC_INTERFACE(xoc_set_container_init_alloc_element_count)(count)
+#define qo_set_container_init_alloc_element_count(count) \
+    QO_INTERFACE(qo_set_container_init_alloc_element_count)(count)
 
-#define xoc_get_container_init_alloc_element_count() \
-    XOC_INTERFACE(xoc_get_container_init_alloc_element_count)()
+#define qo_get_container_init_alloc_element_count() \
+    QO_INTERFACE(qo_get_container_init_alloc_element_count)()

@@ -1,5 +1,5 @@
 #pragma once
-#define __XOC_DRAGONBOX_H__
+#define __QO_DRAGONBOX_H__
 
 #include "base.h"
 
@@ -10,10 +10,10 @@ extern "C" {
 /// @brief  Change 
 /// @param  
 /// @return 
-xoc_stat_t
-XOC_INTERFACE(xoc_dragonbox_set_table)(
-    xoc_size_t fp32_table_size ,
-    xoc_size_t fp64_table_size 
+qo_stat_t
+QO_INTERFACE(qo_dragonbox_set_table)(
+    qo_size_t fp32_table_size ,
+    qo_size_t fp64_table_size 
 );
 
 

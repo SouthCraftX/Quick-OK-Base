@@ -41,7 +41,7 @@
 #pragma intrinsic(_mm_or_si128)
 #pragma intrinsic(_mm_xor_si128)
 
-#if (defined(XOC_WANT_SIMD_256) || defined(XOC_WANT_SIMD_512))
+#if (defined(QO_WANT_SIMD_256) || defined(QO_WANT_SIMD_512))
 #   pragma intrinsic(_mm256_storeu_si256)
 #   pragma intrinsic(_mm256_loadu_si256)
 #   pragma intrinsic(_mm256_set1_epi8)
@@ -79,9 +79,9 @@
 #   pragma intrinsic(_mm256_and_si256)
 #   pragma intrinsic(_mm256_andnot_si256)
 #   pragma intrinsic(_mm256_or_si256)
-#endif // defined(XOC_WANT_SIMD_256) || defined(XOC_WANT_SIMD_512)
+#endif // defined(QO_WANT_SIMD_256) || defined(QO_WANT_SIMD_512)
 
-#if defined(XOC_WANT_SIMD_512)
+#if defined(QO_WANT_SIMD_512)
 #   pragma intrinsic(_mm512_add_epi8)
 #   pragma intrinsic(_mm512_add_epi16)
 #   pragma intrinsic(_mm512_add_epi32)
@@ -111,15 +111,15 @@
 #   pragma intrinsic(_mm512_or_si512)
 #endif 
 
-#if defined(XOC_WANT_SIMD_128) || defined(XOC_WANT_SIMD_256) ||\ 
-    defined(XOC_WANT_SIMD_512)
+#if defined(QO_WANT_SIMD_128) || defined(QO_WANT_SIMD_256) ||\ 
+    defined(QO_WANT_SIMD_512)
 #   include "v128.h"
-#elif defined(XOC_WANT_SIMD_256) || defined(XOC_WANT_SIMD_512)
+#elif defined(QO_WANT_SIMD_256) || defined(QO_WANT_SIMD_512)
 #   include "v256.h"
-#elif defined(XOC_WANT_SIMD_512)
+#elif defined(QO_WANT_SIMD_512)
 #   include "v512.h"
 #else
-#   error "XOCLib: simd.h is included but no SIMD support is enabled"
+#   error "QOLib: simd.h is included but no SIMD support is enabled"
 #endif
 
 #if defined(__cplusplus)
@@ -127,27 +127,27 @@ extern "C" {
 #endif
 
 
-#if defined(XOC_SIMD_WANT_256)
+#if defined(QO_SIMD_WANT_256)
 ;
 #else
 {
-    XOC_IMPL(xoc_copy128)(source, destination);
-    XOC_IMPL(xoc_copy128)(source + 16, destination + 16);
+    QO_IMPL(qo_copy128)(source, destination);
+    QO_IMPL(qo_copy128)(source + 16, destination + 16);
 }
-#endif // XOC_SIMD_WANT_256
+#endif // QO_SIMD_WANT_256
 
-XOC_FORCE_INLINE
+QO_FORCE_INLINE
 void
-XOC_IMPL(xoc_copy512)(
-    xoc_pointer_t source ,
-    xoc_pointer_t destination
+QO_IMPL(qo_copy512)(
+    qo_pointer_t source ,
+    qo_pointer_t destination
 )
-#if defined(XOC_SIMD_WANT_512)
+#if defined(QO_SIMD_WANT_512)
 ;
 #else
 {
-    XOC_IMPL(xoc_copy256)(source, destination);
-    XOC_IMPL(xoc_copy256)(source + 32, destination + 32);
+    QO_IMPL(qo_copy256)(source, destination);
+    QO_IMPL(qo_copy256)(source + 32, destination + 32);
 }
 
 #if defined(__cplusplus)

@@ -1,11 +1,11 @@
 #pragma once
-#define __XOC_POSIX_PERFORMANCE_MONITOR_IO_H__
+#define __QO_POSIX_PERFORMANCE_MONITOR_IO_H__
 
 // for debug
 #include "include/performance_monitor/io.h"
 
-#if !defined(__XOC_PERFORMANCE_MONITOR_IO_H__)
-#   error Never include this file directly, include "xoc/performance_monitor/io.h" instead.
+#if !defined(__QO_PERFORMANCE_MONITOR_IO_H__)
+#   error Never include this file directly, include "qo/performance_monitor/io.h" instead.
 #endif
 
 /*
@@ -19,39 +19,39 @@
     cancelled_write_bytes: 18446744073709551615
 */
 
-#define __XOC_IO_INFO_MAX_SIZE 256
+#define __QO_IO_INFO_MAX_SIZE 256
 
 #include "fstream.h"
 
-XOC_File * __xoc_io_info_file;
+QO_File * __qo_io_info_file;
 
-XOC_FORCE_INLINE
-xoc_stat_t
-XOC_IMPL(xoc_io_measurer_init)()
+QO_FORCE_INLINE
+qo_stat_t
+QO_IMPL(qo_io_measurer_init)()
 {
     const char io_info_path[] = "/proc/self/io";
-    return xoc_file_open(
-        &__xoc_io_info_file , io_info_path , 
-        sizeof(io_info_path) , XOC_FILE_READONLY ,
-        XOC_FILE_OPEN_EXISTING , 0
+    return qo_file_open(
+        &__qo_io_info_file , io_info_path , 
+        sizeof(io_info_path) , QO_FILE_READONLY ,
+        QO_FILE_OPEN_EXISTING , 0
     );
 }
 
-XOC_FORCE_INLINE
+QO_FORCE_INLINE
 void
-XOC_IMPL(xoc_io_measurer_finish)()
+QO_IMPL(qo_io_measurer_finish)()
 {
-    xoc_file_close(__xoc_io_info_file);
+    qo_file_close(__qo_io_info_file);
 }
 
-xoc_stat_t
-XOC_IMPL(xoc_io_measurer_get)(
-    XOC_IOStatus * p_io_status
+qo_stat_t
+QO_IMPL(qo_io_measurer_get)(
+    QO_IOStatus * p_io_status
 ){
-    char io_info_text[__XOC_IO_INFO_MAX_SIZE];
-    xoc_stat_t read_ret;
-    xoc_size_t read_size = xoc_file_read(
-        __xoc_io_info_file , 
+    char io_info_text[__QO_IO_INFO_MAX_SIZE];
+    qo_stat_t read_ret;
+    qo_size_t read_size = qo_file_read(
+        __qo_io_info_file , 
         io_info_text , 
         sizeof(io_info_text) , 
         &read_ret

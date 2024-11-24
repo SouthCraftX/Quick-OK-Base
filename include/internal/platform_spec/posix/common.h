@@ -1,23 +1,23 @@
 #pragma once
-#define __XOC_POSIX_COMMON__
+#define __QO_POSIX_COMMON__
 
 #include "base.h"
 
 // Sometimes we need to store an interger int as a pointer.
 // For example, store file descriptor in a pointer.
-XOC_FORCE_INLINE
-xoc_pointer_t
-__xoc_write_pointer_as_int(
-    xoc_pointer_t ** ptr , 
+QO_FORCE_INLINE
+qo_pointer_t
+__qo_write_pointer_as_int(
+    qo_pointer_t ** ptr , 
     int value
 ){
-    return *(xoc_intmax_t *)ptr = value;
+    return *(qo_intmax_t *)ptr = value;
 }
 
-XOC_FORCE_INLINE
+QO_FORCE_INLINE
 int
-__xoc_read_pointer_as_int(
-    xoc_pointer_t * ptr
+__qo_read_pointer_as_int(
+    qo_pointer_t * ptr
 ){
-    return *(xoc_intmax_t *)&ptr;
+    return *(qo_intmax_t *)&ptr;
 }

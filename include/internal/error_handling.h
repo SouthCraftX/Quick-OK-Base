@@ -1,5 +1,5 @@
 #pragma once
-#define __XOC_WIN32_ERROR_HANDLING_H__
+#define __QO_WIN32_ERROR_HANDLING_H__
 
 #include "base.h"
 
@@ -8,38 +8,38 @@ extern "C" {
 #endif // __cplusplus
 
 /* ======== File Stream ======== */
-XOC_IMPORT
-xoc_stat_t
-__xoc_file_opening_error();
+QO_IMPORT
+qo_stat_t
+__qo_file_opening_error();
 
-XOC_IMPORT
-xoc_stat_t
-__xoc_file_reading_error();
+QO_IMPORT
+qo_stat_t
+__qo_file_reading_error();
 
-XOC_IMPORT
-xoc_stat_t
-__xoc_file_writing_error();
+QO_IMPORT
+qo_stat_t
+__qo_file_writing_error();
 
-XOC_IMPORT
-xoc_stat_t
-__xoc_file_pos_setting_error();
+QO_IMPORT
+qo_stat_t
+__qo_file_pos_setting_error();
 
-XOC_IMPORT
-xoc_stat_t
-__xoc_file_seeking_error();
+QO_IMPORT
+qo_stat_t
+__qo_file_seeking_error();
 
-XOC_IMPORT
-xoc_stat_t
-__xoc_file_size_getting_error();
+QO_IMPORT
+qo_stat_t
+__qo_file_size_getting_error();
 
-XOC_IMPORT
-xoc_stat_t
-__xoc_file_allocating_error();
+QO_IMPORT
+qo_stat_t
+__qo_file_allocating_error();
 
 /* ======== Multithreading ======== */
-XOC_IMPORT
-xoc_stat_t
-__xoc_thread_creating_error();
+QO_IMPORT
+qo_stat_t
+__qo_thread_creating_error();
 
 
 

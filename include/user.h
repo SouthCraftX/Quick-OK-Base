@@ -1,5 +1,5 @@
 #pragma once
-#define __XOC_USER_H__
+#define __QO_USER_H__
 
 #include "base.h"
 
@@ -9,8 +9,8 @@ extern "C" {
 
 /// @brief  Check if the current user is root
 /// @return true if the current user is root, false otherwise
-xoc_bool_t
-XOC_INTERFACE(xoc_is_high_privileged)();
+qo_bool_t
+QO_INTERFACE(qo_is_high_privileged)();
 
 #if defined(__cplusplus)
 }

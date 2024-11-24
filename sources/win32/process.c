@@ -1,22 +1,22 @@
 #include "include/process.h"
 #include "include/memalloc.h"
 
-XOC_FORCE_INLINE
-xoc_size_t
+QO_FORCE_INLINE
+qo_size_t
 __calculate_wide_string_size(
-    xoc_ccstring_t      command_line ,
-    xoc_ccstring_t      environment ,
-    xoc_ccstring_t      working_directory ,
-    xoc_uint16_t *        p_command_line_length ,     //< In: length ; Out:size
-    xoc_uint16_t *        p_environment_length ,      //< In: length ; Out:size
-    xoc_uint16_t *        p_working_directory_length  //< In: length ; Out:size
+    qo_ccstring_t      command_line ,
+    qo_ccstring_t      environment ,
+    qo_ccstring_t      working_directory ,
+    qo_uint16_t *        p_command_line_length ,     //< In: length ; Out:size
+    qo_uint16_t *        p_environment_length ,      //< In: length ; Out:size
+    qo_uint16_t *        p_working_directory_length  //< In: length ; Out:size
 ){
-    const xoc_uint16_t command_line_size = (*p_command_line_length ? 
+    const qo_uint16_t command_line_size = (*p_command_line_length ? 
         *p_command_line_length : strlen(command_line)) + sizeof(CHAR); 
         // sizeof(CHAR) for the null-terminator
     *p_command_line_length = command_line_size;
 
-    xoc_uint16_t environment_size;
+    qo_uint16_t environment_size;
     if (*p_environment_length)
     {
         environment_size = environment ? (*p_environment_length + 1) : 0;
@@ -27,7 +27,7 @@ __calculate_wide_string_size(
     }
     *p_environment_length = environment_size;
 
-    xoc_uint16_t working_directory_size;
+    qo_uint16_t working_directory_size;
     if (working_directory)
     {
         working_directory_size = working_directory ? (*p_working_directory_length + 1) : 0;
@@ -42,22 +42,22 @@ __calculate_wide_string_size(
 }
 
 
-xoc_stat_t
-XOC_IMPL(xoc_process_create)(
-    XOC_Process **      p_process ,
-    xoc_ccstring_t      command_line ,
-    xoc_ccstring_t      environment ,
-    xoc_ccstring_t      working_directory ,
-    xoc_uint16_t        command_line_length ,
-    xoc_uint16_t        environment_length ,
-    xoc_uint16_t        working_directory_length ,
-    XOC_ProcessStdio *  stdio
+qo_stat_t
+QO_IMPL(qo_process_create)(
+    QO_Process **      p_process ,
+    qo_ccstring_t      command_line ,
+    qo_ccstring_t      environment ,
+    qo_ccstring_t      working_directory ,
+    qo_uint16_t        command_line_length ,
+    qo_uint16_t        environment_length ,
+    qo_uint16_t        working_directory_length ,
+    QO_ProcessStdio *  stdio
 ){
-    xoc_size_t  wcstring_size = __calculate_wide_string_size(
+    qo_size_t  wcstring_size = __calculate_wide_string_size(
         command_line , environment , working_directory ,
         &command_line_length , &environment_length , &working_directory_length
     );
-    PWSTR   wide_string = xoc_alloc(wcstring_size) ,
+    PWSTR   wide_string = qo_alloc(wcstring_size) ,
             wc_cmdline  = wide_string , 
             wc_env      = environment_length ? 
                           (wc_cmdline + command_line_length) : NULL ,
@@ -68,8 +68,8 @@ XOC_IMPL(xoc_process_create)(
 #define environment_size        environment_length
 #define working_directory_size  working_directory_length
 
-    if(XOC_UNLIKELY(!wide_string))
-        return XOC_OUT_OF_MEMORY;
+    if(QO_UNLIKELY(!wide_string))
+        return QO_OUT_OF_MEMORY;
 
     PROCESS_INFORMATION proc_info;
     STARTUPINFOW        startup_info;
@@ -103,9 +103,9 @@ XOC_IMPL(xoc_process_create)(
 
     if (stdio)
     {
-        stdio->stdin  = (XOC_File *)startup_info.hStdInput;
-        stdio->stdout = (XOC_File *)startup_info.hStdOutput;
-        stdio->stderr = (XOC_File *)startup_info.hStdError;
+        stdio->stdin  = (QO_File *)startup_info.hStdInput;
+        stdio->stdout = (QO_File *)startup_info.hStdOutput;
+        stdio->stderr = (QO_File *)startup_info.hStdError;
     }
     else
     {
@@ -114,7 +114,7 @@ XOC_IMPL(xoc_process_create)(
         CloseHandle(startup_info.hStdInput);
     }
 
-    *p_process = (XOC_Process*)proc_info.hProcess;
+    *p_process = (QO_Process*)proc_info.hProcess;
 }
 
 #undef command_line_size

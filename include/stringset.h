@@ -1,5 +1,5 @@
 #pragma once
-#define __XOC_STRINGSET_H__
+#define __QO_STRINGSET_H__
 
 #include "base.h"
 
@@ -10,10 +10,10 @@ extern "C" {
 /// @brief  Calculate the length of a string.
 /// @param  string  The string to calculate the length of
 /// @return The length of the string.
-xoc_size_t
-XOC_INTERFACE(xoc_string_length)(
-    xoc_ccstring_t  string
-) XOC_NONNULL(1);
+qo_size_t
+QO_INTERFACE(qo_string_length)(
+    qo_ccstring_t  string
+) QO_NONNULL(1);
 
 /// @brief  Copy a string to another
 /// @param  source  The source string
@@ -21,14 +21,14 @@ XOC_INTERFACE(xoc_string_length)(
 /// @param  count  The number of characters to copy. 0 is allowed, in that case,
 ///         the string is copied until the null terminator is reached.
 /// @return 
-xoc_size_t
-XOC_INTERFACE(xoc_string_copy)(
-    xoc_ccstring_t  source ,
-    xoc_cstring_t   destination ,
-    xoc_size_t      count
-) XOC_NONNULL(1 , 2);
+qo_size_t
+QO_INTERFACE(qo_string_copy)(
+    qo_ccstring_t  source ,
+    qo_cstring_t   destination ,
+    qo_size_t      count
+) QO_NONNULL(1 , 2);
 
-/// @brief  Duplicate a string using xoc_alloc()
+/// @brief  Duplicate a string using qo_alloc()
 /// @param  string  The string to duplicate
 /// @param  p_count Pointer to the count of characters to duplicate. 
 ///         If NULL,
@@ -40,37 +40,37 @@ XOC_INTERFACE(xoc_string_copy)(
 ///         number of characters duplicated.
 /// @return The duplicated string. NULL if no enough memory to handle this
 ///         operation.
-xoc_cstring_t
-XOC_INTERFACE(xoc_string_duplicate)(
-    xoc_ccstring_t  string ,
-    xoc_size_t *    p_count
-) XOC_NONNULL(1);
+qo_cstring_t
+QO_INTERFACE(qo_string_duplicate)(
+    qo_ccstring_t  string ,
+    qo_size_t *    p_count
+) QO_NONNULL(1);
 
 /// @brief  Find a character in a string
 /// @param  string  The string to search
 /// @param  character  The character to find 
 /// @param  length  The length of the string to search
 /// @return Pointer to the first occurrence of the character in the string.
-xoc_cstring_t
-XOC_INTERFACE(xoc_string_find_char)(
-    xoc_ccstring_t  string ,
-    xoc_int32_t     character ,
-    xoc_size_t      length
-) XOC_NONNULL(1);
+qo_cstring_t
+QO_INTERFACE(qo_string_find_char)(
+    qo_ccstring_t  string ,
+    qo_int32_t     character ,
+    qo_size_t      length
+) QO_NONNULL(1);
 
-xoc_ccstring_t
-XOC_INTERFACE(xoc_string_find_substring)(
-    xoc_ccstring_t  string ,
-    xoc_ccstring_t  substring ,
-    xoc_size_t      length
-) XOC_NONNULL(1 , 2);
+qo_ccstring_t
+QO_INTERFACE(qo_string_find_substring)(
+    qo_ccstring_t  string ,
+    qo_ccstring_t  substring ,
+    qo_size_t      length
+) QO_NONNULL(1 , 2);
 
 #if defined(__cplusplus)
 }
 #endif
 
-#define xoc_string_length       XOC_INTERFACE(xoc_string_length)
-#define xoc_string_copy         XOC_INTERFACE(xoc_string_copy)
-#define xoc_string_duplicate    XOC_INTERFACE(xoc_string_duplicate)
-#define xoc_string_find_char    XOC_INTERFACE(xoc_string_find_char)
-#define xoc_string_find_substring XOC_INTERFACE(xoc_string_find_substring)
+#define qo_string_length       QO_INTERFACE(qo_string_length)
+#define qo_string_copy         QO_INTERFACE(qo_string_copy)
+#define qo_string_duplicate    QO_INTERFACE(qo_string_duplicate)
+#define qo_string_find_char    QO_INTERFACE(qo_string_find_char)
+#define qo_string_find_substring QO_INTERFACE(qo_string_find_substring)

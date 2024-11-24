@@ -1,5 +1,5 @@
 #pragma once
-#define __XOC_ATOMIC_H__
+#define __QO_ATOMIC_H__
 
 #include "base.h"
 

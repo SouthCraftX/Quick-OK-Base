@@ -13,24 +13,24 @@ extern "C" {
 #include <libavutil/hwcontext.h>
 #include <libavutil/imgutils.h>
 
-#define XOC_VIDEO_PROFILE_BASELINE   "baseline"
-#define XOC_VIDEO_PROFILE_MAIN       "main"
-#define XOC_VIDEO_PROFILE_HIGH       "high"
-#define XOC_VIDEO_PROFILE_EXTENDED   "extended"
+#define QO_VIDEO_PROFILE_BASELINE   "baseline"
+#define QO_VIDEO_PROFILE_MAIN       "main"
+#define QO_VIDEO_PROFILE_HIGH       "high"
+#define QO_VIDEO_PROFILE_EXTENDED   "extended"
 
-#define XOC_VIDEO_PRESET_PLACEBO     "placebo"
-#define XOC_VIDEO_PRESET_VERYSLOW    "veryslow"
-#define XOC_VIDEO_PRESET_SLOW        "slow"
-#define XOC_VIDEO_PRESET_MEDIUM      "medium"
-#define XOC_VIDEO_PROSET_FAST        "fast"
-#define XOC_VIDEO_PRESET_VERYFAST    "veryfast"
-#define XOC_VIDEO_PRESET_ULTRAFAST   "ultrafast"
+#define QO_VIDEO_PRESET_PLACEBO     "placebo"
+#define QO_VIDEO_PRESET_VERYSLOW    "veryslow"
+#define QO_VIDEO_PRESET_SLOW        "slow"
+#define QO_VIDEO_PRESET_MEDIUM      "medium"
+#define QO_VIDEO_PROSET_FAST        "fast"
+#define QO_VIDEO_PRESET_VERYFAST    "veryfast"
+#define QO_VIDEO_PRESET_ULTRAFAST   "ultrafast"
 
 
 
-struct _XOCVideoEncoder
+struct _QOVideoEncoder
 {
-    XOCVideoInfo     video_info;
+    QOVideoInfo     video_info;
     AVCodecContext *    codec_ctx;
     AVFormatContext *   format_ctx;
     AVCodec *           codec;
@@ -39,48 +39,48 @@ struct _XOCVideoEncoder
     AVDictionary *      opt;
     AVStream *          stream;
 };
-typedef struct _XOCVideoEncoder XOCVideoEncoder;
+typedef struct _QOVideoEncoder QOVideoEncoder;
 
 
-struct _XOCHardwareVideoEncoder
+struct _QOHardwareVideoEncoder
 {
-    XOCVideoEncoder  base;
+    QOVideoEncoder  base;
     AVFrame *           hw_frame;
     AVBufferRef *       hw_device_ctx;
     AVBufferRef *       hw_frames_ref;
     AVHWFramesContext * hw_frames_ctx;
 };
-typedef struct _XOCHardwareVideoEncoder XOCHardwareVideoEncoder;
-int a =sizeof(XOCHardwareVideoEncoder);
+typedef struct _QOHardwareVideoEncoder QOHardwareVideoEncoder;
+int a =sizeof(QOHardwareVideoEncoder);
 
-xoc_stat_t
-XOC_INTERFACE(xoc_video_encoder_init)(
-    XOCVideoEncoder *        encoder ,
-    const XOCVideoInfo *     video_info ,
-    const XOCVideoQuality *  video_quality ,
+qo_stat_t
+QO_INTERFACE(qo_video_encoder_init)(
+    QOVideoEncoder *        encoder ,
+    const QOVideoInfo *     video_info ,
+    const QOVideoQuality *  video_quality ,
     enum AVCodecID              codec_id ,
-    xoc_ccstring_t           video_path
+    qo_ccstring_t           video_path
 );
 
 
-xoc_stat_t
-XOC_INTERFACE(xoc_hardware_video_encoder_init)(
-    XOCVideoEncoder *        encoder ,
-    const XOCVideoInfo *     video_info ,
-    const XOCVideoQuality *  video_quality ,
+qo_stat_t
+QO_INTERFACE(qo_hardware_video_encoder_init)(
+    QOVideoEncoder *        encoder ,
+    const QOVideoInfo *     video_info ,
+    const QOVideoQuality *  video_quality ,
     const enum AVHWDeviceType   hardware_type ,
-    xoc_ccstring_t           video_path
+    qo_ccstring_t           video_path
 );
 
-xoc_stat_t
-XOC_INTERFACE(xoc_video_encoder_write_frame)(
-    XOCVideoEncoder *    encoder ,
-    xoc_pointer_t        frame
+qo_stat_t
+QO_INTERFACE(qo_video_encoder_write_frame)(
+    QOVideoEncoder *    encoder ,
+    qo_pointer_t        frame
 );
 
 void
-XOC_INTERFACE(xoc_video_encoder_stop)(
-    XOCVideoEncoder *    encoder
+QO_INTERFACE(qo_video_encoder_stop)(
+    QOVideoEncoder *    encoder
 );
 
 

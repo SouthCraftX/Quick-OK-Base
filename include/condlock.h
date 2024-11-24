@@ -19,7 +19,7 @@
 *******************************************************************************/
 
 #pragma once
-#define __XOC_CONDLOCK_H__
+#define __QO_CONDLOCK_H__
 
 #include "base.h"
 
@@ -29,62 +29,62 @@ extern "C" {
 
 // @brief Condition lock
 // @remark This structure is designed not to exposed to user.
-struct _XOC_CondLock;
-typedef struct _XOC_CondLock XOC_CondLock;
+struct _QO_CondLock;
+typedef struct _QO_CondLock QO_CondLock;
 
 // @brief Initialize condition lock
 // @param lock Condition lock
 void 
-XOC_INTERFACE(xoc_condlock_init)(
-    XOC_CondLock * lock
+QO_INTERFACE(qo_condlock_init)(
+    QO_CondLock * lock
 );
 
 // @brief Aquire condition lock
 // @param lock Condition lock
 void 
-XOC_INTERFACE(xoc_condlock_lock)(
-    XOC_CondLock * lock
+QO_INTERFACE(qo_condlock_lock)(
+    QO_CondLock * lock
 );
 
 // @brief Release condition lock
 // @param lock Condition lock
 // @note To reduce context switches, it is recommanded to call this function 
-// before calling `xoc_condlock_wake` or `xoc_condlock_wake_all`.
+// before calling `qo_condlock_wake` or `qo_condlock_wake_all`.
 void 
-XOC_INTERFACE(xoc_condlock_unlock)(
-    XOC_CondLock * lock
+QO_INTERFACE(qo_condlock_unlock)(
+    QO_CondLock * lock
 );
 
 // @brief Wait for condition lock until other thread wake caller up.
 // @param lock Condition lock
 void
-XOC_INTERFACE(xoc_condlock_wait)(
-    XOC_CondLock * lock
+QO_INTERFACE(qo_condlock_wait)(
+    QO_CondLock * lock
 );
 
 // @brief   Wake up one thread waiting for condition lock.
 // @param   `lock` Condition lock
 // @note    To reduce context switches, it is recommanded to call 
-// `xoc_condlock_unlock` before calling this function.
+// `qo_condlock_unlock` before calling this function.
 void 
-XOC_INTERFACE(xoc_condlock_wake)(
-    XOC_CondLock * lock
+QO_INTERFACE(qo_condlock_wake)(
+    QO_CondLock * lock
 );
 
 // @brief Wake up all threads waiting for condition lock.
 // @param lock Condition lock
 // @note To reduce context switches, it is recommanded to call 
-// `xoc_condlock_unlock` before calling this function.
+// `qo_condlock_unlock` before calling this function.
 void 
-XOC_INTERFACE(xoc_condlock_wake_all)(
-    XOC_CondLock * lock
+QO_INTERFACE(qo_condlock_wake_all)(
+    QO_CondLock * lock
 );
 
 // @brief Destroy condition lock
 // @param lock Condition lock
 void 
-XOC_INTERFACE(xoc_condlock_destroy)(
-    XOC_CondLock * lock
+QO_INTERFACE(qo_condlock_destroy)(
+    QO_CondLock * lock
 );
 
 
@@ -92,16 +92,16 @@ XOC_INTERFACE(xoc_condlock_destroy)(
 }
 #endif // __cplusplus
 
-#if XOC_PLATFORM(WINDOWS)
+#if QO_PLATFORM(WINDOWS)
 #   include "platform_spec/win32/condlock.h"
-#elif XOC_PLATFORM(POSIX)
+#elif QO_PLATFORM(POSIX)
 #   include "platform_spec/posix/condlock.h"
 #endif 
 
-#define xoc_condlock_init        XOC_INTERFACE(xoc_condlock_init)
-#define xoc_condlock_lock        XOC_INTERFACE(xoc_condlock_lock)
-#define xoc_condlock_unlock      XOC_INTERFACE(xoc_condlock_unlock)
-#define xoc_condlock_wait        XOC_INTERFACE(xoc_condlock_wait)
-#define xoc_condlock_wake        XOC_INTERFACE(xoc_condlock_wake)
-#define xoc_condlock_wake_all    XOC_INTERFACE(xoc_condlock_wake_all)
-#define xoc_condlock_destroy     XOC_INTERFACE(xoc_condlock_destroy)
+#define qo_condlock_init        QO_INTERFACE(qo_condlock_init)
+#define qo_condlock_lock        QO_INTERFACE(qo_condlock_lock)
+#define qo_condlock_unlock      QO_INTERFACE(qo_condlock_unlock)
+#define qo_condlock_wait        QO_INTERFACE(qo_condlock_wait)
+#define qo_condlock_wake        QO_INTERFACE(qo_condlock_wake)
+#define qo_condlock_wake_all    QO_INTERFACE(qo_condlock_wake_all)
+#define qo_condlock_destroy     QO_INTERFACE(qo_condlock_destroy)

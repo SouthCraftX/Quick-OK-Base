@@ -6,179 +6,179 @@ extern "C" {
 #include "../base.h"
 #include "../memory.h"
 
-struct xocRWLock;
-typedef struct xocRWLock XOCRWLock;
+struct qoRWLock;
+typedef struct qoRWLock QORWLock;
 
-XOCRWLock * xoc_rwlock_new();
-XOCRWLock * xoc_rwlock_new_ex(
-    xoc_stat_t * stat
+QORWLock * qo_rwlock_new();
+QORWLock * qo_rwlock_new_ex(
+    qo_stat_t * stat
 );
-void xoc_rwlock_delete(
-    XOCRWLock * lock
-);
-
-xoc_stat_t xoc_rwlock_init(
-    XOCRWLock * lock
+void qo_rwlock_delete(
+    QORWLock * lock
 );
 
-void xoc_rwlock_rdlock(
-    XOCRWLock * lock
+qo_stat_t qo_rwlock_init(
+    QORWLock * lock
 );
 
-void xoc_rwlock_wrlock(
-    XOCRWLock * lock
+void qo_rwlock_rdlock(
+    QORWLock * lock
 );
 
-void xoc_rwlock_unlock(
-    XOCRWLock * lock
+void qo_rwlock_wrlock(
+    QORWLock * lock
 );
 
-void xoc_rwlock_destroy(
-    XOCRWLock * lock
+void qo_rwlock_unlock(
+    QORWLock * lock
+);
+
+void qo_rwlock_destroy(
+    QORWLock * lock
 );
 
  
-XOCRWLock * xoc_rwlock_new()
+QORWLock * qo_rwlock_new()
 {
-    xoc_stat_t stat;
-    return xoc_rwlock_new_ex(&stat);
+    qo_stat_t stat;
+    return qo_rwlock_new_ex(&stat);
 }
 
  
-XOCRWLock * xoc_rwlock_new_ex(xoc_stat_t * stat)
+QORWLock * qo_rwlock_new_ex(qo_stat_t * stat)
 {
-    XOC_ASSERT(stat);
-    XOCRWLock * ret = (XOCRWLock*)mi_malloc_small(sizeof(XOCRWLock));
-    if (XOC_LIKELY(ret))
+    QO_ASSERT(stat);
+    QORWLock * ret = (QORWLock*)mi_malloc_small(sizeof(QORWLock));
+    if (QO_LIKELY(ret))
     {
-        *stat = xoc_rwlock_init(ret);
+        *stat = qo_rwlock_init(ret);
         return ret;
     }
-    *stat = XOC_OUT_OF_MEMORY;
+    *stat = QO_OUT_OF_MEMORY;
     return NULL;
 }
 
 
-void xoc_rwlock_delete(XOCRWLock * lock)
+void qo_rwlock_delete(QORWLock * lock)
 {
-    xoc_rwlock_destroy(lock);
+    qo_rwlock_destroy(lock);
     mi_free(lock);
 }
 
-#if XOC_PLATFORM(POSIX)
+#if QO_PLATFORM(POSIX)
 #   include <pthread.h>
-struct xocRWLock
+struct qoRWLock
 {
-    XOCeanClassBase     base;
+    QOeanClassBase     base;
     pthread_rwlock_t    rwlock;
 };
 
 
-xoc_stat_t xoc_rwlock_init(XOCRWLock * lock)
+qo_stat_t qo_rwlock_init(QORWLock * lock)
 {
     int ret = pthread_rwlock_init(&lock->rwlock, NULL);
-    if (XOC_UNLIKELY(ret))
+    if (QO_UNLIKELY(ret))
     {
         switch(ret)
         {
             case EAGAIN:
-                return XOC_NO_RESOURCE;
+                return QO_NO_RESOURCE;
             case EINVAL:
-                return XOC_INVALID_ARGUMENT;
+                return QO_INVALID_ARGUMENT;
             case ENOMEM:
-                return XOC_OUT_OF_MEMORY;
+                return QO_OUT_OF_MEMORY;
             default:
-                return XOC_ERR_UNKNOWN;
+                return QO_ERR_UNKNOWN;
         }
     }
-    return XOC_OK;
+    return QO_OK;
 }
 
 
-void xoc_rwlock_rdlock(XOCRWLock * lock)
+void qo_rwlock_rdlock(QORWLock * lock)
 {
     int ret = pthread_rwlock_rdlock(&lock->rwlock);
-    XOC_ASSERT(ret == 0); // Deadly lock, too many lock acquire or invaild argument
+    QO_ASSERT(ret == 0); // Deadly lock, too many lock acquire or invaild argument
     (void)ret;
 }
 
 
-void xoc_rwlock_wrlock(XOCRWLock * lock)
+void qo_rwlock_wrlock(QORWLock * lock)
 {
     int ret = pthread_rwlock_wrlock(&lock->rwlock);
-    XOC_ASSERT(ret == 0); // Deadly lock or invaild argument
+    QO_ASSERT(ret == 0); // Deadly lock or invaild argument
     (void)ret;
 }
 
 
-void xoc_rwlock_unlock(XOCRWLock * lock)
+void qo_rwlock_unlock(QORWLock * lock)
 {
     int ret = pthread_rwlock_unlock(&lock->rwlock);
-    XOC_ASSERT(ret == 0); // Trying to unlock a not-locked lock or invaild argument
+    QO_ASSERT(ret == 0); // Trying to unlock a not-locked lock or invaild argument
     (void)ret;
 }
 
 
-void xoc_rwlock_destroy(XOCRWLock * lock)
+void qo_rwlock_destroy(QORWLock * lock)
 {
     int ret = pthread_rwlock_destroy(&lock->rwlock);
-    XOC_ASSERT(ret == 0); // Trying to destroy a locked lock or invaild argument
+    QO_ASSERT(ret == 0); // Trying to destroy a locked lock or invaild argument
     (void)ret;
 }
-#elif XOC_PLATFORM(WINDOWS)
+#elif QO_PLATFORM(WINDOWS)
 #   include <synchapi.h>
 
-struct xocRWLock
+struct qoRWLock
 {
-    XOCClassBase base;
+    QOClassBase base;
     SRWLOCK         lock;
     (void       )(* fn_unlock   )(PSRWLOCK);
-}; // xocRWLock
+}; // qoRWLock
 // Expected size: 16 bytes(on 64-bit) / 8bytes(on 32-bit)
 
 
-xoc_stat_t xoc_rwlock_init(XOCRWLock * lock)
+qo_stat_t qo_rwlock_init(QORWLock * lock)
 {
-    XOC_ASSERT(lock != NULL);
+    QO_ASSERT(lock != NULL);
     InitializeSRWLock(&lock->lock);
-#   if defined(XOC_DEBUG)
+#   if defined(QO_DEBUG)
     lock->fn_unlock = NULL;
 #   endif
-    return XOC_OK;
+    return QO_OK;
 }
 
 
-void xoc_rwlock_rdlock(XOCRWLock * lock)
+void qo_rwlock_rdlock(QORWLock * lock)
 {
-    XOC_ASSERT(lock != NULL);
-    XOC_ASSERT(lock->fn_unlock == NULL)
+    QO_ASSERT(lock != NULL);
+    QO_ASSERT(lock->fn_unlock == NULL)
     lock->fn_unlock = AcquireSRWLockShared;
     AcquireSRWLockShared(&lock->lock);
 }
 
 
-void xoc_rwlock_wrlock(XOCRWLock * lock)
+void qo_rwlock_wrlock(QORWLock * lock)
 {
-    XOC_ASSERT(lock != NULL);
-    XOC_ASSERT(lock->fn_unlock == NULL);   
+    QO_ASSERT(lock != NULL);
+    QO_ASSERT(lock->fn_unlock == NULL);   
     lock->fn_unlock = ReleaseSRWLockExclusive;
     AcquireSRWLockExclusive(&lock->lock);
 }
 
 
-void xoc_rwlock_unlock(XOCRWLock * lock)
+void qo_rwlock_unlock(QORWLock * lock)
 {
-    XOC_ASSERT(lock != NULL);
+    QO_ASSERT(lock != NULL);
     (*lock->fn_unlock)(&lock->lock);
-#   ifdef XOC_DEBUG
+#   ifdef QO_DEBUG
     lock->fn_unlock = NULL;
-#   endif // XOC_DEBUG
+#   endif // QO_DEBUG
 }
 
 
-void xoc_rwlock_destory(XOCRWLock * lock)
+void qo_rwlock_destory(QORWLock * lock)
 {
-    XOC_ASSERT(lock != NULL);
+    QO_ASSERT(lock != NULL);
     (void)lock;
     return;
 }

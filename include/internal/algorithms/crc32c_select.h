@@ -3,19 +3,19 @@
 // for debug
 #include "algorithms/crc32.h"
 
-#if !defined(__XOC_ALGORITHMS_CRC32_H__)
+#if !defined(__QO_ALGORITHMS_CRC32_H__)
 #   error "Never include this header file directly. Use crc32.h instead."
 #endif 
 
 #include <aws/checksums/crc.h>
 
-#if XOC_ARCH(x86) && (defined(__SSE4_2__) || defined(__AVX2__))
-#   define __XOC_CAN_USE_CRC32_4K_FUSION
+#if QO_ARCH(x86) && (defined(__SSE4_2__) || defined(__AVX2__))
+#   define __QO_CAN_USE_CRC32_4K_FUSION
 
-XOC_IMPORT
-__xoc_crc32c_4k_fusion(
-    const xoc_byte_t *   buffer ,
-    const xoc_size_t     size
+QO_IMPORT
+__qo_crc32c_4k_fusion(
+    const qo_byte_t *   buffer ,
+    const qo_size_t     size
 );
 
 #endif
@@ -24,14 +24,14 @@ __xoc_crc32c_4k_fusion(
 extern "C" {
 #endif // __cplusplus
 
-xoc_int32_t
-XOC_IMPL(xoc_crc32c_4k)(
-    const xoc_byte_t *   buffer ,
-    const xoc_size_t     size
+qo_int32_t
+QO_IMPL(qo_crc32c_4k)(
+    const qo_byte_t *   buffer ,
+    const qo_size_t     size
 ){
-#if __XOC_CAN_USE_CRC32_4K_FUSION
-    return __xoc_crc32c_4k_fusion(buffer , size , 0);
-#   undef __XOC_CAN_USE_CRC32_4K_FUSION  
+#if __QO_CAN_USE_CRC32_4K_FUSION
+    return __qo_crc32c_4k_fusion(buffer , size , 0);
+#   undef __QO_CAN_USE_CRC32_4K_FUSION  
     // Remove the macro because it's no longer used.
 #else
     // aws crc32c provides an implementation for all architectures that may

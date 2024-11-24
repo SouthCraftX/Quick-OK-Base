@@ -7,24 +7,24 @@
 
 #   include <unistd.h>
 
-xoc_stat_t 
-XOC_IMPL(xoc_fstream_prealloc)(
-    XOC_File *    file ,
-    xoc_size_t   size
+qo_stat_t 
+QO_IMPL(qo_fstream_prealloc)(
+    QO_File *    file ,
+    qo_size_t   size
 ){
     switch(fallocate((int)file , 0 , 0 , size))
     {
 
-        case 0:         return XOC_OK;
-        case EBADF:     return XOC_INVALID_HANDLE;
-        case EINVAL:    return XOC_INVALID_ARG;
-        case EFBIG:     return XOC_FILE_TOO_BIG;
-        case ENOSPC:    return XOC_DISK_NO_SPACE;
-        case ESPIPE:    return XOC_BAD_TYPE;
-        case EIO:       return XOC_BROKEN_DEVICE;
-        case ENOTSUP:   return XOC_NOT_SUPPORTED;
-        case EINPR:     return XOC_SIGNAL_INTERRUPTED;
-        default:        return XOC_UNKNOWN_ERROR;
+        case 0:         return QO_OK;
+        case EBADF:     return QO_INVALID_HANDLE;
+        case EINVAL:    return QO_INVALID_ARG;
+        case EFBIG:     return QO_FILE_TOO_BIG;
+        case ENOSPC:    return QO_DISK_NO_SPACE;
+        case ESPIPE:    return QO_BAD_TYPE;
+        case EIO:       return QO_BROKEN_DEVICE;
+        case ENOTSUP:   return QO_NOT_SUPPORTED;
+        case EINPR:     return QO_SIGNAL_INTERRUPTED;
+        default:        return QO_UNKNOWN_ERROR;
     }
 }
 

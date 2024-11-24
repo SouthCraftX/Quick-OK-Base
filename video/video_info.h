@@ -7,50 +7,50 @@ extern "C" {
 
 #include <libavformat/avformat.h>
 
-struct _XOCVideoInfo
+struct _QOVideoInfo
 {
-    xoc_uint16_t width;
-    xoc_uint16_t height;
-    xoc_uint16_t gop_size;
+    qo_uint16_t width;
+    qo_uint16_t height;
+    qo_uint16_t gop_size;
     AVPixelFormat   pix_fmt;
-    xoc_fp64_t   fps;
+    qo_fp64_t   fps;
     
 };
-typedef struct _XOCVideoInfo XOCVideoInfo;
+typedef struct _QOVideoInfo QOVideoInfo;
 
-enum _XOCVideoQualityType
+enum _QOVideoQualityType
 {
-    XOC_VIDEO_QUALITY_QP,
-    XOC_VIDEO_QUALITY_BITRATE,
-    XOC_VIDEO_QUALITY_CRF
+    QO_VIDEO_QUALITY_QP,
+    QO_VIDEO_QUALITY_BITRATE,
+    QO_VIDEO_QUALITY_CRF
 };
-typedef enum _XOCVideoQualityType XOCVideoQualityType;
+typedef enum _QOVideoQualityType QOVideoQualityType;
 
-struct _XOCVideoQuality
+struct _QOVideoQuality
 {
-    XOCVideoQualityType  type;
-    xoc_ccstring_t       preset;
-    xoc_ccstring_t       profile;
+    QOVideoQualityType  type;
+    qo_ccstring_t       preset;
+    qo_ccstring_t       profile;
     union 
     {
         struct 
         {
-            xoc_int16_t  qp;
-            xoc_int16_t  min_qp;
-            xoc_int16_t  max_qp;
+            qo_int16_t  qp;
+            qo_int16_t  min_qp;
+            qo_int16_t  max_qp;
         } qp;
         struct
         {
-            xoc_size_t   bitrate;
-            xoc_size_t   max_bitrate;
-            xoc_size_t   min_bitrate;
+            qo_size_t   bitrate;
+            qo_size_t   max_bitrate;
+            qo_size_t   min_bitrate;
         } bitrate;
         struct {
-            xoc_int16_t  crf;
+            qo_int16_t  crf;
         } crf;
     };
 };
-typedef struct _XOCVideoQuality XOCVideoQuality;
+typedef struct _QOVideoQuality QOVideoQuality;
 
 
 #if defined(__cplusplus)
