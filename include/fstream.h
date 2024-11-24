@@ -74,12 +74,12 @@ typedef struct _QO_FileOpenMode QO_FileOpenMode;
 /// @sa     qo_sysfile_close()
 qo_stat_t 
 QO_INTERFACE(qo_sysfile_open)(
-    QO_SysFileStream **         p_file , 
-    qo_ccstring_t      path , 
-    qo_size_t          path_size ,
-    qo_flag32_t        access_mode ,
-    qo_flag32_t        open_mode ,
-    qo_flag32_t        hints
+    QO_SysFileStream ** p_file , 
+    qo_ccstring_t       path , 
+    qo_size_t           path_size ,
+    qo_flag32_t         access_mode ,
+    qo_flag32_t         open_mode ,
+    qo_flag32_t         hints
 ) QO_NONNULL(1 , 2);
 
 /// @brief  Read data from a file
@@ -89,44 +89,143 @@ QO_INTERFACE(qo_sysfile_open)(
 /// @param  p_error A pointer to a status code. If the operation succeeds, the 
 ///         status code will be set to `QO_OK`. Other error codes may be set.
 ///         NULL is allowed, in that case the status code will not be set.
-/// @return The size of the data that has been read. 0 will be returned 
-///         if the operation fails.
+/// @return The size of the data that has been read.
 qo_size_t 
 QO_INTERFACE(qo_sysfile_read_explicit)(
-    QO_SysFileStream *       file ,
-    qo_byte_t *     buffer ,
-    qo_size_t       desired_size ,
-    qo_stat_t *     p_error
+    QO_SysFileStream *  p_file ,
+    qo_byte_t *         buffer ,
+    qo_size_t           desired_size ,
+    qo_stat_t *         p_error
 ) QO_NONNULL(1 , 2);
 
+/// @brief  Read data from a file
+/// @param  p_file The file object.
+/// @param  buffer A buffer that can hold the data at least `desired_size` bytes.
+/// @param  desired_size The size of the data to be read.
+/// @return The size of the data that has been read.
 QO_FORCE_INLINE
-qo_stat_t
-QO_INTERFACE(qo_sysfile_write_implicit)(
-    QO_SysFileStream *       file ,
-    qo_byte_t *     buf ,
-    qo_size_t       desired_size
+qo_size_t
+QO_INTERFACE(qo_sysfile_read_implicit)(
+    QO_SysFileStream *  p_file ,
+    qo_byte_t *         buffer ,
+    qo_size_t           desired_size
+){
+    return QO_INTERFACE(qo_sysfile_read_explicit)(p_file , buffer , desired_size , NULL);
+}
+
+/// @brief  Write data to a file at a specific offset
+/// @param  file The file object.
+/// @param  buffer A buffer that contains the data to be written.
+/// @param  desired_size The size of the data to be written.
+/// @param  offset The offset of the file.
+/// @param  p_error A pointer to a status code. If the operation succeeds, the
+///         status code will be set to `QO_OK`. Other error codes may be set.
+///         NULL is allowed, if you don't desire this information.
+/// @return The size of the data that has been written. 
+/// @sa     qo_sysfile_read_at_explicit()
+/// @remark In most platforms, parallel reading specified offsets is usually
+///         safe despite overlapped regions.
+qo_size_t
+QO_INTERFACE(qo_sysfile_read_at_explicit)(
+    QO_SysFileStream *  p_file ,
+    qo_byte_t *         buffer ,
+    qo_size_t           desired_size ,
+    qo_offset_t         offset ,
+    qo_stat_t *         p_error
+) QO_NONNULL(1 , 2);
+
+/// @brief  Write data to a file at a specific offset
+/// @param  file The file object.
+/// @param  buffer A buffer that contains the data to be written.
+/// @param  desired_size The size of the data to be written.
+/// @param  offset The offset of the file.
+/// @return The status of the operation.
+/// @sa     qo_sysfile_write_at_explicit()
+// @remark  In most platforms, parallel reading specified offsets is usually
+///         safe despite overlapped regions.
+QO_FORCE_INLINE
+qo_size_t
+QO_INTERFACE(qo_sysfile_read_at_implicit)(
+    QO_SysFileStream *  p_file ,
+    qo_byte_t *         buffer ,
+    qo_size_t           desired_size ,
+    qo_offset_t         offset
 ) {
-    return QO_INTERFACE(qo_sysfile_write_explicit)(
-        file , buf , desired_size , NULL
+    return QO_INTERFACE(qo_sysfile_read_at_explicit)(
+        p_file , buffer , desired_size , offset , NULL
     );
 }
 
+/// @brief  Write data to a file
+/// @param  file The file object.
+/// @param  buffer A buffer that contains the data to be written.
+/// @param  desired_size The size of the data to be written.
+/// @return The size of the data that has been written.
+QO_FORCE_INLINE
+qo_size_t
+QO_INTERFACE(qo_sysfile_write_implicit)(
+    QO_SysFileStream *  p_file ,
+    qo_byte_t *         buffer ,
+    qo_size_t           desired_size
+) {
+    return QO_INTERFACE(qo_sysfile_write_explicit)(
+        p_file , buffer , desired_size , NULL
+    );
+}
+
+/// @brief  Write data to a file
+/// @param  file The file object.
+/// @param  buffer A buffer that contains the data to be written.
+/// @param  desired_size The size of the data to be written.
+/// @param  p_error A pointer to a status code. If the operation succeeds, the
 qo_size_t
 QO_INTERFACE(qo_sysfile_write_explicit)(
-    QO_SysFileStream *       file ,
-    qo_byte_t *     buf ,
-    qo_size_t       desired_size ,
-    qo_stat_t *     error
+    QO_SysFileStream *  p_file ,
+    qo_byte_t *         buffer ,
+    qo_size_t           desired_size ,
+    qo_stat_t *         p_error
 ) QO_NONNULL(1 , 2);
 
-QO_FORCE_INLINE
-qo_stat_t
-QO_INTERFACE(qo_sysfile_read_implicit)(
-    QO_SysFileStream *       file ,
-    qo_byte_t *     buf ,
-    qo_size_t       desired_size
-){
-    return QO_INTERFACE(qo_sysfile_read_explicit)(file , buf , desired_size , NULL);
+/// @brief  Write data to a file at a specific offset
+/// @param  file The file object.
+/// @param  buffer A buffer that contains the data to be written.
+/// @param  desired_size The size of the data to be written.
+/// @param  offset The offset of the file.
+/// @param  p_error A pointer to a status code. If the operation succeeds, the
+///         status code will be set to `QO_OK`. Other error codes may be set.
+///         NULL is allowed, if you don't desire this information.
+/// @return The size of the data that has been written.
+/// @sa     qo_sysfile_write_explicit()
+/// @warning Parallel writing with overlapped regions can lead to undefined
+///         behavior.
+qo_size_t
+QO_INTERFACE(qo_sysfile_write_at_explicit)(
+    QO_SysFileStream *  p_file ,
+    qo_byte_t *         buffer ,
+    qo_size_t           desired_size ,
+    qo_offset_t         offset ,
+    qo_stat_t *         p_error
+) QO_NONNULL(1 , 2);
+
+/// @brief  Write data to a file at a specific offset
+/// @param  p_file The file object.
+/// @param  buffer A buffer that contains the data to be written.
+/// @param  desired_size The size of the data to be written.
+/// @param  offset The offset of the file.
+/// @return The size of the data that has been written.
+/// @sa     qo_sysfile_write_at_explicit()
+/// @warning Parallel writing with overlapped regions can lead to undefined
+///         behavior.
+qo_size_t
+QO_INTERFACE(qo_sysfile_write_at_implicit)(
+    QO_SysFileStream *  p_file ,
+    qo_byte_t *         buffer ,
+    qo_size_t           desired_size ,
+    qo_offset_t         offset
+) {
+    return QO_INTERFACE(qo_sysfile_write_at_explicit)(
+        p_file , buffer , desired_size , offset , NULL  
+    );
 }
 
 /// @brief  Close a file
@@ -134,7 +233,7 @@ QO_INTERFACE(qo_sysfile_read_implicit)(
 ///         will do nothing.
 void 
 QO_INTERFACE(qo_sysfile_close)(
-    QO_SysFileStream *    file
+    QO_SysFileStream *    p_file
 );
 
 /// @brief  Allocate a file
@@ -157,10 +256,10 @@ QO_INTERFACE(qo_sysfile_alloc)(
 /// @return The offset of the file pointer after the operation.
 qo_offset_t 
 QO_INTERFACE(qo_sysfile_seek)(
-    QO_SysFileStream *      file ,
-    qo_offset_t    offset ,
-    qo_flag32_t    move_method ,
-    qo_stat_t *    p_error
+    QO_SysFileStream *  file ,
+    qo_offset_t         offset ,
+    qo_flag32_t         move_method ,
+    qo_stat_t *         p_error
 ) QO_NONNULL(1);
 
 /// @brief  Get the current position of the file pointer.
@@ -185,8 +284,8 @@ QO_INTERFACE(qo_sysfile_get_position)(
 ///         function. 
 qo_stat_t 
 QO_INTERFACE(qo_sysfile_get_size)(
-    QO_SysFileStream *      file ,
-    qo_size_t *    p_size
+    QO_SysFileStream *  file ,
+    qo_size_t *         p_size
 ) QO_NONNULL(1 , 2);
 
 /// @brief  Get the maximum length of a path.
@@ -216,7 +315,7 @@ QO_INTERFACE(qo_get_path_max_length)();
 #endif // 
 
 // Make p_error optional for qo_sysfile_read and qo_sysfile_write
-#define __QO_FILE_RW_SELECT(file , buf , desired_size , have_operated_size , \
+#define __QO_FILE_RW_SELECT(file , buffer , desired_size , have_operated_size , \
                                 __target , ...) __target
 
 #define qo_sysfile_read(...)                                               \

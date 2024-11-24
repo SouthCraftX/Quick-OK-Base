@@ -11,6 +11,8 @@
 
 #include <fileapi.h>
 
+#define __QO_SINGAL_IO_CALL_LIMIT (1024 * 1024 * 1024)
+
 #define __QO_ACCESS_MODE_PACK(x) (x >> 24)
 #define __QO_FLAGS_PACK(x) (x >> 24)
 
@@ -34,13 +36,6 @@
 
 // Not 32767, to reserve some space for API consumption.
 #define __QO_IS_PATH_LEN_UNRESONABLE(path_size) (path_size > 32760)
-
-struct ___QO_RW32Returns
-{
-    DWORD operated_bytes;
-    qo_stat_t status;
-};
-typedef struct ___QO_RW32Returns __QO_RW32Returns;
 
 qo_stat_t
 __qo_handle_transcoding_failure()
@@ -91,48 +86,230 @@ __qo_sysfile_reading_error()
     
 }
 
-__QO_RW32Returns 
-__qo_sysfile_read32(
-    QO_SysFileStream *   file ,
-    qo_byte_t * buffer ,
-    qo_uint32_t size
+// Extension of Windows's `WriteFile`.  It supports writing more than 4GB.
+BOOL
+__qo_WriteFile64(
+    HANDLE hFile ,
+    LPCVOID lpBuffer ,
+    ULONG64 dwNumberOfBytesToWrite ,
+    PULONG64 lpNumberOfBytesWritten ,
+    LPOVERLAPPED lpOverlapped
 ){
-    __QO_RW32Returns ret;
-    if(!ReadFile((HANDLE)file , buffer , size , &ret.operated_bytes , NULL))
+    BOOL ret = TRUE;
+    DWORD chuck_size , singly_written;
+    OVERLAPPED overlapped;
+    
+    if (lpOverlapped)
     {
-        
+        overlapped = *lpOverlapped;
     }
+
+    do {
+        chuck_size = dwNumberOfBytesToWrite > __QO_SINGAL_IO_CALL_LIMIT ? 
+                    __QO_SINGAL_IO_CALL_LIMIT : 
+                    dwNumberOfBytesToWrite;
+        if (!WriteFile(hFile , lpBuffer , chuck_size , &singly_written , &overlapped))
+        {
+            ret = FALSE;
+            break;
+        }
+        
+        if(singly_written < chuck_size)
+            break;
+        
+        lpBuffer = (LPVOID)((qo_byte_t *)lpBuffer + chuck_size);
+        dwNumberOfBytesToWrite -= chuck_size;
+        *lpNumberOfBytesWritten += singly_written;
+
+        if (lpOverlapped)
+            overlapped.Pointer += chuck_size;
+
+    } 
+    while(dwNumberOfBytesToWrite);
+
+    return ret;
+}
+
+// Extension of Windows's `ReadFile`.  It supports reading more than 4GB.
+BOOL
+__qo_ReadFile64(
+    HANDLE hFile ,
+    LPVOID lpBuffer ,
+    ULONG64 dwNumberOfBytesToRead ,
+    PULONG64 lpNumberOfBytesRead ,
+    LPOVERLAPPED lpOverlapped
+){
+    BOOL ret = TRUE;
+    DWORD chuck_size , singly_read;
+    OVERLAPPED overlapped;
+
+    if (lpOverlapped)
+    {
+        overlapped = *lpOverlapped;
+    }
+
+    do {
+        chuck_size = dwNumberOfBytesToRead > __QO_SINGAL_IO_CALL_LIMIT ? 
+                    __QO_SINGAL_IO_CALL_LIMIT : 
+                    dwNumberOfBytesToRead;
+        if (!ReadFile(hFile , lpBuffer , chuck_size , &singly_read , &overlapped))
+        {
+            ret = FALSE;
+            break;
+        }
+
+        if(singly_read < chuck_size)
+            break;
+
+        lpBuffer = (LPVOID)((qo_byte_t *)lpBuffer + chuck_size);
+        dwNumberOfBytesToRead -= chuck_size;
+        *lpNumberOfBytesRead += singly_read;
+
+        if (lpOverlapped)
+            overlapped.Pointer += chuck_size;
+
+    }
+    while(dwNumberOfBytesToRead);
+
     return ret;
 }
 
 #   if QO_SYSTEM_BIT(64)
-QO_API
 qo_size_t qo_sysfile_read64(
     QO_SysFileStream *    file ,
     qo_byte_t * buf ,
     qo_ssize_t  size
 ){
-    qo_size_t have_read , once_read;
-    qo_ssize_t remain;
-    for(remain = size ; remain > 0 ; remain -= 0xffffffff)
-    {
-        once_read = qo_sysfile_read(file , buf , 0xffffffff);
-        if (!once_read)
-            return have_read;
-        have_read += once_read;
-    }
-    have_read += qo_sysfile_read(file , buf + have_read , remain);
-    return have_read;
+    //
 }
 #   endif
 
+qo_size_t
+QO_IMPL(qo_sysfile_read_explicit)(
+    QO_SysFileStream *  file ,
+    qo_byte_t *         buffer ,
+    qo_size_t           size ,
+    qo_stat_t *         p_error    
+){
+    qo_size_t read_size = 0;
+#if QO_SYSTEM_BIT(64)
+    if (size > QO_UINT32_MAX)
+    {
+        if (__qo_ReadFile64((HANDLE)file , buffer , size , &read_size , NULL))
+        {
+            goto fail;   
+        }
+    }
+    else
+    {
+        if (!ReadFile((HANDLE)file , buffer , size , (DWORD *)&read_size , NULL))
+        {
+            goto fail;
+        }
+    }
+#else
+    if (!ReadFile((HANDLE)file , buffer , size , (DWORD *)&read_size , NULL))
+    {
+        goto fail;
+    }
+#endif 
+    if (p_error)
+        *p_error = QO_OK;
+    return read_size;
+fail:
+    if (p_error)
+        *p_error = __qo_sysfile_reading_error();
+    return read_size;
+}
+
+
+qo_size_t
+QO_IMPL(qo_sysfile_write)(
+    QO_SysFileStream *  file ,
+    const qo_byte_t *   buffer ,
+    qo_size_t           size ,
+    qo_stat_t *         p_error
+){
+    qo_size_t written_size = 0;
+#if QO_SYSTEM_BIT(64)
+    if (size > QO_UINT32_MAX)
+    {
+        if (__qo_WriteFile64((HANDLE)file , buffer , size , &written_size , NULL))
+        {
+            goto fail;
+        }
+    }
+    else
+    {
+        if (!WriteFile((HANDLE)file , buffer , size , (DWORD *)&written_size , NULL))
+        {
+            goto fail;
+        }
+    }
+#else
+    if (!WriteFile((HANDLE)file , buffer , size , (DWORD *)&written_size , NULL))
+    {
+        goto fail;
+    }
+#endif
+    if (p_error)
+        *p_error = QO_OK;
+    return written_size;
+fail:
+    if (p_error)
+        *p_error = __qo_sysfile_writing_error();
+    return written_size;    
+}
+
+qo_size_t
+QO_IMPL(qo_sysfile_read_at_explicit)(
+    QO_SysFileStream *  file ,
+    qo_byte_t *         buffer ,
+    qo_size_t           size ,
+    qo_offset_t         offset ,
+    qo_stat_t *         p_error
+) {
+    qo_size_t read_size = 0;
+    OVERLAPPED overlapped = { 0 };
+#if QO_SYSTEM_BIT(64)
+    overlapped.Pointer = offset;
+    if (size > QO_UINT32_MAX)
+    {
+        if (__qo_ReadFile64((HANDLE)file , buffer , size , &read_size , NULL))
+        {
+            goto fail;
+        }
+    }
+    else
+    {
+        if (!ReadFile((HANDLE)file , buffer , size , (DWORD *)&read_size , &overlapped))
+        {
+            goto fail;
+        }
+    }
+
+#else
+    overlapped.offset = offset;
+    if (!ReadFile((HANDLE)file , buffer , size , (DWORD *)&read_size , &overlapped))
+    {
+        goto fail;
+    }
+#endif
+    if (p_error)
+        *p_error = QO_OK;
+    return read_size;
+fail:
+    if (p_error)
+        *p_error = __qo_sysfile_reading_error();
+    return read_size;
+}
 
 qo_stat_t 
 QO_IMPL(qo_sysfile_open)(
-    QO_SysFileStream **         p_file , 
-    qo_ccstring_t      path ,
-    qo_size_t          path_size ,
-    QO_FileOpenMode    mode 
+    QO_SysFileStream ** p_file , 
+    qo_ccstring_t       path ,
+    qo_size_t           path_size ,
+    QO_FileOpenMode     mode 
 ){
     LARGE_INTEGER file_size;
     const qo_size_t long_path_prefix_len = sizeof(L"\\\\?\\") - sizeof(WCHAR);
@@ -184,7 +361,7 @@ void qo_sysfile_close(
     QO_SysFileStream * file
 ){
     if (file)
-        CloseHandle((HANDLE)handle);
+        CloseHandle((HANDLE)file);
 }
 
 QO_API 
