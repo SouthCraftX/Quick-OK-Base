@@ -22,7 +22,7 @@ typedef struct _QO_MemMap QO_MemMap;
 
 /// @brief  Create a memory map for a file.
 /// @param  p_memmap Pointer to the memory map object.
-/// @param  file File object created by qo_file_open()
+/// @param  file File object created by qo_sysfile_open()
 /// @param  offset Offset in the file.
 /// @param  length Length of the memory map.
 /// @param  p_address If *p_address is not NULL, it serves as the hint for the
@@ -48,7 +48,7 @@ typedef struct _QO_MemMap QO_MemMap;
 qo_stat_t
 QO_INTERFACE(qo_memmap_create)(
     QO_MemMap **           p_memmap ,
-    QO_File *              file ,
+    QO_SysFileStream *              file ,
     qo_offset_t            offset ,
     qo_size_t              length ,
     qo_flag32_t            mode ,

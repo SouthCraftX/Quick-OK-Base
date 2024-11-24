@@ -23,7 +23,7 @@
 #define __QO_POSIX_ONCE_READ_LIMIT 0x7ffff000
 
 qo_stat_t 
-QO_IMPL(qo_file_open)(
+QO_IMPL(qo_sysfile_open)(
     QO_File **      file ,
     qo_ccstring_t   path ,
     qo_flag32_t      access_mode ,
@@ -33,7 +33,7 @@ QO_IMPL(qo_file_open)(
     int fd = open(path , mode);
     if (fd == -1)
     {
-        return __qo_file_handle_open_error(); 
+        return __qo_sysfile_handle_open_error(); 
     }
     __qo_write_pointer_as_int(file , fd);
     return QO_OK;
@@ -41,7 +41,7 @@ QO_IMPL(qo_file_open)(
 
 QO_FORCE_INLINE
 void 
-QO_IMPL(qo_file_close)(
+QO_IMPL(qo_sysfile_close)(
     QO_File * file
 ){
     if (file)
@@ -50,7 +50,7 @@ QO_IMPL(qo_file_close)(
 
 QO_FORCE_INLINE
 qo_uint32_t 
-__qo_file_read32(
+__qo_sysfile_read32(
     QO_File *      file ,
     qo_byte_t *    buf ,
     qo_size_t      size
@@ -60,7 +60,7 @@ __qo_file_read32(
 }
 
 qo_size_t 
-QO_IMPL(__qo_file_read32)(
+QO_IMPL(__qo_sysfile_read32)(
     QO_File *        file ,
     qo_byte_t *     buf ,
     qo_size_t       size
@@ -69,16 +69,16 @@ QO_IMPL(__qo_file_read32)(
     for (; remain_size >= __QO_POSIX_ONCE_READ_LIMIT; 
            remain_size -= __QO_POSIX_ONCE_READ_LIMIT
     ){
-        once_read = __qo_file_read32(file , buf , __QO_POSIX_ONCE_READ_LIMIT);
+        once_read = __qo_sysfile_read32(file , buf , __QO_POSIX_ONCE_READ_LIMIT);
         if (once_read)
         {
-            qo_file_auto_handle_read_error(file , once_read);
+            qo_sysfile_auto_handle_read_error(file , once_read);
             buf += once_read;
             have_read += once_read;
         }
         return have_read;
     }
-    have_read += __qo_file_read32(__qo_read_pointer_as_int(file) , buf , remain_size);
+    have_read += __qo_sysfile_read32(__qo_read_pointer_as_int(file) , buf , remain_size);
     return have_read;
 }
 
@@ -107,7 +107,7 @@ __qo_auto_handle_file_seek_error(
 
 QO_FORCE_INLINE
 qo_stat_t
-QO_IMPL(qo_file_seek)(
+QO_IMPL(qo_sysfile_seek)(
     QO_File *       file ,
     qo_offset_t     desired_offset ,
     qo_flag32_t     move_method ,
@@ -124,7 +124,7 @@ QO_IMPL(qo_fstream_prealloc)(
     qo_size_t   size
 ){
     return fallocate(__qo_read_pointer_as_int(file) , 0 , 0 , size) ? 
-           __qo_file_prealloc_error() : QO_OK;
+           __qo_sysfile_prealloc_error() : QO_OK;
 }
 
 #if 0

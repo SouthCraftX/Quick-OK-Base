@@ -23,14 +23,14 @@
 
 #include "fstream.h"
 
-QO_File * __qo_io_info_file;
+QO_SysFileStream * __qo_io_info_file;
 
 QO_FORCE_INLINE
 qo_stat_t
 QO_IMPL(qo_io_measurer_init)()
 {
     const char io_info_path[] = "/proc/self/io";
-    return qo_file_open(
+    return qo_sysfile_open(
         &__qo_io_info_file , io_info_path , 
         sizeof(io_info_path) , QO_FILE_READONLY ,
         QO_FILE_OPEN_EXISTING , 0
@@ -41,7 +41,7 @@ QO_FORCE_INLINE
 void
 QO_IMPL(qo_io_measurer_finish)()
 {
-    qo_file_close(__qo_io_info_file);
+    qo_sysfile_close(__qo_io_info_file);
 }
 
 qo_stat_t
@@ -50,7 +50,7 @@ QO_IMPL(qo_io_measurer_get)(
 ){
     char io_info_text[__QO_IO_INFO_MAX_SIZE];
     qo_stat_t read_ret;
-    qo_size_t read_size = qo_file_read(
+    qo_size_t read_size = qo_sysfile_read(
         __qo_io_info_file , 
         io_info_text , 
         sizeof(io_info_text) , 

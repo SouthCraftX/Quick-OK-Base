@@ -57,7 +57,7 @@ qo_mmap_handle_map_error()
 qo_stat_t
 QO_IMPL(qo_memmap_init)(
     QO_MemMap *          memmap ,
-    QO_File *            file ,
+    QO_SysFileStream *            file ,
     const qo_offset_t   offset ,
     const qo_size_t     len ,
     const qo_flag32_t   mode ,

@@ -10,8 +10,8 @@
 #else
 
 QO_API
-qo_stat_t QO_IMPL(qo_file_alloc)(
-    QO_File *    file ,
+qo_stat_t QO_IMPL(qo_sysfile_alloc)(
+    QO_SysFileStream *    file ,
     qo_size_t   size
 ){
     switch(posix_fallocate(__qo_read_pointer_as_int(file) , 0 , size))

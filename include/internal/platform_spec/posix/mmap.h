@@ -46,7 +46,7 @@ QO_FORCE_INLINE
 qo_stat_t
 QO_IMPL(qo_memmap_init)(
     QO_MemMap *    memmap ,
-    QO_File *      file ,
+    QO_SysFileStream *      file ,
     qo_offset_t    offset ,
     qo_size_t      len ,
     qo_flag32_t    mode

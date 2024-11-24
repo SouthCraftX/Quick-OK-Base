@@ -13,9 +13,9 @@ typedef struct _QO_Process QO_Process;
 
 struct _QO_ProcessStdio
 {
-    QO_File *  stdin;
-    QO_File *  stdout;
-    QO_File *  stderr;
+    QO_SysFileStream *  stdin;
+    QO_SysFileStream *  stdout;
+    QO_SysFileStream *  stderr;
 };
 typedef struct _QO_ProcessStdio QO_ProcessStdio;
 
@@ -48,7 +48,7 @@ typedef qo_flag32_t    qo_pid_t;
 /// @param  p_stdio A pointer to the standard input/output/error streams of the
 ///         new process. NULL is allowed if you don't want this infomation.
 ///         Caller must close the file objects in the stdio structure if they're
-///         no longer needed. @sa qo_file_close().
+///         no longer needed. @sa qo_sysfile_close().
 /// @return The status of the operation.
 qo_stat_t
 QO_INTERFACE(qo_process_create)(

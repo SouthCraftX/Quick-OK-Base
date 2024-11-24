@@ -103,9 +103,9 @@ QO_IMPL(qo_process_create)(
 
     if (stdio)
     {
-        stdio->stdin  = (QO_File *)startup_info.hStdInput;
-        stdio->stdout = (QO_File *)startup_info.hStdOutput;
-        stdio->stderr = (QO_File *)startup_info.hStdError;
+        stdio->stdin  = (QO_SysFileStream *)startup_info.hStdInput;
+        stdio->stdout = (QO_SysFileStream *)startup_info.hStdOutput;
+        stdio->stderr = (QO_SysFileStream *)startup_info.hStdError;
     }
     else
     {

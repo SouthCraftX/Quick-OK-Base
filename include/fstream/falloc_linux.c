@@ -9,7 +9,7 @@
 
 qo_stat_t 
 QO_IMPL(qo_fstream_prealloc)(
-    QO_File *    file ,
+    QO_SysFileStream *    file ,
     qo_size_t   size
 ){
     switch(fallocate((int)file , 0 , 0 , size))

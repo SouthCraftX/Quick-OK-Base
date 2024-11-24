@@ -41,11 +41,11 @@
 extern "C" {
 #endif // __cplusplus
 
-struct _QO_File;
-typedef struct _QO_File QO_File;
+struct _QO_SysFileStream;
+typedef struct _QO_SysFileStream QO_SysFileStream;
 
 /// @brief  Struct indicates how to open a file.
-/// @sa     qo_file_open()
+/// @sa     qo_sysfile_open()
 struct _QO_FileOpenMode
 {
     /// @brief  The access mode of the file.
@@ -58,7 +58,7 @@ struct _QO_FileOpenMode
 
     /// @brief  The hints of the file. It may not be used if current platform 
     ///         does not support it. Set the first bit to 1 to force applying
-    ///         the hints(x & 0x8000), in that case, qo_file_read() will fail 
+    ///         the hints(x & 0x8000), in that case, qo_sysfile_read() will fail 
     ///         if not supported.
     /// @sa     QO_FILE_NO_CACHING, QO_FILE_SEQUENTIAL
     qo_flag16_t hints;
@@ -71,10 +71,10 @@ typedef struct _QO_FileOpenMode QO_FileOpenMode;
 /// @param  path_size The size of the path. 0 is allowed, in that case the size 
 ///         of the path will be calculated automatically.
 /// @return The status of the operation.
-/// @sa     qo_file_close()
+/// @sa     qo_sysfile_close()
 qo_stat_t 
-QO_INTERFACE(qo_file_open)(
-    QO_File **         p_file , 
+QO_INTERFACE(qo_sysfile_open)(
+    QO_SysFileStream **         p_file , 
     qo_ccstring_t      path , 
     qo_size_t          path_size ,
     qo_flag32_t        access_mode ,
@@ -92,8 +92,8 @@ QO_INTERFACE(qo_file_open)(
 /// @return The size of the data that has been read. 0 will be returned 
 ///         if the operation fails.
 qo_size_t 
-QO_INTERFACE(qo_file_read_explicit)(
-    QO_File *       file ,
+QO_INTERFACE(qo_sysfile_read_explicit)(
+    QO_SysFileStream *       file ,
     qo_byte_t *     buffer ,
     qo_size_t       desired_size ,
     qo_stat_t *     p_error
@@ -101,19 +101,19 @@ QO_INTERFACE(qo_file_read_explicit)(
 
 QO_FORCE_INLINE
 qo_stat_t
-QO_INTERFACE(qo_file_write_implicit)(
-    QO_File *       file ,
+QO_INTERFACE(qo_sysfile_write_implicit)(
+    QO_SysFileStream *       file ,
     qo_byte_t *     buf ,
     qo_size_t       desired_size
 ) {
-    return QO_INTERFACE(qo_file_write_explicit)(
+    return QO_INTERFACE(qo_sysfile_write_explicit)(
         file , buf , desired_size , NULL
     );
 }
 
 qo_size_t
-QO_INTERFACE(qo_file_write_explicit)(
-    QO_File *       file ,
+QO_INTERFACE(qo_sysfile_write_explicit)(
+    QO_SysFileStream *       file ,
     qo_byte_t *     buf ,
     qo_size_t       desired_size ,
     qo_stat_t *     error
@@ -121,20 +121,20 @@ QO_INTERFACE(qo_file_write_explicit)(
 
 QO_FORCE_INLINE
 qo_stat_t
-QO_INTERFACE(qo_file_read_implicit)(
-    QO_File *       file ,
+QO_INTERFACE(qo_sysfile_read_implicit)(
+    QO_SysFileStream *       file ,
     qo_byte_t *     buf ,
     qo_size_t       desired_size
 ){
-    return QO_INTERFACE(qo_file_read_explicit)(file , buf , desired_size , NULL);
+    return QO_INTERFACE(qo_sysfile_read_explicit)(file , buf , desired_size , NULL);
 }
 
 /// @brief  Close a file
 /// @param  file The file object. NULL is allowed, in that case the function
 ///         will do nothing.
 void 
-QO_INTERFACE(qo_file_close)(
-    QO_File *    file
+QO_INTERFACE(qo_sysfile_close)(
+    QO_SysFileStream *    file
 );
 
 /// @brief  Allocate a file
@@ -142,8 +142,8 @@ QO_INTERFACE(qo_file_close)(
 /// @param  size The size of the file.
 /// @return The status of the operation.
 qo_stat_t 
-QO_INTERFACE(qo_file_alloc)(
-    QO_File *   file ,
+QO_INTERFACE(qo_sysfile_alloc)(
+    QO_SysFileStream *   file ,
     qo_size_t   size
 ) QO_NONNULL(1);
 
@@ -156,8 +156,8 @@ QO_INTERFACE(qo_file_alloc)(
 ///         NULL is allowed, in that case the status code will not be set.
 /// @return The offset of the file pointer after the operation.
 qo_offset_t 
-QO_INTERFACE(qo_file_seek)(
-    QO_File *      file ,
+QO_INTERFACE(qo_sysfile_seek)(
+    QO_SysFileStream *      file ,
     qo_offset_t    offset ,
     qo_flag32_t    move_method ,
     qo_stat_t *    p_error
@@ -168,11 +168,11 @@ QO_INTERFACE(qo_file_seek)(
 /// @return 
 QO_FORCE_INLINE
 qo_offset_t 
-QO_INTERFACE(qo_file_get_position)(
-    QO_File *    file ,
+QO_INTERFACE(qo_sysfile_get_position)(
+    QO_SysFileStream *    file ,
     qo_stat_t *  p_error
 ) {
-    return QO_INTERFACE(qo_file_seek)(file , 0 , QO_FILE_MOVE_FROM_CURRENT);
+    return QO_INTERFACE(qo_sysfile_seek)(file , 0 , QO_FILE_MOVE_FROM_CURRENT);
 } QO_NONNULL(1);
 
 /// @brief  Get the size of a file.
@@ -184,8 +184,8 @@ QO_INTERFACE(qo_file_get_position)(
 /// @note   Only file or device that supports file-like operations can use this
 ///         function. 
 qo_stat_t 
-QO_INTERFACE(qo_file_get_size)(
-    QO_File *      file ,
+QO_INTERFACE(qo_sysfile_get_size)(
+    QO_SysFileStream *      file ,
     qo_size_t *    p_size
 ) QO_NONNULL(1 , 2);
 
@@ -198,7 +198,7 @@ QO_INTERFACE(qo_file_get_size)(
 ///         Of note, you may fail to open a file before reaching the maximum
 ///         length of a path, as many file systems limit a file name to 255
 ///         characters, which may be smaller than the maximum length.
-/// @sa     qo_file_open()
+/// @sa     qo_sysfile_open()
 QO_PURE
 qo_size_t
 QO_INTERFACE(qo_get_path_max_length)();
@@ -215,29 +215,29 @@ QO_INTERFACE(qo_get_path_max_length)();
 #   error "QOLib: File stream interfaces not implemented"
 #endif // 
 
-// Make p_error optional for qo_file_read and qo_file_write
+// Make p_error optional for qo_sysfile_read and qo_sysfile_write
 #define __QO_FILE_RW_SELECT(file , buf , desired_size , have_operated_size , \
                                 __target , ...) __target
 
-#define qo_file_read(...)                                               \
+#define qo_sysfile_read(...)                                               \
         __QO_FILE_RW_SELECT                                             \
         (                                                                   \
             __VA_ARGS__ ,                                                   \
-            QO_INTERFACE(qo_file_read_explicit) ,                   \
-            QO_INTERFACE(qo_file_read_implicit)                     \
+            QO_INTERFACE(qo_sysfile_read_explicit) ,                   \
+            QO_INTERFACE(qo_sysfile_read_implicit)                     \
         ) (__VA_ARGS__)
 
-#define qo_file_write(...)                                              \
+#define qo_sysfile_write(...)                                              \
         __QO_FILE_RW_SELECT                                             \
         (                                                                   \ 
             __VA_ARGS__ ,                                                   \
-            QO_INTERFACE(qo_file_read_explicit) ,                   \
-            QO_INTERFACE(qo_file_write_implicit)                    \
+            QO_INTERFACE(qo_sysfile_read_explicit) ,                   \
+            QO_INTERFACE(qo_sysfile_write_implicit)                    \
         ) (__VA_ARGS__)
 
-#define  qo_file_open        QO_INTERFACE(qo_file_open)
-#define  qo_file_close       QO_INTERFACE(qo_file_close)
-#define  qo_file_alloc       QO_INTERFACE(qo_file_alloc)
-#define  qo_file_seek        QO_INTERFACE(qo_file_seek)
-#define  qo_file_get_pos     QO_INTERFACE(qo_file_get_pos)
-#define  qo_file_get_size    QO_INTERFACE(qo_file_get_size)
+#define  qo_sysfile_open        QO_INTERFACE(qo_sysfile_open)
+#define  qo_sysfile_close       QO_INTERFACE(qo_sysfile_close)
+#define  qo_sysfile_alloc       QO_INTERFACE(qo_sysfile_alloc)
+#define  qo_sysfile_seek        QO_INTERFACE(qo_sysfile_seek)
+#define  qo_sysfile_get_pos     QO_INTERFACE(qo_sysfile_get_pos)
+#define  qo_sysfile_get_size    QO_INTERFACE(qo_sysfile_get_size)

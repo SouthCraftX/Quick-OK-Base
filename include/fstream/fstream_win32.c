@@ -11,7 +11,7 @@ DWORD qo_access_mode_list[] = {
 
 QO_GLOBAL_LOCAL QO_FORCE_INLINE
 DWORD 
-_qo_file_win_translate_flag_and_attributes(
+_qo_sysfile_win_translate_flag_and_attributes(
     qo_flag32_t mode
 ){
     return (QO_HAS_FLAG(mode , QO_FILE_NO_CACHING) ? FILE_FLAG_NO_BUFFERING : 0) &
@@ -20,7 +20,7 @@ _qo_file_win_translate_flag_and_attributes(
 
 QO_GLOBAL_LOCAL QO_FORCE_INLINE
 DWORD 
-_qo_file_win_translate_open_mode(
+_qo_sysfile_win_translate_open_mode(
     qo_flag32_t mode
 ){
     return (mode >> 8) & 0xff;
@@ -28,7 +28,7 @@ _qo_file_win_translate_open_mode(
 
 QO_NOEXPORT QO_FORCE_INLINE
 DWORD 
-_qo_file_win_translate_desired_access(
+_qo_sysfile_win_translate_desired_access(
     qo_flag32_t mode
 ){
     return qo_access_mode_list[mode & 0x3];
@@ -36,8 +36,8 @@ _qo_file_win_translate_desired_access(
 
 
 qo_uint32_t 
-__qo_file_read32(
-    QO_File * file ,
+__qo_sysfile_read32(
+    QO_SysFileStream * file ,
     qo_byte_t * buf ,
     qo_uint32_t size
 ){
@@ -49,8 +49,8 @@ __qo_file_read32(
 
 QO_GLOBAL_LOCAL QO_FORCE_INLINE
 qo_size_t 
-__qo_file_read64(
-    QO_File *    file ,
+__qo_sysfile_read64(
+    QO_SysFileStream *    file ,
     qo_byte_t * buf ,
     qo_ssize_t  size
 ){
@@ -58,40 +58,40 @@ __qo_file_read64(
     qo_ssize_t remain;
     for(remain = size ; remain > 0 ; remain -= 0xffffffff)
     {
-        once_read = __qo_file_read32(file , buf , 0xffffffff);
+        once_read = __qo_sysfile_read32(file , buf , 0xffffffff);
         if (!once_read)
             return have_read;
         have_read += once_read;
     }
-    have_read += __qo_file_read32(file , buf + have_read , remain);
+    have_read += __qo_sysfile_read32(file , buf + have_read , remain);
     return have_read;
 }
 
 qo_size_t
-QO_IMPL(qo_file_read)(
-    QO_File *    file , 
+QO_IMPL(qo_sysfile_read)(
+    QO_SysFileStream *    file , 
     qo_byte_t * buf ,
     qo_size_t   size
 ){
-    return __qo_file_read64(file , buf , size);
+    return __qo_sysfile_read64(file , buf , size);
 }
 
 #else
 
 qo_size_t
-QO_IMPL(qo_file_read)(
+QO_IMPL(qo_sysfile_read)(
     QO_File *    file ,
     qo_byte_t * buf ,
     qo_size_t   size
 ){
-    return __qo_file_read32(file , buf , size);
+    return __qo_sysfile_read32(file , buf , size);
 }
 
 #endif
 
 qo_stat_t 
-QO_IMPL(qo_file_open)(
-    QO_File **       file , 
+QO_IMPL(qo_sysfile_open)(
+    QO_SysFileStream **       file , 
     qo_ccstring_t   path ,
     qo_flag32_t     mode
 ){
@@ -101,11 +101,11 @@ QO_IMPL(qo_file_open)(
 
     HANDLE file_handle = CreateFileW(
         wc_path ,
-        _qo_file_win_translate_desired_access(mode) ,
+        _qo_sysfile_win_translate_desired_access(mode) ,
         FILE_SHARE_READ | FILE_SHARE_WRITE , 
         NULL , 
-        _qo_file_win_translate_open_mode(mode), 
-        FILE_ATTRIBUTE_NORMAL | _qo_file_win_translate_flag_and_attributes(mode) ,
+        _qo_sysfile_win_translate_open_mode(mode), 
+        FILE_ATTRIBUTE_NORMAL | _qo_sysfile_win_translate_flag_and_attributes(mode) ,
         NULL
     );
 
@@ -128,16 +128,16 @@ QO_IMPL(qo_file_open)(
 
 
 void 
-QO_IMPL(qo_file_close)(
-    QO_File * file
+QO_IMPL(qo_sysfile_close)(
+    QO_SysFileStream * file
 ){
     CloseHandle((HANDLE)file);
 }
 
 QO_API 
 qo_stat_t 
-QO_IMPL(qo_file_get_size)(
-    QO_File *    file ,
+QO_IMPL(qo_sysfile_get_size)(
+    QO_SysFileStream *    file ,
     qo_size_t * size
 ){
 #   if QO_SYSTEM_BIT(64)
@@ -173,8 +173,8 @@ qo_win_large_interger_to_offset(
 }
 
 qo_offset_t 
-QO_IMPL(qo_file_seek)(
-    QO_File *    file ,
+QO_IMPL(qo_sysfile_seek)(
+    QO_SysFileStream *    file ,
     qo_offset_t offset ,
     qo_flag32_t move_method
 ){
@@ -231,7 +231,7 @@ __qo_fstream_prealloc_handle_error()
 
 qo_stat_t 
 qo_fstream_prealloc(
-    QO_File *    file , 
+    QO_SysFileStream *    file , 
     qo_size_t   size
 ){
     FILE_ALLOCATE_INFORMATION falloc_info;

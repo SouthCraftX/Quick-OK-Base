@@ -46,7 +46,7 @@ qo_stat_t
 __qo_handle_transcoding_failure()
 {
 #if QO_DEBUG
-    QO_ERRPRINTF("qo_file_open: MultiByteToWideChar failed: ");
+    QO_ERRPRINTF("qo_sysfile_open: MultiByteToWideChar failed: ");
 
     switch (GetLastError())
     {
@@ -70,7 +70,7 @@ __qo_handle_transcoding_failure()
 
 QO_PURE
 qo_stat_t
-__qo_file_opening_error()
+__qo_sysfile_opening_error()
 {
     switch(GetLastError())
     {
@@ -86,14 +86,14 @@ __qo_file_opening_error()
 
 QO_PURE
 qo_stat_t
-__qo_file_reading_error()
+__qo_sysfile_reading_error()
 {
     
 }
 
 __QO_RW32Returns 
-__qo_file_read32(
-    QO_File *   file ,
+__qo_sysfile_read32(
+    QO_SysFileStream *   file ,
     qo_byte_t * buffer ,
     qo_uint32_t size
 ){
@@ -107,8 +107,8 @@ __qo_file_read32(
 
 #   if QO_SYSTEM_BIT(64)
 QO_API
-qo_size_t qo_file_read64(
-    QO_File *    file ,
+qo_size_t qo_sysfile_read64(
+    QO_SysFileStream *    file ,
     qo_byte_t * buf ,
     qo_ssize_t  size
 ){
@@ -116,20 +116,20 @@ qo_size_t qo_file_read64(
     qo_ssize_t remain;
     for(remain = size ; remain > 0 ; remain -= 0xffffffff)
     {
-        once_read = qo_file_read(file , buf , 0xffffffff);
+        once_read = qo_sysfile_read(file , buf , 0xffffffff);
         if (!once_read)
             return have_read;
         have_read += once_read;
     }
-    have_read += qo_file_read(file , buf + have_read , remain);
+    have_read += qo_sysfile_read(file , buf + have_read , remain);
     return have_read;
 }
 #   endif
 
 
 qo_stat_t 
-QO_IMPL(qo_file_open)(
-    QO_File **         p_file , 
+QO_IMPL(qo_sysfile_open)(
+    QO_SysFileStream **         p_file , 
     qo_ccstring_t      path ,
     qo_size_t          path_size ,
     QO_FileOpenMode    mode 
@@ -173,23 +173,23 @@ QO_IMPL(qo_file_open)(
 
     if (file_handle == INVALID_HANDLE_VALUE)
     {
-        return __qo_file_opening_error();
+        return __qo_sysfile_opening_error();
     }
-    *p_file = (QO_File *)file_handle;
+    *p_file = (QO_SysFileStream *)file_handle;
     return QO_OK;
 }
 
 QO_FORCE_INLINE
-void qo_file_close(
-    QO_File * file
+void qo_sysfile_close(
+    QO_SysFileStream * file
 ){
     if (file)
         CloseHandle((HANDLE)handle);
 }
 
 QO_API 
-qo_stat_t qo_file_get_size(
-    QO_File * file ,
+qo_stat_t qo_sysfile_get_size(
+    QO_SysFileStream * file ,
     qo_size_t * size
 ){
 #   if QO_SYSTEM_BIT(64)
@@ -225,8 +225,8 @@ qo_offset_t qo_win_large_interger_to_offset(
 }
 
 QO_API
-qo_offset_t qo_file_seek(
-    QO_File * file ,
+qo_offset_t qo_sysfile_seek(
+    QO_SysFileStream * file ,
     qo_offset_t offset ,
     qo_flag32_t move_method
 ){

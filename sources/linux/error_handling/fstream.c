@@ -5,7 +5,7 @@
 
 QO_NO_INLINE
 qo_stat_t
-__qo_file_open_error()
+__qo_sysfile_open_error()
 {
     switch (errno)
     {
@@ -28,7 +28,7 @@ __qo_file_open_error()
 
 QO_NO_INLINE
 qo_stat_t
-__qo_file_prealloc_error()
+__qo_sysfile_prealloc_error()
 {
     switch (errno)
     {
@@ -49,7 +49,7 @@ __qo_file_prealloc_error()
 
 QO_NO_INLINE
 qo_stat_t
-__qo_file_read_error()
+__qo_sysfile_read_error()
 {
     switch (errno)
     {
@@ -67,7 +67,7 @@ __qo_file_read_error()
 
 QO_NO_INLINE
 qo_stat_t
-__qo_file_write_error()
+__qo_sysfile_write_error()
 {
     switch (errno)
     {

@@ -6,9 +6,11 @@
 struct _QO_AbstractFile;
 typedef struct _QO_AbstractFile QO_AbstractFile;
 
+/// @brief  Create a new abstract file from 
+/// @param  
+/// @return 
 qo_stat_t
 QO_INTERFACE(qo_abstract_file_open)(
-    QO_AbstractFile ** p_file ,
-    qo_ccstring_t      path 
-    
+    QO_AbstractFile ** pp_abs_file ,
+    QO_File * p_file
 );

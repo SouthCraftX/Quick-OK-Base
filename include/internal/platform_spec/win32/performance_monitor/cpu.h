@@ -14,7 +14,7 @@ FILETIME __qo_cpu_time_user , __qo_cpu_time_kernel , __qo_process_creation_time;
 
 QO_FORCE_INLINE
 ULONGLONG
-__qo_filetime_to_ull(
+__qo_sysfiletime_to_ull(
     FILETIME *   filetime
 ){
     return (((ULONGLONG)filetime->dwHighDateTime) << 32) | filetime->dwLowDateTime;
@@ -50,12 +50,12 @@ QO_IMPL(qo_cpu_time_measurer_stop)(
         return QO_UNKNOWN_ERROR;
     }
     const ULONGLONG 
-        period_times =  __qo_filetime_to_ull(&now_creation_time) - 
-                        __qo_filetime_to_ull(&__qo_process_creation_time) ,
-        kernel_times =  __qo_filetime_to_ull(&kernel_end) - 
-                        __qo_filetime_to_ull(&__qo_cpu_time_kernel) ,
-        user_times =    __qo_filetime_to_ull(&user_end) -
-                        __qo_filetime_to_ull(&__qo_cpu_time_user);
+        period_times =  __qo_sysfiletime_to_ull(&now_creation_time) - 
+                        __qo_sysfiletime_to_ull(&__qo_process_creation_time) ,
+        kernel_times =  __qo_sysfiletime_to_ull(&kernel_end) - 
+                        __qo_sysfiletime_to_ull(&__qo_cpu_time_kernel) ,
+        user_times =    __qo_sysfiletime_to_ull(&user_end) -
+                        __qo_sysfiletime_to_ull(&__qo_cpu_time_user);
     p_cpu_time->kernel = (qo_fp32_t)kernel_times / period_times * 100.0f;
     p_cpu_time->user = (qo_fp32_t)user_times / period_times * 100.0f;
     return QO_OK;
@@ -68,9 +68,9 @@ QO_IMPL(qo_cpu_time_get)(
 ){
     FILETIME idel_time , kernel_time , user_time;
     GetSystemTimes(&idel_time , &kernel_time , &user_time);
-    const ULONGLONG idel_u64 = __qo_filetime_to_ull(&idel_time) ,
-                    kernel_u64 = __qo_filetime_to_ull(&kernel_time) ,
-                    user_u64 = __qo_filetime_to_ull(&user_time) ,
+    const ULONGLONG idel_u64 = __qo_sysfiletime_to_ull(&idel_time) ,
+                    kernel_u64 = __qo_sysfiletime_to_ull(&kernel_time) ,
+                    user_u64 = __qo_sysfiletime_to_ull(&user_time) ,
                     total_u64 = kernel_u64 + user_u64 + idel_u64;
     cpu_time->kernel = (qo_fp32_t)kernel_u64 / total_u64 * 100.0f;
     cpu_time->user = (qo_fp32_t)user_u64 / total_u64 * 100.0f;
