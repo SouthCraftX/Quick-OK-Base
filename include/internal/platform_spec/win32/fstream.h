@@ -184,84 +184,71 @@ qo_size_t qo_sysfile_read64(
 }
 #   endif
 
-qo_size_t
+qo_size_t 
 QO_IMPL(qo_sysfile_read_explicit)(
     QO_SysFileStream *  file ,
-    qo_byte_t *         buffer ,
+    qo_byte_t *         buffer  ,
     qo_size_t           size ,
-    qo_stat_t *         p_error    
-){
+    qo_stat_t *         p_error
+) {
     qo_size_t read_size = 0;
+    qo_bool_t success = qo_false;
 #if QO_SYSTEM_BIT(64)
-    if (size > QO_UINT32_MAX)
-    {
-        if (__qo_ReadFile64((HANDLE)file , buffer , size , &read_size , NULL))
-        {
-            goto fail;   
-        }
-    }
-    else
-    {
-        if (!ReadFile((HANDLE)file , buffer , size , (DWORD *)&read_size , NULL))
-        {
-            goto fail;
-        }
+    if (size > QO_UINT32_MAX) {
+        success = __qo_ReadFile64((HANDLE)file, buffer, size, &read_size, NULL);
+    } else {
+        success = ReadFile((HANDLE)file, buffer, size, (DWORD *)&read_size, NULL);
     }
 #else
-    if (!ReadFile((HANDLE)file , buffer , size , (DWORD *)&read_size , NULL))
-    {
-        goto fail;
+    success = ReadFile((HANDLE)file, buffer, size, (DWORD *)&read_size, NULL);
+#endif
+
+    if (!success) {
+        if (p_error) 
+            *p_error = __qo_sysfile_reading_error();
+        return read_size;
     }
-#endif 
-    if (p_error)
+
+    if (p_error) 
         *p_error = QO_OK;
-    return read_size;
-fail:
-    if (p_error)
-        *p_error = __qo_sysfile_reading_error();
+    
     return read_size;
 }
 
 
+
 qo_size_t
-QO_IMPL(qo_sysfile_write)(
+QO_IMPL(qo_sysfile_write_explicit)(
     QO_SysFileStream *  file ,
     const qo_byte_t *   buffer ,
     qo_size_t           size ,
     qo_stat_t *         p_error
 ){
     qo_size_t written_size = 0;
+    qo_bool_t success = qo_false;
 #if QO_SYSTEM_BIT(64)
-    if (size > QO_UINT32_MAX)
-    {
-        if (__qo_WriteFile64((HANDLE)file , buffer , size , &written_size , NULL))
-        {
-            goto fail;
-        }
-    }
-    else
-    {
-        if (!WriteFile((HANDLE)file , buffer , size , (DWORD *)&written_size , NULL))
-        {
-            goto fail;
-        }
+    if (size > QO_UINT32_MAX) {
+        success = __qo_WriteFile64((HANDLE)file, buffer, size, &written_size, NULL);
+    } else {
+        success = WriteFile((HANDLE)file, buffer, size, (DWORD *)&written_size, NULL);
     }
 #else
-    if (!WriteFile((HANDLE)file , buffer , size , (DWORD *)&written_size , NULL))
-    {
-        goto fail;
-    }
+    success = WriteFile((HANDLE)file, buffer, size, (DWORD *)&read_size, NULL);
 #endif
-    if (p_error)
+
+    if (!success) {
+        if (p_error) 
+            *p_error = __qo_sysfile_writing_error();
+        return written_size;
+    }
+
+    if (p_error) 
         *p_error = QO_OK;
+    
     return written_size;
-fail:
-    if (p_error)
-        *p_error = __qo_sysfile_writing_error();
-    return written_size;    
 }
 
-qo_size_t
+qo_size_t 
 QO_IMPL(qo_sysfile_read_at_explicit)(
     QO_SysFileStream *  file ,
     qo_byte_t *         buffer ,
@@ -270,39 +257,81 @@ QO_IMPL(qo_sysfile_read_at_explicit)(
     qo_stat_t *         p_error
 ) {
     qo_size_t read_size = 0;
-    OVERLAPPED overlapped = { 0 };
+    OVERLAPPED overlapped;
+
 #if QO_SYSTEM_BIT(64)
     overlapped.Pointer = offset;
-    if (size > QO_UINT32_MAX)
-    {
-        if (__qo_ReadFile64((HANDLE)file , buffer , size , &read_size , NULL))
-        {
-            goto fail;
-        }
+#else
+    overlapped.Offset = offset;
+    overlapped.OffsetHigh = 0;
+#endif
+
+    qo_bool_t success = qo_false;
+
+#if QO_SYSTEM_BIT(64)
+    if (size > QO_UINT32_MAX) {
+        success = __qo_ReadFile64((HANDLE)file, buffer, size, &read_size, NULL);
+    } else {
+        success = ReadFile((HANDLE)file, buffer, size, (DWORD *)&read_size, &overlapped);
     }
-    else
-    {
-        if (!ReadFile((HANDLE)file , buffer , size , (DWORD *)&read_size , &overlapped))
-        {
-            goto fail;
-        }
+#else
+    read_success = ReadFile((HANDLE)file, buffer, size, (DWORD *)&read_size, &overlapped);
+#endif
+
+    if (!success) {
+        if (p_error) 
+            *p_error = __qo_sysfile_reading_error();
+        return read_size;
     }
 
-#else
-    overlapped.offset = offset;
-    if (!ReadFile((HANDLE)file , buffer , size , (DWORD *)&read_size , &overlapped))
-    {
-        goto fail;
-    }
-#endif
-    if (p_error)
+    if (p_error) 
         *p_error = QO_OK;
-    return read_size;
-fail:
-    if (p_error)
-        *p_error = __qo_sysfile_reading_error();
+    
     return read_size;
 }
+
+qo_size_t 
+QO_IMPL(qo_sysfile_write_at_explicit)(
+    QO_SysFileStream *  file ,
+    qo_byte_t *         buffer ,
+    qo_size_t           size ,
+    qo_offset_t         offset ,
+    qo_stat_t *         p_error
+) {
+    qo_size_t written_size = 0;
+    OVERLAPPED overlapped;
+
+#if QO_SYSTEM_BIT(64)
+    overlapped.Pointer = offset;
+#else
+    overlapped.Offset = offset;
+    overlapped.OffsetHigh = 0;
+#endif
+
+    qo_bool_t success = qo_false;
+
+#if QO_SYSTEM_BIT(64)
+    if (size > QO_UINT32_MAX) {
+        success = __qo_WriteFile64((HANDLE)file, buffer, size, &written_size, NULL);
+    } else {
+        success = WriteFile((HANDLE)file, buffer, size, (DWORD *)&written_size, &overlapped);
+    }
+#else
+    read_success = WriteFile((HANDLE)file, buffer, size, (DWORD *)&read_size, &overlapped);
+#endif
+
+    if (!success) {
+        if (p_error) 
+            *p_error = __qo_sysfile_writing_error();
+        return written_size;
+    }
+
+    if (p_error) 
+        *p_error = QO_OK;
+    
+    return written_size;
+}
+
 
 qo_stat_t 
 QO_IMPL(qo_sysfile_open)(
