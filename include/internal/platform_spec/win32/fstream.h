@@ -83,7 +83,15 @@ QO_PURE
 qo_stat_t
 __qo_sysfile_reading_error()
 {
-    
+    switch (GetLastError())
+    {
+        case ERROR_INVALID_HANDLE:
+            return QO_INVALID_HANDLE;
+        case ERROR_ACCESS_DENIED:
+            return QO_PERMISSION_DENIED;
+        case ERROR_HANDLE_EOF:
+        
+    }
 }
 
 // Extension of Windows's `WriteFile`.  It supports writing more than 4GB.
@@ -335,10 +343,12 @@ QO_IMPL(qo_sysfile_write_at_explicit)(
 
 qo_stat_t 
 QO_IMPL(qo_sysfile_open)(
-    QO_SysFileStream ** p_file , 
-    qo_ccstring_t       path ,
+    QO_SysFileStream ** pp_file , 
+    qo_ccstring_t       path , 
     qo_size_t           path_size ,
-    QO_FileOpenMode     mode 
+    qo_flag32_t         access_mode ,
+    qo_flag32_t         open_mode ,
+    qo_flag32_t         hints
 ){
     LARGE_INTEGER file_size;
     const qo_size_t long_path_prefix_len = sizeof(L"\\\\?\\") - sizeof(WCHAR);
@@ -359,7 +369,6 @@ QO_IMPL(qo_sysfile_open)(
     {
         memcpy(wc_path , L"\\\\?\\UNC\\" , long_path_prefix_len);
     }
-    
 
     const BOOL transcode_status =
     MultiByteToWideChar(
@@ -371,23 +380,22 @@ QO_IMPL(qo_sysfile_open)(
     {
         return __qo_handle_transcoding_failure();
     }
+
     HANDLE file_handle = CreateFileW(
-        wc_path , __QO_ACCESS_MODE_UNPACK(mode.access_mode) , 0 , NULL , 
-        __QO_ACCESS_MODE_UNPACK(mode.open_mode) , 
-        __QO_FLAGS_UNPACK(mode.hints) , NULL
+        wc_path , access_mode , 0 , NULL , open_mode , hints , NULL
     );
 
     if (file_handle == INVALID_HANDLE_VALUE)
     {
         return __qo_sysfile_opening_error();
     }
-    *p_file = (QO_SysFileStream *)file_handle;
+    *pp_file = (QO_SysFileStream *)file_handle;
     return QO_OK;
 }
 
 QO_FORCE_INLINE
 void qo_sysfile_close(
-    QO_SysFileStream * file
+    QO_SysFileStream * p_file
 ){
     if (file)
         CloseHandle((HANDLE)file);
@@ -395,13 +403,13 @@ void qo_sysfile_close(
 
 QO_API 
 qo_stat_t qo_sysfile_get_size(
-    QO_SysFileStream * file ,
-    qo_size_t * size
+    QO_SysFileStream * p_file ,
+    qo_size_t * p_size
 ){
 #   if QO_SYSTEM_BIT(64)
-    BOOL ret = GetFileSizeEx(file->handle , (PLARGE_INTEGER)size);
+    BOOL ret = GetFileSizeEx((HANDLE)p_file , (PLARGE_INTEGER)p_size);
 #   else
-    BOOL ret = GetFileSizeEx(file->handle , &(LARGE_INTEGER){.LowPart = *size , .HighPart = 0});
+    BOOL ret = GetFileSizeEx((HANDLE)p_file , &(LARGE_INTEGER){.LowPart = *size , .HighPart = 0});
 #   endif
     if (ret)
     {

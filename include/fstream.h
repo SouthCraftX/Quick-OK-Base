@@ -44,27 +44,6 @@ extern "C" {
 struct _QO_SysFileStream;
 typedef struct _QO_SysFileStream QO_SysFileStream;
 
-/// @brief  Struct indicates how to open a file.
-/// @sa     qo_sysfile_open()
-struct _QO_FileOpenMode
-{
-    /// @brief  The access mode of the file.
-    /// @sa     QO_FILE_READ, QO_FILE_WRITE, QO_FILE_READ_WRITE
-    qo_flag8_t access_mode;
-
-    /// @brief  The open mode of the file.
-    /// @sa
-    qo_flag8_t open_mode;
-
-    /// @brief  The hints of the file. It may not be used if current platform 
-    ///         does not support it. Set the first bit to 1 to force applying
-    ///         the hints(x & 0x8000), in that case, qo_sysfile_read() will fail 
-    ///         if not supported.
-    /// @sa     QO_FILE_NO_CACHING, QO_FILE_SEQUENTIAL
-    qo_flag16_t hints;
-};
-typedef struct _QO_FileOpenMode QO_FileOpenMode;
-
 /// @brief  Open a file
 /// @param  p_file A pointer to a file object.
 /// @param  path   The path of the file. UTF-8 encoding is required.
@@ -74,7 +53,7 @@ typedef struct _QO_FileOpenMode QO_FileOpenMode;
 /// @sa     qo_sysfile_close()
 qo_stat_t 
 QO_INTERFACE(qo_sysfile_open)(
-    QO_SysFileStream ** p_file , 
+    QO_SysFileStream ** pp_file , 
     qo_ccstring_t       path , 
     qo_size_t           path_size ,
     qo_flag32_t         access_mode ,
