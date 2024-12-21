@@ -162,7 +162,7 @@ qo_stat_t qo_fstream_prealloc_handle_error()
             return QO_DISK_NO_SPACE;
 
         case ERROR_HANDLE_TIMEOUT:
-            return QO_TIMEOUT;
+            return QO_TIMEDOUT;
 
         case ERROR_PIPE_BUSY:
             return QO_BUSY;

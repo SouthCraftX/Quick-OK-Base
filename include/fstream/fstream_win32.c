@@ -222,7 +222,7 @@ __qo_fstream_prealloc_handle_error()
         case ERROR_OPERATION_ABORTED:       return QO_SIGNAL_INTERRUPTED;
         case ERROR_HANDLE_DISK_FULL:
         case ERROR_DISK_FULL:               return QO_DISK_NO_SPACE;
-        case ERROR_HANDLE_TIMEOUT:          return QO_TIMEOUT;
+        case ERROR_HANDLE_TIMEOUT:          return QO_TIMEDOUT;
         case ERROR_PIPE_BUSY:               return QO_TARGET_BUSY;
         case ERROR_INSUFFICIENT_BUFFER:     QO_BUG(0);
         default:                            return QO_UNKNOWN_ERROR;
